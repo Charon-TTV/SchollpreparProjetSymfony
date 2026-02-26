@@ -1,17 +1,27 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}SchoolPrepar{% endblock %}</title>
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    {% block importmap %}{{ importmap('app') }}{% endblock %}
+</head>
+<body>
+    <!--------------------------------- navbar -------------------------------------------->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{{ path('app_home') }}">SchoolPrepar</a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
+                <a class="nav-link" href="{{ path('app_features') }}">Fonctionnalités</a>
+            </div>
+        </div>
+    </nav>
+    <!--------------------------------- navbar -------------------------------------------->
+
+    <main class="container">
+        {% block contenu %}{% endblock %}
+    </main>
+
+</body>
 </html>
