@@ -32,3 +32,15 @@ DATABASE_URL="postgresql://nom_utilisateur:votre_mot_de_passe@127.0.0.1:5432/sch
     Exécuter la commande :
         php bin/console doctrine:database:create
 
+
+IV- Design & Interface Utilisateur
+
+Pour répondre aux exigences d'une interface professionnelle, le projet utilise Bootstrap 5.3.3.
+
+Particularité technique :
+- Gestion des Assets : Contrairement à l'utilisation classique de liens CDN (souvent bloqués par les navigateurs pour des raisons de sécurité), Bootstrap a été intégré localement via Symfony AssetMapper.
+- Avantages : Cette méthode garantit que le design de SchoolPrepar s'affiche correctement même sans connexion internet ou si le navigateur bloque les scripts tiers.
+
+Installation du composant :
+Si vous installez le projet pour la première fois, assurez-vous de mettre à jour le mappage des assets avec la commande suivante :
+    php bin/console importmap:install
