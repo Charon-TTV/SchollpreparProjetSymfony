@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>{% block title %}Admin | SchoolPrepar{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <link rel="icon" href="{{ asset('assets/admin/images/favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/style.css') }}">
+
+    {% block stylesheets %}{% endblock %}
+</head>
+<body class="">
+<div class="loader-bg">
+    <div class="loader-track"><div class="loader-fill"></div></div>
+</div>
+
+{# Inclusion de l'aside (Sidebar) #}
+{{ include('admin/partials/aside.html.twig') }}
+
+{# Inclusion de la nav (Header) #}
+{{ include('admin/partials/nav.html.twig') }}
+
+<div class="pcoded-main-container">
+    <div class="pcoded-content">
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">{% block page_title %}Tableau de bord{% endblock %}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% block body %}{% endblock %}
+    </div>
+</div>
+
+{# Inclusion du footer (Scripts) #}
+{{ include('admin/partials/footer.html.twig') }}
+
+{% block javascripts %}{% endblock %}
+</body>
+</html>

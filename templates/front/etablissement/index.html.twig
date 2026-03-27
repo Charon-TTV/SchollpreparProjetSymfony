@@ -1,0 +1,84 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Nos Établissements - SchoolPrepar{% endblock %}
+
+{% block body %}
+    {# 1. Header de page #}
+    <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/1.jpg') }}">
+        <div class="container">
+            <div class="site-breadcrumb">
+                <a href="{{ path('app_home') }}">Accueil</a> /
+                <span>Établissements</span>
+            </div>
+            <h2 class="hp-title">Universités & Grandes Écoles</h2>
+        </div>
+    </section>
+
+    {# 2. Barre de recherche #}
+    <section class="search-section">
+        <div class="container">
+            <div class="search-warp">
+                <div class="section-title text-white">
+                    <h2>Trouvez l'établissement idéal</h2>
+                    <p>Découvrez les meilleures institutions d'enseignement supérieur au Togo.</p>
+                </div>
+                <div class="row">
+                    <div class="col-md-10 offset-md-1">
+                        <form class="course-search-form">
+                            <input type="text" placeholder="Nom de l'école (ex: Université de Lomé)">
+                            <input type="text" class="last-m" placeholder="Ville">
+                            <button class="site-btn">Rechercher</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# 3. Grille des Établissements #}
+    <section class="course-section spad">
+        <div class="container">
+            <div class="row">
+                {% set ecoles = [
+                    {'id': 1, 'nom': 'Université de Lomé (UL)', 'ville': 'Lomé', 'desc': 'Le plus grand centre universitaire public du Togo, offrant une diversité de parcours.', 'type': 'Public', 'img': '1.jpg'},
+                    {'id': 2, 'nom': 'Université de Kara (UK)', 'ville': 'Kara', 'desc': 'Deuxième université publique du pays, pôle d\'excellence dans le nord du Togo.', 'type': 'Public', 'img': '2.jpg'},
+                    {'id': 3, 'nom': 'IPNET Institute', 'ville': 'Lomé', 'desc': 'Institut spécialisé dans les hautes technologies et les certifications internationales.', 'type': 'Privé', 'img': '3.jpg'},
+                    {'id': 4, 'nom': 'ESA Lomé', 'ville': 'Lomé', 'desc': 'École Supérieure des Affaires, reconnue pour ses formations en gestion et management.', 'type': 'Privé', 'img': '4.jpg'},
+                    {'id': 5, 'nom': 'IAEC', 'ville': 'Lomé', 'desc': 'Institut Africain d\'Enseignement Commercial, pionnier dans la formation des cadres.', 'type': 'Privé', 'img': '1.jpg'},
+                    {'id': 6, 'nom': 'FORMATEC', 'ville': 'Lomé', 'desc': 'Institut polytechnique reconnu pour ses formations techniques et d\'ingénierie.', 'type': 'Privé', 'img': '2.jpg'}
+                ] %}
+
+                {% for e in ecoles %}
+                    <div class="col-lg-4 col-md-6 mb-5 d-flex align-items-stretch">
+                        <div class="course-item" style="display: flex; flex-direction: column; width: 100%; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); background: #fff;">
+                            {# Image de l'école #}
+                            <div class="course-thumb set-bg"
+                                 data-setbg="{{ asset('assets/front/img/categories/' ~ e.img) }}"
+                                 style="height: 200px; width: 100%;">
+                                <div class="price" style="background: {{ e.type == 'Public' ? '#252525' : '#d82a2e' }};">{{ e.type }}</div>
+                            </div>
+
+                            {# Contenu #}
+                            <div class="course-info" style="padding: 25px; flex-grow: 1; display: flex; flex-direction: column;">
+                                <div class="course-text" style="flex-grow: 1; min-height: 140px;">
+                                    <h5 style="color: #252525; font-weight: 700; margin-bottom: 5px;">{{ e.nom }}</h5>
+                                    <div class="mb-3" style="color: #d82a2e; font-size: 13px; font-weight: 600;">
+                                        <i class="fa fa-map-marker"></i> {{ e.ville }}, Togo
+                                    </div>
+                                    <p style="color: #707070; line-height: 1.5; font-size: 14px;">{{ e.desc }}</p>
+                                </div>
+
+                                {# Bouton #}
+                                <div class="course-author" style="border-top: 1px solid #eee; padding-top: 20px; margin-top: auto;">
+                                    <a href="#" class="site-btn btn-sm" style="border-radius: 30px; width: 100%; text-align: center;">
+                                        Voir les filières
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

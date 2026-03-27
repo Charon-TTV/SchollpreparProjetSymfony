@@ -1,0 +1,49 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block page_title %}Gestion des Filières{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Liste des filières</h5>
+                    <div class="card-header-right">
+                        <a href="#" class="btn btn-primary btn-sm rounded-pill">
+                            <i class="feather icon-plus"></i> Ajouter une filière
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body table-border-style">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nom de la filière</th>
+                                <th>Catégorie</th>
+                                <th>Date de création</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for f in filieres %}
+                                <tr>
+                                    <td>{{ f.id }}</td>
+                                    <td>{{ f.nom }}</td>
+                                    <td><span class="badge badge-light-danger">{{ f.categorie }}</span></td>
+                                    <td>{{ f.date }}</td>
+                                    <td>
+                                        <a href="#" class="btn btn-info btn-sm"><i class="feather icon-edit"></i></a>
+                                        <a href="#" class="btn btn-danger btn-sm"><i class="feather icon-trash-2"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

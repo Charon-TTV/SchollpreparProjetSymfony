@@ -1,0 +1,83 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Nos Filières - SchoolPrepar{% endblock %}
+
+{% block body %}
+    {# 1. Header de page #}
+    <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/1.jpg') }}">
+        <div class="container">
+            <div class="site-breadcrumb">
+                <a href="{{ path('app_home') }}">Accueil</a> /
+                <span>Filières</span>
+            </div>
+            <h2 class="hp-title">Nos Filières</h2>
+        </div>
+    </section>
+
+    {# 2. Barre de recherche #}
+    <section class="search-section">
+        <div class="container">
+            <div class="search-warp">
+                <div class="section-title text-white">
+                    <h2>Trouvez votre futur métier</h2>
+                    <p>Explorez les formations d'avenir adaptées au marché du travail.</p>
+                </div>
+                <div class="row">
+                    <div class="col-md-10 offset-md-1">
+                        <form class="course-search-form">
+                            <input type="text" placeholder="Rechercher une filière (ex: Cyber Sécurité)">
+                            <input type="text" class="last-m" placeholder="Catégorie">
+                            <button class="site-btn">Rechercher</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# 3. Grille des Filières Corrigée #}
+    <section class="course-section spad">
+        <div class="container">
+            <div class="row">
+                {% set filieres = [
+                    {'id': 1, 'nom': 'Génie Logiciel', 'desc': 'Concevez les logiciels et applications de demain.', 'img': '1.jpg', 'cat': 'Développement'},
+                    {'id': 2, 'nom': 'Développement Web', 'desc': 'Maîtrisez les technologies front et back-end.', 'img': '2.jpg', 'cat': 'Web'},
+                    {'id': 3, 'nom': 'Cyber Sécurité', 'desc': 'Devenez le gardien des données et des systèmes.', 'img': '3.jpg', 'cat': 'Sécurité'},
+                    {'id': 4, 'nom': 'Intelligence Artificielle', 'desc': 'Explorez le machine learning et le big data.', 'img': '4.jpg', 'cat': 'Data'},
+                    {'id': 5, 'nom': 'Réseaux & Télécoms', 'desc': 'Gérez les infrastructures de communication.', 'img': '1.jpg', 'cat': 'Réseaux'},
+                    {'id': 6, 'nom': 'Design Numérique', 'desc': 'Créez des expériences utilisateurs uniques.', 'img': '2.jpg', 'cat': 'Design'},
+                    {'id': 7, 'nom': 'Cloud Computing', 'desc': 'Déployez des solutions sur des serveurs distants.', 'img': '3.jpg', 'cat': 'Infrastructure'},
+                    {'id': 8, 'nom': 'Internet des Objets (IoT)', 'desc': 'Connectez le monde physique au numérique.', 'img': '4.jpg', 'cat': 'Innovation'}
+                ] %}
+
+                {% for f in filieres %}
+                    <div class="col-lg-4 col-md-6 mb-5 d-flex align-items-stretch">
+                        <div class="course-item" style="display: flex; flex-direction: column; width: 100%; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); background: #fff;">
+                            {# Image avec taille fixe #}
+                            <div class="course-thumb set-bg"
+                                 data-setbg="{{ asset('assets/front/img/courses/' ~ f.img) }}"
+                                 style="height: 220px; width: 100%;">
+                                <div class="price" style="background: #d82a2e;">{{ f.cat }}</div>
+                            </div>
+
+                            {# Contenu texte flexible #}
+                            <div class="course-info" style="padding: 25px; flex-grow: 1; display: flex; flex-direction: column;">
+                                <div class="course-text" style="flex-grow: 1; min-height: 120px;">
+                                    <h5 style="color: #252525; font-weight: 700; margin-bottom: 15px;">{{ f.nom }}</h5>
+                                    <p style="color: #707070; line-height: 1.6;">{{ f.desc }}</p>
+                                </div>
+
+                                {# Pied de carte avec bouton #}
+                                <div class="course-author" style="border-top: 1px solid #eee; padding-top: 20px; margin-top: auto;">
+                                    <a href="{{ path('app_filiere_show', {'id': f.id}) }}" class="site-btn btn-sm" style="border-radius: 30px; width: 100%; text-align: center;">
+                                        En savoir plus
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

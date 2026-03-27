@@ -1,0 +1,24 @@
+{% extends 'Admin/base.html.twig' %}
+
+{% block page_title %}Résumé des activités{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6 col-xl-4">
+            <div class="card bg-c-blue order-card">
+                <div class="card-body">
+                    <h6 class="text-white">Filières Total</h6>
+                    <h2 class="text-right text-white"><i class="feather icon-book float-left"></i><span>12</span></h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-4">
+            <div class="card bg-c-green order-card">
+                <div class="card-body">
+                    <h6 class="text-white">Établissements</h6>
+                    <h2 class="text-right text-white"><i class="feather icon-map float-left"></i><span>6</span></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

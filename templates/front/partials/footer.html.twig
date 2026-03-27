@@ -1,0 +1,85 @@
+<footer class="footer-section" style="background: #111; color: #fff; padding-top: 80px;">
+    <div class="container">
+        <div class="row">
+            {# Colonne 1 : Brand & Bio #}
+            <div class="col-lg-3 col-md-6 mb-5">
+                <div class="footer-widget">
+                    <h4 style="color: #fff; font-weight: 800; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">
+                        School<span style="color: #d82a2e;">Prepar</span>
+                    </h4>
+                    <p style="color: #adadad; line-height: 1.8; font-size: 15px;">
+                        La plateforme de référence pour l'orientation universitaire au Togo. Trouvez votre voie, choisissez votre avenir.
+                    </p>
+                    <div class="footer-social" style="margin-top: 25px;">
+                        <a href="#" style="display: inline-block; width: 40px; height: 40px; background: #222; color: #fff; text-align: center; line-height: 40px; border-radius: 50%; margin-right: 10px; transition: 0.3s;" onmouseover="this.style.background='#d82a2e'" onmouseout="this.style.background='#222'"><i class="fa fa-facebook"></i></a>
+                        <a href="#" style="display: inline-block; width: 40px; height: 40px; background: #222; color: #fff; text-align: center; line-height: 40px; border-radius: 50%; margin-right: 10px; transition: 0.3s;" onmouseover="this.style.background='#d82a2e'" onmouseout="this.style.background='#222'"><i class="fa fa-linkedin"></i></a>
+                        <a href="#" style="display: inline-block; width: 40px; height: 40px; background: #222; color: #fff; text-align: center; line-height: 40px; border-radius: 50%; transition: 0.3s;" onmouseover="this.style.background='#d82a2e'" onmouseout="this.style.background='#222'"><i class="fa fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            {# Colonne 2 : Liens Utiles #}
+            <div class="col-lg-3 col-md-6 mb-5">
+                <div class="footer-widget">
+                    <h5 style="color: #fff; font-weight: 700; margin-bottom: 25px; position: relative; padding-bottom: 10px;">
+                        Navigation
+                        <span style="position: absolute; left: 0; bottom: 0; width: 40px; height: 2px; background: #d82a2e;"></span>
+                    </h5>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 12px;"><a href="{{ path('app_home') }}" style="color: #adadad; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#d82a2e'; this.style.paddingLeft='10px'" onmouseout="this.style.color='#adadad'; this.style.paddingLeft='0'"><i class="fa fa-angle-right" style="color: #d82a2e; margin-right: 8px;"></i> Accueil</a></li>
+                        <li style="margin-bottom: 12px;"><a href="{{ path('app_filiere_index') }}" style="color: #adadad; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#d82a2e'; this.style.paddingLeft='10px'" onmouseout="this.style.color='#adadad'; this.style.paddingLeft='0'"><i class="fa fa-angle-right" style="color: #d82a2e; margin-right: 8px;"></i> Nos Filières</a></li>
+                        <li style="margin-bottom: 12px;"><a href="#" style="color: #adadad; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#d82a2e'; this.style.paddingLeft='10px'" onmouseout="this.style.color='#adadad'; this.style.paddingLeft='0'"><i class="fa fa-angle-right" style="color: #d82a2e; margin-right: 8px;"></i> Établissements</a></li>
+                        <li style="margin-bottom: 12px;"><a href="#" style="color: #adadad; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#d82a2e'; this.style.paddingLeft='10px'" onmouseout="this.style.color='#adadad'; this.style.paddingLeft='0'"><i class="fa fa-angle-right" style="color: #d82a2e; margin-right: 8px;"></i> Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            {# Colonne 3 : Newsletter #}
+            <div class="col-lg-3 col-md-6 mb-5">
+                <div class="footer-widget">
+                    <h5 style="color: #fff; font-weight: 700; margin-bottom: 25px; position: relative; padding-bottom: 10px;">
+                        Newsletter
+                        <span style="position: absolute; left: 0; bottom: 0; width: 40px; height: 2px; background: #d82a2e;"></span>
+                    </h5>
+                    <p style="color: #adadad; font-size: 14px; margin-bottom: 20px;">Restez informé des dates de concours au Togo.</p>
+                    <form style="position: relative;">
+                        <input type="email" placeholder="Votre email" style="width: 100%; padding: 12px 15px; background: #222; border: 1px solid #333; color: #fff; border-radius: 5px; outline: none;">
+                        <button style="position: absolute; right: 5px; top: 5px; background: #d82a2e; border: none; color: #fff; padding: 7px 15px; border-radius: 4px; cursor: pointer;"><i class="fa fa-send"></i></button>
+                    </form>
+                </div>
+            </div>
+
+            {# Colonne 4 : Contact Info #}
+            <div class="col-lg-3 col-md-6 mb-5">
+                <div class="footer-widget">
+                    <h5 style="color: #fff; font-weight: 700; margin-bottom: 25px; position: relative; padding-bottom: 10px;">
+                        Contact
+                        <span style="position: absolute; left: 0; bottom: 0; width: 40px; height: 2px; background: #d82a2e;"></span>
+                    </h5>
+                    <div style="display: flex; margin-bottom: 15px;">
+                        <i class="fa fa-map-marker" style="color: #d82a2e; margin-top: 5px; margin-right: 15px;"></i>
+                        <p style="color: #adadad; margin: 0; font-size: 14px;">Bd de la Paix, Lomé, Togo</p>
+                    </div>
+                    <div style="display: flex; margin-bottom: 15px;">
+                        <i class="fa fa-phone" style="color: #d82a2e; margin-top: 5px; margin-right: 15px;"></i>
+                        <p style="color: #adadad; margin: 0; font-size: 14px;">+228 90 12 34 56</p>
+                    </div>
+                    <div style="display: flex;">
+                        <i class="fa fa-envelope" style="color: #d82a2e; margin-top: 5px; margin-right: 15px;"></i>
+                        <p style="color: #adadad; margin: 0; font-size: 14px;">contact@schoolprepar.tg</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Copyright #}
+        <div class="row" style="border-top: 1px solid #222; padding: 30px 0; margin-top: 20px;">
+            <div class="col-md-12 text-center">
+                <p style="color: #666; font-size: 13px; margin: 0;">
+                    &copy; {{ "now"|date("Y") }} <strong>SchoolPrepar</strong>. Tous droits réservés. <br>
+                    <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">TP Symfony - Licence 2 Informatique</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
