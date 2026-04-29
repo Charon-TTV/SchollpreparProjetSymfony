@@ -1,0 +1,40 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Modifier la Catégorie - SchoolPrepar{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-6">
+                <div class="card border-0 shadow-sm mt-4">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-0 text-info font-weight-bold">
+                                <i class="feather icon-edit-2 mr-2"></i>Modifier la catégorie
+                            </h5>
+                            <small class="text-muted">Édition de : <strong>{{ categorie.nom }}</strong></small>
+                        </div>
+                        {# On peut mettre le bouton supprimer ici ou en bas, mais restons cohérents #}
+                        <span class="badge badge-light-info">ID #{{ categorie.id }}</span>
+                    </div>
+
+                    <div class="card-body p-4">
+                        {# Le formulaire avec le bouton de mise à jour arrondi #}
+                        {{ include('admin/admin_categorie/_form.html.twig', {'button_label': 'Mettre à jour les infos'}) }}
+
+                        {# Zone danger séparée pour la suppression #}
+                        <div class="mt-5 pt-4 border-top">
+                            <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded-lg" style="border-radius: 15px;">
+                                <div>
+                                    <h6 class="mb-0 font-weight-bold text-danger">Suppression </h6>
+                                    <small class="text-muted">Cette action est irréversible.</small>
+                                </div>
+                                {{ include('admin/admin_categorie/_delete_form.html.twig') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

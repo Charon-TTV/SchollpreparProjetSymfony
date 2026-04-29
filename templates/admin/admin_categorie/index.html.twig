@@ -1,0 +1,111 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Gestion des Catégories - SchoolPrepar{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="m-0 text-primary font-weight-bold">
+                                <i class="feather icon-tag mr-2"></i>Liste des Catégories
+                            </h5>
+                            <p class="text-muted small mb-0">Gérez les grands domaines de formation</p>
+                        </div>
+                        <a href="{{ path('app_admin_categorie_new') }}" class="btn btn-primary btn-sm rounded-pill px-4 shadow-sm">
+                            <i class="feather icon-plus"></i> Ajouter une catégorie
+                        </a>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th class="border-top-0" style="width: 50px;">#</th>
+                                    <th class="border-top-0">Nom de la catégorie</th>
+                                    <th class="border-top-0">Description</th>
+                                    <th class="border-top-0 text-center" style="width: 180px;">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for categorie in categories %}
+                                    <tr>
+                                        <td class="text-muted font-weight-bold">{{ loop.index }}</td>
+                                        <td>
+                                            <h6 class="m-0 font-weight-bold text-dark">{{ categorie.nom }}</h6>
+                                            <small class="text-muted">ID: CAT-{{ categorie.id }}</small>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0 text-muted small" style="max-width: 400px; line-height: 1.4;">
+                                                {{ categorie.description|length > 100 ? categorie.description|slice(0, 100) ~ '...' : categorie.description }}
+                                            </p>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group">
+                                                <a href="{{ path('app_admin_categorie_show', {'id': categorie.id}) }}"
+                                                   class="btn btn-sm btn-outline-primary border-0 rounded-circle" title="Détails">
+                                                    <i class="feather icon-eye"></i>
+                                                </a>
+                                                <a href="{{ path('app_admin_categorie_edit', {'id': categorie.id}) }}"
+                                                   class="btn btn-sm btn-outline-info border-0 rounded-circle" title="Modifier">
+                                                    <i class="feather icon-edit"></i>
+                                                </a>
+
+                                                <form method="post" action="{{ path('app_admin_categorie_delete', {'id': categorie.id}) }}"
+                                                      style="display:inline-block"
+                                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ categorie.id) }}">
+                                                    <button class="btn btn-sm btn-outline-danger border-0 rounded-circle">
+                                                        <i class="feather icon-trash-2"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4" class="text-center py-5">
+                                            <div class="text-muted">
+                                                <i class="feather icon-tag h3 d-block mb-3"></i>
+                                                Aucune catégorie enregistrée.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .align-middle td { vertical-align: middle !important; }
+
+        /* Conteneur des boutons calqué sur Filière */
+        .btn-group .btn {
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 3px;
+            transition: all 0.2s ease-in-out;
+            background-color: transparent !important;
+        }
+
+        /* Style spécifique au survol */
+        .btn-group .btn-outline-primary:hover { color: #7267EF !important; background-color: rgba(114, 103, 239, 0.1) !important; transform: scale(1.1); }
+        .btn-group .btn-outline-info:hover { color: #11c15b !important; background-color: rgba(17, 193, 91, 0.1) !important; transform: scale(1.1); }
+        .btn-group .btn-outline-danger:hover { color: #ff5252 !important; background-color: rgba(255, 82, 82, 0.1) !important; transform: scale(1.1); }
+
+        .btn-group .btn i {
+            font-size: 1.1rem;
+        }
+    </style>
+{% endblock %}

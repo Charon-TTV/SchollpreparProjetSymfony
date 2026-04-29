@@ -1,24 +1,67 @@
-{% extends 'Admin/base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
 {% block page_title %}Résumé des activités{% endblock %}
 
 {% block body %}
     <div class="row">
+        {# Carte Filières #}
         <div class="col-md-6 col-xl-4">
-            <div class="card bg-c-blue order-card">
+            <div class="card bg-c-blue order-card shadow border-0 transition-hover">
                 <div class="card-body">
-                    <h6 class="text-white">Filières Total</h6>
-                    <h2 class="text-right text-white"><i class="feather icon-book float-left"></i><span>12</span></h2>
+                    <h6 class="text-white opacity-75">Filières Total</h6>
+                    <h2 class="text-right text-white d-flex align-items-center justify-content-between">
+                        <div class="icon-circle bg-white-opacity-20">
+                            <i class="feather icon-book"></i>
+                        </div>
+                        <span class="counter font-weight-bold">{{ totalFilieres }}</span>
+                    </h2>
                 </div>
             </div>
         </div>
+
+        {# Carte Établissements #}
         <div class="col-md-6 col-xl-4">
-            <div class="card bg-c-green order-card">
+            <div class="card bg-c-green order-card shadow border-0 transition-hover">
                 <div class="card-body">
-                    <h6 class="text-white">Établissements</h6>
-                    <h2 class="text-right text-white"><i class="feather icon-map float-left"></i><span>6</span></h2>
+                    <h6 class="text-white opacity-75">Établissements</h6>
+                    <h2 class="text-right text-white d-flex align-items-center justify-content-between">
+                        <div class="icon-circle bg-white-opacity-20">
+                            <i class="feather icon-map-pin"></i>
+                        </div>
+                        <span class="counter font-weight-bold">{{ totalEtablissements }}</span>
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        {# Carte Catégories #}
+        <div class="col-md-6 col-xl-4">
+            <div class="card bg-c-yellow order-card shadow border-0 transition-hover">
+                <div class="card-body">
+                    <h6 class="text-white opacity-75">Catégories</h6>
+                    <h2 class="text-right text-white d-flex align-items-center justify-content-between">
+                        <div class="icon-circle bg-white-opacity-20">
+                            <i class="feather icon-tag"></i>
+                        </div>
+                        <span class="counter font-weight-bold">{{ totalCategories }}</span>
+                    </h2>
                 </div>
             </div>
         </div>
     </div>
+
+    <style>
+        .opacity-75 { opacity: 0.75; }
+        .bg-white-opacity-20 { background: rgba(255,255,255,0.2); }
+        .icon-circle {
+            width: 50px; height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .transition-hover { transition: all 0.3s ease; }
+        .transition-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
+    </style>
 {% endblock %}

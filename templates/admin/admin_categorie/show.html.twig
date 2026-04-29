@@ -1,0 +1,83 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Détails Catégorie - SchoolPrepar{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            {# Colonne Principale #}
+            <div class="col-md-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 text-primary font-weight-bold">
+                                <i class="feather icon-info mr-2"></i>Détails de la catégorie
+                            </h5>
+                            <span class="badge badge-light-primary">ID #{{ categorie.id }}</span>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-sm-4 text-muted font-weight-bold">Nom de la catégorie</div>
+                            <div class="col-sm-8">
+                                <p class="h5 text-dark">{{ categorie.nom }}</p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-sm-4 text-muted font-weight-bold">Description officielle</div>
+                            <div class="col-sm-8">
+                                <p class="text-secondary" style="line-height: 1.6;">
+                                    {{ categorie.description ?: 'Aucune description fournie.' }}
+                                </p>
+                            </div>
+                        </div>
+
+                        {# Optionnel : Afficher les filières liées si la relation existe #}
+                        <div class="row mb-4">
+                            <div class="col-sm-4 text-muted font-weight-bold">Filières associées</div>
+                            <div class="col-sm-8">
+                                {% if categorie.filieres|length > 0 %}
+                                    <div class="d-flex flex-wrap gap-2">
+                                        {% for filiere in categorie.filieres %}
+                                            <span class="badge badge-pill badge-outline-primary m-1">{{ filiere.nom }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <span class="text-muted italic">Aucune filière liée pour le moment.</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mt-5 pt-3 border-top d-flex justify-content-between align-items-center">
+                            <a href="{{ path('app_admin_categorie_index') }}" class="btn btn-light btn-sm rounded-pill px-3">
+                                <i class="feather icon-arrow-left"></i> Retour à la liste
+                            </a>
+
+                            <div class="d-flex align-items-center">
+                                <a href="{{ path('app_admin_categorie_edit', {'id': categorie.id}) }}" class="btn btn-info btn-sm rounded-pill px-3 mr-2">
+                                    <i class="feather icon-edit"></i> Modifier
+                                </a>
+                                {{ include('admin/admin_categorie/_delete_form.html.twig') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Petite colonne latérale pour les stats #}
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm text-center">
+                    <div class="card-body py-4">
+                        <div class="mb-3">
+                            <i class="feather icon-layers h1 text-primary"></i>
+                        </div>
+                        <h3 class="font-weight-bold">{{ categorie.filieres|length }}</h3>
+                        <p class="text-muted mb-0">Filières enregistrées dans cette catégorie</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

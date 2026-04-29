@@ -35,27 +35,18 @@
         </div>
     </section>
 
-    {# 3. Grille des Établissements #}
+    {# 3. Grille des Établissements Dynamique #}
     <section class="course-section spad">
         <div class="container">
             <div class="row">
-                {% set ecoles = [
-                    {'id': 1, 'nom': 'Université de Lomé (UL)', 'ville': 'Lomé', 'desc': 'Le plus grand centre universitaire public du Togo, offrant une diversité de parcours.', 'type': 'Public', 'img': '1.jpg'},
-                    {'id': 2, 'nom': 'Université de Kara (UK)', 'ville': 'Kara', 'desc': 'Deuxième université publique du pays, pôle d\'excellence dans le nord du Togo.', 'type': 'Public', 'img': '2.jpg'},
-                    {'id': 3, 'nom': 'IPNET Institute', 'ville': 'Lomé', 'desc': 'Institut spécialisé dans les hautes technologies et les certifications internationales.', 'type': 'Privé', 'img': '3.jpg'},
-                    {'id': 4, 'nom': 'ESA Lomé', 'ville': 'Lomé', 'desc': 'École Supérieure des Affaires, reconnue pour ses formations en gestion et management.', 'type': 'Privé', 'img': '4.jpg'},
-                    {'id': 5, 'nom': 'IAEC', 'ville': 'Lomé', 'desc': 'Institut Africain d\'Enseignement Commercial, pionnier dans la formation des cadres.', 'type': 'Privé', 'img': '1.jpg'},
-                    {'id': 6, 'nom': 'FORMATEC', 'ville': 'Lomé', 'desc': 'Institut polytechnique reconnu pour ses formations techniques et d\'ingénierie.', 'type': 'Privé', 'img': '2.jpg'}
-                ] %}
-
-                {% for e in ecoles %}
+                {% for e in etablissements %}
                     <div class="col-lg-4 col-md-6 mb-5 d-flex align-items-stretch">
                         <div class="course-item" style="display: flex; flex-direction: column; width: 100%; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); background: #fff;">
                             {# Image de l'école #}
                             <div class="course-thumb set-bg"
-                                 data-setbg="{{ asset('assets/front/img/categories/' ~ e.img) }}"
+                                 data-setbg="{{ e.image ? asset('uploads/images/' ~ e.image) : asset('assets/front/img/categories/default.jpg') }}"
                                  style="height: 200px; width: 100%;">
-                                <div class="price" style="background: {{ e.type == 'Public' ? '#252525' : '#d82a2e' }};">{{ e.type }}</div>
+                                <div class="price" style="background: {{ e.type == 'Public' ? '#252525' : '#d82a2e' }};">{{ e.type|default('Privé') }}</div>
                             </div>
 
                             {# Contenu #}
@@ -65,17 +56,23 @@
                                     <div class="mb-3" style="color: #d82a2e; font-size: 13px; font-weight: 600;">
                                         <i class="fa fa-map-marker"></i> {{ e.ville }}, Togo
                                     </div>
-                                    <p style="color: #707070; line-height: 1.5; font-size: 14px;">{{ e.desc }}</p>
+                                    <p style="color: #707070; line-height: 1.5; font-size: 14px;">
+                                        {{ e.localisation|length > 100 ? e.localisation|slice(0, 100) ~ '...' : e.localisation }}
+                                    </p>
                                 </div>
 
                                 {# Bouton #}
                                 <div class="course-author" style="border-top: 1px solid #eee; padding-top: 20px; margin-top: auto;">
-                                    <a href="#" class="site-btn btn-sm" style="border-radius: 30px; width: 100%; text-align: center;">
+                                    <a href="{{ path('app_etablissement_show', {'id': e.id}) }}" class="site-btn btn-sm" style="border-radius: 30px; width: 100%; text-align: center;">
                                         Voir les filières
                                     </a>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                {% else %}
+                    <div class="col-12 text-center">
+                        <p class="text-muted">Aucun établissement répertorié pour le moment.</p>
                     </div>
                 {% endfor %}
             </div>

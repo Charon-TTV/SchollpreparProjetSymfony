@@ -1,0 +1,128 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Gestion des Filières - SchoolPrepar{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="m-0 text-primary font-weight-bold">
+                                <i class="feather icon-book mr-2"></i>Liste des Filières Académiques
+                            </h5>
+                            <p class="text-muted small mb-0">Gérez les programmes et spécialités d'enseignement</p>
+                        </div>
+                        <a href="{{ path('app_admin_filiere_new') }}" class="btn btn-primary btn-sm rounded-pill px-4 shadow-sm">
+                            <i class="feather icon-plus"></i> Ajouter une filière
+                        </a>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th class="border-top-0" style="width: 50px;">#</th>
+                                    <th class="border-top-0">Aperçu</th>
+                                    <th class="border-top-0">Nom de la filière</th>
+                                    <th class="border-top-0">Description</th>
+                                    <th class="border-top-0 text-center" style="width: 180px;">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for filiere in filieres %}
+                                    <tr>
+                                        <td class="text-muted font-weight-bold">{{ loop.index }}</td>
+                                        <td>
+                                            {% if filiere.image %}
+                                                <img src="{{ asset('uploads/images/' ~ filiere.image) }}"
+                                                     alt="{{ filiere.nom }}"
+                                                     class="rounded-circle shadow-xs"
+                                                     style="width: 45px; height: 45px; object-fit: cover; border: 2px solid #f8f9fa;">
+                                            {% else %}
+                                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center text-muted"
+                                                     style="width: 45px; height: 45px; border: 1px dashed #dee2e6;">
+                                                    <i class="feather icon-image small"></i>
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <h6 class="m-0 font-weight-bold text-dark">{{ filiere.nom }}</h6>
+                                            <small class="text-muted">Code: FIL-{{ filiere.id }}</small>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0 text-muted small" style="max-width: 300px; line-height: 1.4;">
+                                                {{ filiere.description|length > 80 ? filiere.description|slice(0, 80) ~ '...' : filiere.description }}
+                                            </p>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group">
+                                                <a href="{{ path('app_admin_filiere_show', {'id': filiere.id}) }}"
+                                                   class="btn btn-sm btn-outline-primary border-0 rounded-circle" title="Détails">
+                                                    <i class="feather icon-eye"></i>
+                                                </a>
+                                                <a href="{{ path('app_admin_filiere_edit', {'id': filiere.id}) }}"
+                                                   class="btn btn-sm btn-outline-info border-0 rounded-circle" title="Modifier">
+                                                    <i class="feather icon-edit"></i>
+                                                </a>
+
+                                                {# Formulaire de suppression sécurisé par Token #}
+                                                <form method="post" action="{{ path('app_admin_filiere_delete', {'id': filiere.id}) }}"
+                                                      style="display:inline-block"
+                                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette filière ?');">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ filiere.id) }}">
+                                                    <button class="btn btn-sm btn-outline-danger border-0 rounded-circle">
+                                                        <i class="feather icon-trash-2"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="5" class="text-center py-5">
+                                            <div class="text-muted">
+                                                <i class="feather icon-layers h3 d-block mb-3"></i>
+                                                Aucune filière n'a été trouvée dans la base de données.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .shadow-xs { box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .align-middle td { vertical-align: middle !important; }
+
+        /* Conteneur des boutons */
+        .btn-group .btn {
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 3px;
+            transition: all 0.2s ease-in-out;
+            background-color: transparent !important; /* On évite le fond Bootstrap par défaut */
+        }
+
+        /* Style spécifique au survol pour éviter la disparition */
+        .btn-group .btn-outline-primary:hover { color: #7267EF !important; background-color: rgba(114, 103, 239, 0.1) !important; transform: scale(1.1); }
+        .btn-group .btn-outline-info:hover { color: #11c15b !important; background-color: rgba(17, 193, 91, 0.1) !important; transform: scale(1.1); }
+        .btn-group .btn-outline-danger:hover { color: #ff5252 !important; background-color: rgba(255, 82, 82, 0.1) !important; transform: scale(1.1); }
+
+        /* On s'assure que l'icône prend la couleur du parent */
+        .btn-group .btn i {
+            font-size: 1.1rem;
+        }
+    </style>
+{% endblock %}

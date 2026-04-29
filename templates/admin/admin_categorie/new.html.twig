@@ -1,0 +1,20 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Nouvelle Catégorie{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-6">
+                <div class="card border-0 shadow-sm mt-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 text-primary font-weight-bold">Créer une nouvelle catégorie</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        {{ include('admin/admin_categorie/_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

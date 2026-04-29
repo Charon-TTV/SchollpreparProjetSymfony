@@ -1,0 +1,100 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}{{ etablissement.nom }} - SchoolPrepar{% endblock %}
+
+{% block body %}
+    {# 1. Header de page #}
+    <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/1.jpg') }}" style="height: 180px;">
+        <div class="container">
+            {# Correction navigation : Couleurs sombres pour la lisibilité sur fond clair #}
+            <div class="site-breadcrumb" style="color: #252525;">
+                <a href="{{ path('app_home') }}" style="color: #d82a2e; font-weight: 600;">Accueil</a>
+                <span style="color: #252525; margin: 0 10px;">/</span>
+                <a href="{{ path('app_etablissement_index') }}" style="color: #d82a2e; font-weight: 600;">Établissements</a>
+                <span style="color: #252525; margin: 0 10px;">/</span>
+                <span style="color: #707070;">{{ etablissement.nom }}</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="single-course-section spad" style="background: #fdfdfd; padding-top: 60px;">
+        <div class="container">
+            <div class="row">
+
+                {# COLONNE GAUCHE #}
+                <div class="col-lg-8">
+
+                    {# Bloc 1 : Identité #}
+                    <div class="card border-0 shadow-sm mb-4" style="border-radius: 10px; background: #fff;">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge px-3 py-1 mr-3" style="border-radius: 4px; font-size: 10px; background: #d82a2e; color: #fff;">
+                                    {{ etablissement.type|upper }}
+                                </span>
+                                <h2 class="m-0" style="font-weight: 700; color: #252525; font-size: 24px;">{{ etablissement.nom }}</h2>
+                            </div>
+                            <p class="text-muted mb-0 small">
+                                <i class="fa fa-map-marker mr-2"></i> {{ etablissement.localisation }}, {{ etablissement.ville }}
+                            </p>
+                        </div>
+                    </div>
+
+                    {# Bloc 2 : Image (Plus petite, sans fond vitré/flouté) #}
+                    <div class="card border-0 shadow-sm mb-4" style="border-radius: 10px; overflow: hidden; background: #fff;">
+                        <div style="height: 300px; width: 100%; display: flex; align-items: center; justify-content: center; padding: 20px;">
+                            <img src="{{ etablissement.image ? asset('uploads/images/' ~ etablissement.image) : asset('assets/front/img/categories/default-big.jpg') }}"
+                                 alt="{{ etablissement.nom }}"
+                                 style="max-width: 100%; max-height: 100%; object-fit: contain; border: 1px solid #eee; border-radius: 5px;">
+                        </div>
+                    </div>
+
+                    {# Bloc 3 : Présentation #}
+                    <div class="card border-0 shadow-sm mb-4" style="border-radius: 10px;">
+                        <div class="card-body p-4">
+                            <h5 class="mb-3" style="font-weight: 700; color: #252525;">À propos</h5>
+                            <div style="font-size: 15px; line-height: 1.6; color: #666;">
+                                <p>L'établissement <strong>{{ etablissement.nom }}</strong> est situé à {{ etablissement.ville }}.</p>
+                                <p>Il offre des programmes de formation adaptés aux besoins du marché local et international, garantissant une insertion professionnelle aux étudiants.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# COLONNE DROITE #}
+                <div class="col-lg-4">
+                    {# Widget Filières #}
+                    <div class="card border-0 shadow-sm mb-4" style="border-radius: 10px;">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h6 style="font-weight: 700; color: #252525; text-transform: uppercase; font-size: 13px; letter-spacing: 1px;">
+                                Filières disponibles
+                            </h6>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="filiere-stack">
+                                {% for filiere in etablissement.filieres %}
+                                    <div class="p-3 mb-2" style="background: #fcfcfc; border: 1px solid #f1f1f1; border-radius: 6px;">
+                                        <h6 class="mb-1" style="font-weight: 600; font-size: 13px; color: #252525;">{{ filiere.nom }}</h6>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="text-muted" style="font-size: 11px;">{{ filiere.categorie ? filiere.categorie.nom : 'Général' }}</span>
+                                            <a href="{{ path('app_filiere_show', {'id': filiere.id}) }}" style="color: #d82a2e; font-size: 11px; font-weight: 700;">
+                                                VOIR <i class="fa fa-angle-right"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted small italic text-center">Aucune filière listée.</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Bouton Contact #}
+                    <a href="#" class="site-btn btn-sm w-100 shadow-sm" style="border-radius: 6px; background: #252525; padding: 15px;">
+                        Contacter l'établissement
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,143 +1,93 @@
 {% extends 'front/base.html.twig' %}
 
-{% block title %}Détails Filière - SchoolPrepar{% endblock %}
+{% block title %}{{ filiere.nom }} - SchoolPrepar{% endblock %}
 
 {% block body %}
-    {# 1. Simulation de la base de données (Tableau identique à l'index) #}
-    {% set filieres = [
-        {'id': 1, 'nom': 'Génie Logiciel', 'desc': 'Concevez les logiciels et applications de demain.', 'img': '1.jpg', 'cat': 'Développement'},
-        {'id': 2, 'nom': 'Développement Web', 'desc': 'Maîtrisez les technologies front et back-end.', 'img': '2.jpg', 'cat': 'Web'},
-        {'id': 3, 'nom': 'Cyber Sécurité', 'desc': 'Devenez le gardien des données et des systèmes.', 'img': '3.jpg', 'cat': 'Sécurité'},
-        {'id': 4, 'nom': 'Intelligence Artificielle', 'desc': 'Explorez le machine learning et le big data.', 'img': '4.jpg', 'cat': 'Data'},
-        {'id': 5, 'nom': 'Réseaux & Télécoms', 'desc': 'Gérez les infrastructures de communication.', 'img': '5.jpg', 'cat': 'Réseaux'},
-        {'id': 6, 'nom': 'Design Numérique', 'desc': 'Créez des expériences utilisateurs uniques.', 'img': '6.jpg', 'cat': 'Design'},
-        {'id': 7, 'nom': 'Cloud Computing', 'desc': 'Déployez des solutions sur des serveurs distants.', 'img': '7.jpg', 'cat': 'Infrastructure'},
-        {'id': 8, 'nom': 'Internet des Objets (IoT)', 'desc': 'Connectez le monde physique au numérique.', 'img': '8.jpg', 'cat': 'Innovation'}
-    ] %}
-
-    {# 2. Recherche de la filière correspondante #}
-    {% set filiere = null %}
-    {% for f in filieres %}
-        {% if f.id == id %}
-            {% set filiere = f %}
-        {% endif %}
-    {% endfor %}
-
-    {% if filiere %}
-        {# 3. En-tête de la page avec Breadcrumb #}
-        <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/2.jpg') }}">
-            <div class="container">
-                <div class="site-breadcrumb">
-                    <a href="{{ path('app_home') }}">Accueil</a> /
-                    <a href="{{ path('app_filiere_index') }}">Filières</a> /
-                    <span>{{ filiere.nom }}</span>
-                </div>
+    <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/2.jpg') }}">
+        <div class="container">
+            <div class="site-breadcrumb">
+                <a href="{{ path('app_home') }}">Accueil</a> /
+                <a href="{{ path('app_filiere_index') }}">Filières</a> /
+                <span>{{ filiere.nom }}</span>
             </div>
-        </section>
-
-        <section class="single-course-section spad">
-            <div class="container">
-                <div class="row">
-                    {# COLONNE GAUCHE : INFOS FILIÈRE #}
-                    <div class="col-lg-8">
-                        <div class="course-meta">
-                            <div class="course-category" style="background: #d82a2e; color: #fff; display: inline-block; padding: 5px 15px; border-radius: 50px; margin-bottom: 10px;">
-                                {{ filiere.cat }}
-                            </div>
-                            <h2 style="font-size: 45px; font-weight: 700; color: #252525; margin-bottom: 20px;">
-                                {{ filiere.nom }}
-                            </h2>
-                        </div>
-
-                        <div class="course-preview" style="margin-bottom: 40px; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                            <img src="{{ asset('assets/front/img/courses/' ~ filiere.img) }}" alt="{{ filiere.nom }}" style="width: 100%;">
-                        </div>
-
-                        <div class="course-description">
-                            <h4 style="margin-bottom: 20px; color: #d82a2e;">Description du programme</h4>
-                            <p>{{ filiere.desc }}</p>
-                            <p>Cette formation sur SchoolPrepar vous garantit un accès à des contenus pédagogiques de qualité, validés par les meilleurs établissements du pays.</p>
-
-                            <div class="row mt-5">
-                                <div class="col-md-6">
-                                    <h5 style="margin-bottom: 15px;"><i class="fa fa-check-circle" style="color: #d82a2e;"></i> Compétences visées</h5>
-                                    <ul style="list-style: none; padding-left: 0;">
-                                        <li><i class="fa fa-angle-right"></i> Analyse des besoins</li>
-                                        <li><i class="fa fa-angle-right"></i> Expertise technique approfondie</li>
-                                        <li><i class="fa fa-angle-right"></i> Gestion de projet</li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-6">
-                                    <h5 style="margin-bottom: 15px;"><i class="fa fa-briefcase" style="color: #d82a2e;"></i> Carrière</h5>
-                                    <ul style="list-style: none; padding-left: 0;">
-                                        <li><i class="fa fa-angle-right"></i> Expert Consultant</li>
-                                        <li><i class="fa fa-angle-right"></i> Chef de projet junior</li>
-                                        <li><i class="fa fa-angle-right"></i> Responsable technique</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {# COLONNE DROITE : BARRE LATÉRALE ÉTABLISSEMENTS #}
-                    <div class="col-lg-4">
-                        <div class="course-sidebar" style="background: #f8f9fa; padding: 30px; border-radius: 15px; border: 1px solid #eee;">
-                            <div class="sb-widget">
-                                <h4 class="sb-title" style="border-left: 4px solid #d82a2e; padding-left: 15px; margin-bottom: 25px; font-weight: 700;">
-                                    Où étudier cette filière ?
-                                </h4>
-
-                                <div class="etablissement-cards">
-                                    {# Carte Établissement 1 #}
-                                    <div class="school-card" style="background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px;">
-                                        <div class="d-flex align-items-center">
-                                            <div class="school-logo" style="width: 50px; height: 50px; background: #fdf2f2; border-radius: 8px; margin-right: 15px; display: flex; align-items: center; justify-content: center;">
-                                                <i class="fa fa-university" style="color: #d82a2e; font-size: 20px;"></i>
-                                            </div>
-                                            <div>
-                                                <h6 style="margin: 0; font-weight: 700;">IPNET Institute</h6>
-                                                <small class="text-muted"><i class="fa fa-map-marker"></i> Lomé, Togo</small>
-                                            </div>
-                                        </div>
-                                        <hr style="margin: 10px 0;">
-                                        <a href="{{ path('app_etablissement_index') }}" style="font-size: 11px; color: #d82a2e; font-weight: 700; text-transform: uppercase; text-decoration: none;">
-                                            Voir la fiche école <i class="fa fa-angle-right"></i>
-                                        </a>
-                                    </div>
-
-                                    {# Carte Établissement 2 #}
-                                    <div class="school-card" style="background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px;">
-                                        <div class="d-flex align-items-center">
-                                            <div class="school-logo" style="width: 50px; height: 50px; background: #fdf2f2; border-radius: 8px; margin-right: 15px; display: flex; align-items: center; justify-content: center;">
-                                                <i class="fa fa-university" style="color: #d82a2e; font-size: 20px;"></i>
-                                            </div>
-                                            <div>
-                                                <h6 style="margin: 0; font-weight: 700;">ESA Lomé</h6>
-                                                <small class="text-muted"><i class="fa fa-map-marker"></i> Agoè, Togo</small>
-                                            </div>
-                                        </div>
-                                        <hr style="margin: 10px 0;">
-                                        <a href="{{ path('app_etablissement_index') }}" style="font-size: 11px; color: #d82a2e; font-weight: 700; text-transform: uppercase; text-decoration: none;">
-                                            Voir la fiche école <i class="fa fa-angle-right"></i>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div class="promo-box" style="background: #252525; color: #fff; padding: 20px; border-radius: 10px; margin-top: 30px; text-align: center;">
-                                    <p style="font-size: 13px; margin-bottom: 15px; opacity: 0.8;">Vous représentez un établissement ?</p>
-                                    <a href="#" class="site-btn btn-sm" style="background: #d82a2e; border: none; font-size: 11px; width: 100%;">Inscrire votre école</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    {% else %}
-        {# Page d'erreur si l'ID n'existe pas #}
-        <div class="container spad text-center">
-            <h2 style="margin-bottom: 20px;">Oups ! Filière introuvable.</h2>
-            <a href="{{ path('app_filiere_index') }}" class="site-btn">Retour à la liste</a>
         </div>
-    {% endif %}
+    </section>
+
+    <section class="single-course-section spad">
+        <div class="container">
+            <div class="row">
+                {# COLONNE GAUCHE : DÉTAILS DU PROGRAMME #}
+                <div class="col-lg-8">
+                    <div class="course-meta">
+                        <div class="course-category" style="background: #d82a2e; color: #fff; display: inline-block; padding: 6px 20px; border-radius: 50px; font-weight: 600; margin-bottom: 15px;">
+                            {{ filiere.categorie ? filiere.categorie.nom : 'Formation Académique' }}
+                        </div>
+                        <h2 style="font-size: 42px; font-weight: 800; color: #252525; margin-bottom: 25px;">
+                            {{ filiere.nom }}
+                        </h2>
+                    </div>
+
+                    <div class="course-preview" style="margin-bottom: 35px; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1);">
+                        <img src="{{ filiere.image ? asset('uploads/images/' ~ filiere.image) : asset('assets/front/img/courses/default-big.jpg') }}"
+                             alt="{{ filiere.nom }}" style="width: 100%; height: 450px; object-fit: cover;">
+                    </div>
+
+                    <div class="course-description p-2">
+                        <h4 style="margin-bottom: 20px; color: #d82a2e; font-weight: 700;">Présentation de la filière</h4>
+                        <div style="font-size: 16px; line-height: 1.8; color: #555;">
+                            {{ filiere.description|nl2br }}
+                        </div>
+                    </div>
+                </div>
+
+                {# COLONNE DROITE : ÉTABLISSEMENTS PARTENAIRES #}
+                <div class="col-lg-4">
+                    <div class="course-sidebar" style="background: #fff; padding: 35px; border-radius: 20px; border: 1px solid #f0f0f0; box-shadow: 0 5px 20px rgba(0,0,0,0.03);">
+                        <div class="sb-widget">
+                            <h4 class="sb-title" style="border-left: 5px solid #d82a2e; padding-left: 15px; margin-bottom: 30px; font-weight: 700;">
+                                Universités & Écoles
+                            </h4>
+
+                            <div class="etablissement-cards">
+                                {# Boucle sur les établissements liés en BDD #}
+                                {% for ecole in filiere.etablissements %}
+                                    <div class="school-card" style="background: #fbfbfb; padding: 20px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 20px; transition: 0.3s;">
+                                        <div class="d-flex align-items-center">
+                                            <div class="school-logo" style="width: 60px; height: 60px; background: #fff; border-radius: 10px; margin-right: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid #f0f0f0;">
+                                                {% if ecole.image %}
+                                                    <img src="{{ asset('uploads/images/' ~ ecole.image) }}" alt="{{ ecole.nom }}" style="max-width: 100%;">
+                                                {% else %}
+                                                    <i class="fa fa-university" style="color: #d82a2e; font-size: 24px;"></i>
+                                                {% endif %}
+                                            </div>
+                                            <div>
+                                                <h6 style="margin: 0; font-weight: 700; color: #252525;">{{ ecole.nom }}</h6>
+                                                <small class="text-muted"><i class="fa fa-map-marker text-danger"></i> {{ ecole.ville }}, Togo</small>
+                                            </div>
+                                        </div>
+                                        <hr style="margin: 15px 0;">
+                                        {# Lien vers la fiche de l'école (à créer) #}
+                                        <a href="{{ path('app_etablissement_index') }}" style="font-size: 12px; color: #d82a2e; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
+                                            Profil de l'école <i class="fa fa-angle-right"></i>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="text-center py-4 bg-light rounded" style="border: 1px dashed #ccc;">
+                                        <p class="text-muted small mb-0">Aucun établissement répertorié pour cette formation.</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            {# Box d'appel à l'action #}
+                            <div class="promo-box" style="background: #252525; color: #fff; padding: 25px; border-radius: 15px; margin-top: 40px; text-align: center;">
+                                <h6 class="text-white mb-2">Besoin d'aide ?</h6>
+                                <p style="font-size: 13px; opacity: 0.8; margin-bottom: 20px;">Nos conseillers vous orientent gratuitement vers l'école idéale.</p>
+                                <a href="#" class="site-btn btn-sm" style="background: #d82a2e; width: 100%; border-radius: 30px;">Nous contacter</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

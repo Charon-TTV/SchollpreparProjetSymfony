@@ -1,0 +1,22 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Nouvel Établissement{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-7">
+                <div class="card border-0 shadow-sm mt-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 text-primary font-weight-bold">
+                            <i class="feather icon-plus-circle mr-2"></i>Enregistrer un établissement
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        {{ include('admin/admin_etablissement/_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

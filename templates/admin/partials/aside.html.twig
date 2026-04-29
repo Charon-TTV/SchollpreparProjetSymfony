@@ -1,71 +1,51 @@
 <nav class="pcoded-navbar">
     <div class="navbar-wrapper">
         <div class="navbar-content scroll-div">
-            <div class="">
-                <div class="main-menu-header">
-                    {# Photo de profil avec bordure stylisée #}
-                    <img class="img-radius" src="{{ asset('assets/admin/images/user/avatar.jpeg') }}" alt="User-Profile-Image" style="border: 2px solid rgba(255,255,255,0.2); padding: 2px;">
-
-                    <div class="user-details">
-                        <span class="font-weight-bold">Charôn VLADIMIR</span>
-                        <div id="more-details">
-                            <small class="text-muted">Super Administrateur</small>
-                            <i class="fa fa-caret-down m-l-5"></i>
-                        </div>
+            <div class="main-menu-header" style="background: rgba(63, 77, 103, 0.05); padding: 25px 15px;">
+                <img class="img-radius" src="{{ asset('assets/admin/images/user/avatar.jpeg') }}" alt="User" style="width: 50px; border: 3px solid #7267EF;">
+                <div class="user-details">
+                    <span class="font-weight-bold text-white">Charôn VLADIMIR</span>
+                    <div id="more-details">
+                        <small class="text-muted">Administrateur</small>
+                        <i class="fa fa-caret-down m-l-5"></i>
                     </div>
-                </div>
-
-                {# Le menu déroulant qui s'affiche quand on clique sur le nom #}
-                <div class="collapse" id="nav-user-link">
-                    <ul class="list-unstyled">
-                        <li class="list-group-item" style="background: transparent; border: none; padding: 10px 20px;">
-                            <a href="#" style="color: #adadad; font-size: 13px; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#adadad'">
-                                <i class="feather icon-user m-r-10"></i>Mon Profil
-                            </a>
-                        </li>
-                        <li class="list-group-item" style="background: transparent; border: none; padding: 10px 20px;">
-                            <a href="#" style="color: #adadad; font-size: 13px; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#adadad'">
-                                <i class="feather icon-settings m-r-10"></i>Paramètres
-                            </a>
-                        </li>
-                        <li class="list-group-item" style="background: transparent; border: none; padding: 10px 20px;">
-                            <a href="#" style="color: #d82a2e; font-size: 13px; text-decoration: none; font-weight: bold;">
-                                <i class="feather icon-power m-r-10"></i>Déconnexion
-                            </a>
-                        </li>
-                    </ul>
                 </div>
             </div>
 
             <ul class="nav pcoded-inner-navbar">
-                <li class="nav-item pcoded-menu-caption">
-                    <label>Navigation</label>
-                </li>
+                <li class="nav-item pcoded-menu-caption"><label>Dashboard</label></li>
                 <li class="nav-item">
                     <a href="{{ path('admin_dashboard') }}" class="nav-link">
                         <span class="pcoded-micon"><i class="feather icon-home"></i></span>
-                        <span class="pcoded-mtext">Dashboard</span>
+                        <span class="pcoded-mtext">Vue d'ensemble</span>
                     </a>
                 </li>
-                <li class="nav-item pcoded-menu-caption">
-                    <label>Gestion</label>
+
+                <li class="nav-item pcoded-menu-caption"><label>Gestion des données</label></li>
+                <li class="nav-item">
+                    <a href="{{ path('app_admin_categorie_index') }}" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-layers"></i></span>
+                        <span class="pcoded-mtext">Catégories</span>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ path('admin_filiere_index') }}" class="nav-link">
+                    <a href="{{ path('app_admin_filiere_index') }}" class="nav-link">
                         <span class="pcoded-micon"><i class="feather icon-book"></i></span>
                         <span class="pcoded-mtext">Filières</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ path('admin_etablissement_index') }}" class="nav-link">
+                    <a href="{{ path('app_admin_etablissement_index') }}" class="nav-link">
                         <span class="pcoded-micon"><i class="feather icon-map"></i></span>
                         <span class="pcoded-mtext">Établissements</span>
                     </a>
                 </li>
-                <li class="nav-item mt-5">
-                    <a href="{{ path('app_home') }}" class="nav-link" target="_blank">
-                        <span class="pcoded-micon"><i class=\"feather icon-eye\"></i></span>
-                        <span class="pcoded-mtext">Voir le site</span>
+
+                <li class="nav-item pcoded-menu-caption"><label>Aperçu</label></li>
+                <li class="nav-item">
+                    <a href="{{ path('app_home') }}" class="nav-link" target="_blank" style="background: rgba(255,255,255,0.05); margin: 10px; border-radius: 8px;">
+                        <span class="pcoded-micon"><i class="feather icon-external-link"></i></span>
+                        <span class="pcoded-mtext text-success font-weight-bold">Accéder au site</span>
                     </a>
                 </li>
             </ul>

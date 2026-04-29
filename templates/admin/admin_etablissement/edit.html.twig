@@ -1,0 +1,22 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Modifier Établissement{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-7">
+                <div class="card border-0 shadow-sm mt-4 border-left-info" style="border-left: 5px solid #00bcd4 !important;">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 text-info font-weight-bold">
+                            <i class="feather icon-edit mr-2"></i>Modifier les informations
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        {{ include('admin/admin_etablissement/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

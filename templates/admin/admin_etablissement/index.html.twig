@@ -1,0 +1,113 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Gestion des Établissements - SchoolPrepar{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="m-0 text-primary font-weight-bold">
+                                <i class="feather icon-home mr-2"></i>Liste des Établissements
+                            </h5>
+                            <p class="text-muted small mb-0">Gérez les universités et centres de formation au Togo</p>
+                        </div>
+                        <a href="{{ path('app_admin_etablissement_new') }}" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
+                            <i class="feather icon-plus"></i> Ajouter un établissement
+                        </a>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th class="border-top-0" style="width: 50px;">#</th>
+                                    <th class="border-top-0">Aperçu</th>
+                                    <th class="border-top-0">Nom & Ville</th>
+                                    <th class="border-top-0">Localisation</th>
+                                    <th class="border-top-0">Type</th>
+                                    <th class="border-top-0 text-center" style="width: 180px;">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for etablissement in etablissements %}
+                                    <tr>
+                                        <td class="text-muted font-weight-bold">{{ loop.index }}</td>
+                                        <td>
+                                            {% if etablissement.image %}
+                                                <img src="{{ asset('uploads/images/' ~ etablissement.image) }}"
+                                                     alt="{{ etablissement.nom }}"
+                                                     class="rounded-lg shadow-xs"
+                                                     style="width: 45px; height: 45px; object-fit: cover; border: 2px solid #f8f9fa;">
+                                            {% else %}
+                                                <div class="rounded-lg bg-light d-flex align-items-center justify-content-center text-muted"
+                                                     style="width: 45px; height: 45px; border: 1px dashed #dee2e6;">
+                                                    <i class="feather icon-image small"></i>
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="font-weight-bold text-dark">{{ etablissement.nom }}</div>
+                                            <small class="text-info"><i class="feather icon-navigation"></i> {{ etablissement.ville }}</small>
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">
+                                                <i class="feather icon-map-pin mr-1"></i>{{ etablissement.localisation }}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            {% if etablissement.type|lower == 'public' %}
+                                                <span class="badge badge-pill badge-light-success px-3 py-2">Public</span>
+                                            {% else %}
+                                                <span class="badge badge-pill badge-light-warning px-3 py-2">Privé</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group">
+                                                <a href="{{ path('app_admin_etablissement_show', {'id': etablissement.id}) }}"
+                                                   class="btn btn-sm btn-outline-primary border-0" title="Voir">
+                                                    <i class="feather icon-eye"></i>
+                                                </a>
+                                                <a href="{{ path('app_admin_etablissement_edit', {'id': etablissement.id}) }}"
+                                                   class="btn btn-sm btn-outline-info border-0" title="Modifier">
+                                                    <i class="feather icon-edit"></i>
+                                                </a>
+
+                                                <form method="post" action="{{ path('app_admin_etablissement_delete', {'id': etablissement.id}) }}"
+                                                      style="display:inline-block"
+                                                      onsubmit="return confirm('Supprimer cet établissement ?');">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ etablissement.id) }}">
+                                                    <button class="btn btn-sm btn-outline-danger border-0">
+                                                        <i class="feather icon-trash-2"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="6" class="text-center py-5 text-muted">
+                                            <i class="feather icon-home h3 d-block"></i>
+                                            Aucun établissement trouvé.
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .shadow-xs { box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .badge-light-success { background-color: #e6f9f0; color: #00c292; }
+        .badge-light-warning { background-color: #fff8e6; color: #fec107; }
+        .align-middle td { vertical-align: middle !important; }
+    </style>
+{% endblock %}

@@ -1,0 +1,124 @@
+{{ form_start(form) }}
+<div class="row">
+    {# Nom de la filière #}
+    <div class="col-md-12 form-group mb-3">
+        {{ form_label(form.nom, 'Nom de la filière', {'label_attr': {'class': 'form-label font-weight-bold text-dark'}}) }}
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text bg-light border-right-0" style="border-radius: 30px 0 0 30px;">
+                    <i class="feather icon-book text-primary"></i>
+                </span>
+            </div>
+            {{ form_widget(form.nom, {'attr': {'class': 'form-control border-left-0', 'placeholder': 'Ex: Informatique de Gestion...', 'style': 'border-radius: 0 30px 30px 0; height: 48px;'}}) }}
+        </div>
+        {{ form_errors(form.nom) }}
+    </div>
+
+    {# Catégorie parente (Nouveau style Dropdown Checkbox) #}
+    <div class="col-md-12 form-group mb-3">
+        {{ form_label(form.categorie, 'Catégorie parente', {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        <div class="dropdown custom-multiselect">
+            <button class="btn btn-light btn-block dropdown-toggle d-flex justify-content-between align-items-center bg-white border shadow-none"
+                    type="button" id="dropdownCat" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    style="border-radius: 30px; height: 48px; padding: 0 20px;">
+                <span id="selected-cat-count" class="text-muted">Choisir la catégorie...</span>
+            </button>
+            <div class="dropdown-menu w-100 shadow-lg border-0 p-3" aria-labelledby="dropdownCat"
+                 style="border-radius: 20px; max-height: 250px; overflow-y: auto;">
+                {% for child in form.categorie %}
+                    <div class="custom-control custom-checkbox mb-2 dropdown-item-filiere py-1">
+                        {{ form_widget(child, {'attr': {'class': 'custom-control-input'}}) }}
+                        {{ form_label(child, null, {'label_attr': {'class': 'custom-control-label d-block w-100', 'style': 'cursor:pointer'}}) }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {{ form_errors(form.categorie) }}
+    </div>
+
+    {# Description #}
+    <div class="col-md-12 form-group mb-3">
+        {{ form_label(form.description, 'Description détaillée', {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Décrivez les débouchés...', 'style': 'border-radius: 20px; min-height: 120px;'}}) }}
+        {{ form_errors(form.description) }}
+    </div>
+
+    {# Image #}
+    <div class="col-md-12 form-group mb-4">
+        {{ form_label(form.image, 'Image d\'illustration', {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        <div class="custom-file-container">
+            <label class="upload-zone" for="{{ form.image.vars.id }}" style="border-radius: 30px;">
+                <i class="feather icon-image h1 text-primary"></i>
+                <p class="mb-0 font-weight-bold text-dark">Cliquez pour choisir une illustration</p>
+                <small class="text-muted">JPG, PNG ou WEBP (Max 2Mo)</small>
+                {{ form_widget(form.image, {'attr': {'class': 'd-none'}}) }}
+            </label>
+        </div>
+        <div id="file-name-display" class="text-center text-primary font-weight-bold small mt-2"></div>
+        {{ form_errors(form.image) }}
+    </div>
+</div>
+
+{# Actions #}
+<div class="pt-4 border-top d-flex justify-content-between">
+    <a href="{{ path('app_admin_filiere_index') }}" class="btn btn-outline-secondary px-5 rounded-pill shadow-none">
+        <i class="feather icon-x mr-1"></i> Annuler
+    </a>
+    <button type="submit" class="btn btn-primary px-5 rounded-pill shadow-sm transition-hover font-weight-bold">
+        <i class="feather icon-check-circle mr-1"></i> {{ button_label|default('Enregistrer') }}
+    </button>
+</div>
+{{ form_end(form) }}
+
+<style>
+    .upload-zone {
+        border: 2px dashed #00c292;
+        background: #f0faf7;
+        padding: 40px;
+        text-align: center;
+        cursor: pointer;
+        display: block;
+        transition: 0.3s;
+    }
+    .upload-zone:hover {
+        background: #e6f7f3;
+        border-color: #00a37b;
+        transform: scale(1.01);
+    }
+
+    .dropdown-item-filiere:hover { background: #f8f9fa; border-radius: 10px; }
+    .custom-control-input:checked ~ .custom-control-label {
+        color: #7267EF;
+        font-weight: bold;
+    }
+    .dropdown-toggle::after { color: #7267EF; }
+
+    .transition-hover:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(114, 103, 239, 0.2) !important;
+    }
+</style>
+
+<script>
+    // Affichage nom fichier
+    document.getElementById('{{ form.image.vars.id }}').addEventListener('change', function(e){
+        var fileName = e.target.files[0] ? e.target.files[0].name : "";
+        document.getElementById('file-name-display').innerHTML = fileName ?
+            '<i class="feather icon-file text-success mr-1"></i>' + fileName : "";
+    });
+
+    // Compteur catégories
+    const catCheckboxes = document.querySelectorAll('.custom-multiselect .custom-control-input');
+    const catDisplay = document.getElementById('selected-cat-count');
+
+    function updateCatCount() {
+        const checkedCount = Array.from(catCheckboxes).filter(i => i.checked).length;
+        catDisplay.innerText = checkedCount > 0 ?
+            checkedCount + (checkedCount > 1 ? " catégories sélectionnées" : " catégorie sélectionnée") :
+            "Choisir la catégorie...";
+        catDisplay.classList.toggle('text-dark', checkedCount > 0);
+    }
+
+    catCheckboxes.forEach(cb => cb.addEventListener('change', updateCatCount));
+    updateCatCount();
+</script>

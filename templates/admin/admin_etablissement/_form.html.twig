@@ -1,0 +1,133 @@
+{{ form_start(form) }}
+<div class="row">
+    {# Nom de l'établissement #}
+    <div class="col-md-12 form-group mb-3">
+        {{ form_label(form.nom, 'Nom de l\'établissement', {'label_attr': {'class': 'form-label font-weight-bold text-dark'}}) }}
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text bg-light border-right-0" style="border-radius: 30px 0 0 30px;">
+                    <i class="feather icon-home text-primary"></i>
+                </span>
+            </div>
+            {{ form_widget(form.nom, {'attr': {'class': 'form-control border-left-0', 'style': 'border-radius: 0 30px 30px 0; height: 48px;'}}) }}
+        </div>
+    </div>
+
+    {# Ville et Type #}
+    <div class="col-md-6 form-group mb-3">
+        {{ form_label(form.ville, 'Ville', {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        {{ form_widget(form.ville, {'attr': {'class': 'form-control rounded-pill', 'style': 'height: 48px;'}}) }}
+    </div>
+    <div class="col-md-6 form-group mb-3">
+        {{ form_label(form.type, 'Type d\'établissement', {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        {{ form_widget(form.type, {'attr': {'class': 'form-control rounded-pill', 'style': 'height: 48px;'}}) }}
+    </div>
+
+    {# Localisation #}
+    <div class="col-md-12 form-group mb-3">
+        {{ form_label(form.localisation, 'Adresse / Quartier', {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        {{ form_widget(form.localisation, {'attr': {'class': 'form-control rounded-pill', 'style': 'height: 48px;'}}) }}
+    </div>
+
+    {# Zone d'Upload Photo #}
+    <div class="col-md-12 form-group mb-4">
+        {{ form_label(form.image, 'Photo / Logo de l\'établissement', {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        <div class="custom-file-container">
+            <label class="upload-zone" for="{{ form.image.vars.id }}" style="border-radius: 30px;">
+                <i class="feather icon-upload-cloud h1 text-primary"></i>
+                <p class="mb-0 font-weight-bold">Cliquez pour choisir une photo</p>
+                <small class="text-muted">JPG, PNG ou WEBP (Max 2Mo)</small>
+                {{ form_widget(form.image, {'attr': {'class': 'd-none'}}) }}
+            </label>
+        </div>
+        <div id="file-name-display" class="text-center text-primary font-weight-bold small mt-2"></div>
+    </div>
+
+    {# Sélection des Filières (Correction Dropdown) #}
+    <div class="col-md-12 form-group mb-4">
+        {{ form_label(form.filieres, 'Sélectionner les filières', {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+
+        <div class="dropdown custom-multiselect">
+            <button class="btn btn-light btn-block dropdown-toggle d-flex justify-content-between align-items-center bg-white border"
+                    type="button" id="dropdownMenuFiliere" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    style="border-radius: 30px; height: 48px; padding: 0 20px;">
+                <span id="selected-count">Choisir les filières...</span>
+            </button>
+            <div class="dropdown-menu w-100 shadow-lg border-0 p-3" aria-labelledby="dropdownMenuFiliere" id="multiselect-menu"
+                 style="border-radius: 20px; max-height: 300px; overflow-y: auto;">
+                {% for child in form.filieres %}
+                    <div class="custom-control custom-checkbox mb-2 py-1 dropdown-item-filiere">
+                        {{ form_widget(child, {'attr': {'class': 'custom-control-input'}}) }}
+                        <label class="custom-control-label d-block w-100" for="{{ child.vars.id }}" style="cursor:pointer">
+                            {{ child.vars.label }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Boutons d'Action #}
+<div class="pt-4 border-top d-flex justify-content-between">
+    <a href="{{ path('app_admin_etablissement_index') }}" class="btn btn-outline-secondary px-5 rounded-pill shadow-none">
+        <i class="feather icon-x mr-1"></i> Annuler
+    </a>
+    <button type="submit" class="btn btn-primary px-5 rounded-pill shadow-sm transition-hover">
+        <i class="feather icon-check-circle mr-1"></i> {{ button_label|default('Enregistrer') }}
+    </button>
+</div>
+{{ form_end(form) }}
+
+<style>
+    .upload-zone {
+        border: 2px dashed #00c292;
+        background: #f0faf7;
+        padding: 40px;
+        text-align: center;
+        cursor: pointer;
+        display: block;
+        transition: 0.3s;
+    }
+    .upload-zone:hover { background: #e6f7f3; border-color: #00a37b; transform: scale(1.01); }
+
+    .dropdown-item-filiere:hover { background: #f8f9fa; border-radius: 10px; }
+    .custom-control-input:checked ~ .custom-control-label {
+        color: #7267EF;
+        font-weight: bold;
+    }
+    .dropdown-toggle::after { color: #7267EF; }
+
+    .transition-hover:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(114, 103, 239, 0.2) !important;
+    }
+</style>
+
+<script>
+    // FIX 1 : Empêcher le menu de se fermer au clic sur une checkbox
+    document.getElementById('multiselect-menu').addEventListener('click', function (e) {
+        e.stopPropagation();
+    });
+
+    // Affichage du nom du fichier image sélectionné
+    document.getElementById('{{ form.image.vars.id }}').addEventListener('change', function(e){
+        var fileName = e.target.files[0] ? e.target.files[0].name : "";
+        document.getElementById('file-name-display').innerHTML = fileName ?
+            '<i class="feather icon-file text-success mr-1"></i>' + fileName : "";
+    });
+
+    // Mise à jour dynamique du compteur de filières
+    const checkboxes = document.querySelectorAll('.custom-multiselect .custom-control-input');
+    const display = document.getElementById('selected-count');
+
+    function updateCount() {
+        const checkedCount = Array.from(checkboxes).filter(i => i.checked).length;
+        display.innerText = checkedCount > 0 ?
+            checkedCount + (checkedCount > 1 ? " filières sélectionnées" : " filière sélectionnée") :
+            "Choisir les filières...";
+    }
+
+    checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
+    updateCount();
+</script>

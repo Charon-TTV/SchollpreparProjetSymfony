@@ -1,0 +1,84 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Détails de la Filière - SchoolPrepar{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
+                {# En-tête avec l'image d'illustration #}
+                {% if filiere.image %}
+                    <div style="width: 100%; height: 250px; overflow: hidden; position: relative;">
+                        <img src="{{ asset('uploads/images/' ~ filiere.image) }}"
+                             alt="{{ filiere.nom }}"
+                             style="width: 100%; height: 100%; object-fit: cover;">
+                        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.7)); padding: 20px;">
+                            <h3 class="text-white m-0">{{ filiere.nom }}</h3>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="bg-light d-flex align-items-center justify-content-center" style="width: 100%; height: 150px; border-bottom: 1px solid #eee;">
+                        <div class="text-center">
+                            <i class="feather icon-image text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-2">Aucune image d'illustration</p>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="card-body p-4">
+                    <div class="row mb-4">
+                        <div class="col-sm-4 text-muted font-weight-bold">Code Identification</div>
+                        <div class="col-sm-8"><span class="badge badge-light-primary">FIL-{{ filiere.id }}</span></div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-sm-4 text-muted font-weight-bold">Nom de la filière</div>
+                        <div class="col-sm-8 text-dark h5 font-weight-bold">{{ filiere.nom }}</div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-sm-4 text-muted font-weight-bold">Description complète</div>
+                        <div class="col-sm-8 text-muted" style="line-height: 1.6;">
+                            {{ filiere.description|default('Aucune description fournie.') }}
+                        </div>
+                    </div>
+
+                    <hr class="my-4 opacity-10">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{{ path('app_admin_filiere_index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                            <i class="feather icon-arrow-left"></i> Retour à la liste
+                        </a>
+
+                        <div>
+                            <a href="{{ path('app_admin_filiere_edit', {'id': filiere.id}) }}" class="btn btn-info btn-sm rounded-pill px-3 mr-2">
+                                <i class="feather icon-edit"></i> Modifier
+                            </a>
+
+                            <div class="d-inline-block">
+                                {{ include('admin/admin_filiere/_delete_form.html.twig') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Widget latéral (Optionnel) #}
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center p-4" style="border-radius: 15px;">
+                <div class="mb-3">
+                    {% if filiere.image %}
+                        <img src="{{ asset('uploads/images/' ~ filiere.image) }}" class="rounded-circle shadow-sm" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #7267EF;">
+                    {% else %}
+                        <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px;">
+                            <i class="feather icon-book text-primary h1 m-0"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <h5 class="font-weight-bold">Filière Académique</h5>
+                <p class="small text-muted">Ce programme est actuellement actif dans le catalogue de SchoolPrepar.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

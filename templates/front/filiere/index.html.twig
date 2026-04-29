@@ -20,7 +20,7 @@
             <div class="search-warp">
                 <div class="section-title text-white">
                     <h2>Trouvez votre futur métier</h2>
-                    <p>Explorez les formations d'avenir adaptées au marché du travail.</p>
+                    <p>Explorez les formations d'avenir adaptées au marché du travail au Togo.</p>
                 </div>
                 <div class="row">
                     <div class="col-md-10 offset-md-1">
@@ -35,36 +35,32 @@
         </div>
     </section>
 
-    {# 3. Grille des Filières Corrigée #}
+    {# 3. Grille des Filières Dynamique #}
     <section class="course-section spad">
         <div class="container">
             <div class="row">
-                {% set filieres = [
-                    {'id': 1, 'nom': 'Génie Logiciel', 'desc': 'Concevez les logiciels et applications de demain.', 'img': '1.jpg', 'cat': 'Développement'},
-                    {'id': 2, 'nom': 'Développement Web', 'desc': 'Maîtrisez les technologies front et back-end.', 'img': '2.jpg', 'cat': 'Web'},
-                    {'id': 3, 'nom': 'Cyber Sécurité', 'desc': 'Devenez le gardien des données et des systèmes.', 'img': '3.jpg', 'cat': 'Sécurité'},
-                    {'id': 4, 'nom': 'Intelligence Artificielle', 'desc': 'Explorez le machine learning et le big data.', 'img': '4.jpg', 'cat': 'Data'},
-                    {'id': 5, 'nom': 'Réseaux & Télécoms', 'desc': 'Gérez les infrastructures de communication.', 'img': '1.jpg', 'cat': 'Réseaux'},
-                    {'id': 6, 'nom': 'Design Numérique', 'desc': 'Créez des expériences utilisateurs uniques.', 'img': '2.jpg', 'cat': 'Design'},
-                    {'id': 7, 'nom': 'Cloud Computing', 'desc': 'Déployez des solutions sur des serveurs distants.', 'img': '3.jpg', 'cat': 'Infrastructure'},
-                    {'id': 8, 'nom': 'Internet des Objets (IoT)', 'desc': 'Connectez le monde physique au numérique.', 'img': '4.jpg', 'cat': 'Innovation'}
-                ] %}
-
+                {# On boucle sur les vraies filières de la BDD #}
                 {% for f in filieres %}
                     <div class="col-lg-4 col-md-6 mb-5 d-flex align-items-stretch">
                         <div class="course-item" style="display: flex; flex-direction: column; width: 100%; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); background: #fff;">
-                            {# Image avec taille fixe #}
+                            {# Image dynamique : priorité à l'image uploadée, sinon image par défaut #}
                             <div class="course-thumb set-bg"
-                                 data-setbg="{{ asset('assets/front/img/courses/' ~ f.img) }}"
+                                 data-setbg="{{ f.image ? asset('uploads/images/' ~ f.image) : asset('assets/front/img/courses/default.jpg') }}"
                                  style="height: 220px; width: 100%;">
-                                <div class="price" style="background: #d82a2e;">{{ f.cat }}</div>
+                                {# Catégorie dynamique #}
+                                <div class="price" style="background: #d82a2e;">
+                                    {{ f.categorie ? f.categorie.nom : 'Formation' }}
+                                </div>
                             </div>
 
                             {# Contenu texte flexible #}
                             <div class="course-info" style="padding: 25px; flex-grow: 1; display: flex; flex-direction: column;">
                                 <div class="course-text" style="flex-grow: 1; min-height: 120px;">
                                     <h5 style="color: #252525; font-weight: 700; margin-bottom: 15px;">{{ f.nom }}</h5>
-                                    <p style="color: #707070; line-height: 1.6;">{{ f.desc }}</p>
+                                    <p style="color: #707070; line-height: 1.6;">
+                                        {# On coupe la description si elle est trop longue pour garder l'alignement #}
+                                        {{ f.description|length > 100 ? f.description|slice(0, 100) ~ '...' : f.description }}
+                                    </p>
                                 </div>
 
                                 {# Pied de carte avec bouton #}
@@ -74,6 +70,14 @@
                                     </a>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                {% else %}
+                    {# Cas où la base de données est vide #}
+                    <div class="col-12 text-center">
+                        <div class="alert alert-light p-5 border">
+                            <i class="fa fa-info-circle fa-2x mb-3 text-muted"></i>
+                            <p>Aucune filière n'est disponible pour le moment. L'administration les ajoutera bientôt.</p>
                         </div>
                     </div>
                 {% endfor %}

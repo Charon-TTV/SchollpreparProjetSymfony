@@ -1,8 +1,14 @@
-<footer class="text-center py-3">
-    <p class="text-muted small">&copy; {{ "now"|date("Y") }} SchoolPrepar - Administration</p>
+<footer class="text-center py-4">
+    {# On garde ta structure simple mais avec une bordure légère pour le côté "pro" #}
+    <hr class="mx-5 opacity-10" style="border-top: 1px solid #e2e5e8;">
+    <p class="text-muted small">
+        &copy; {{ "now"|date("Y") }} <strong>SchoolPrepar</strong>
+        <span class="mx-2">|</span>
+        Administration
+    </p>
 </footer>
 
-{# Scripts corrigés selon ta capture #}
+{# Tes scripts CRUCIAUX sont de retour ici #}
 <script src="{{ asset('assets/admin/js/vendor-all.min.js') }}"></script>
 <script src="{{ asset('assets/admin/js/plugins/bootstrap.min.js') }}"></script>
 <script src="{{ asset('assets/admin/js/pcoded.min.js') }}"></script>

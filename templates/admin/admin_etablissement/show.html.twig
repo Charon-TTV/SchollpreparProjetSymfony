@@ -1,0 +1,116 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Détails Établissement - SchoolPrepar{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            {# Colonne de gauche : Infos principales #}
+            <div class="col-md-7">
+                <div class="card shadow-sm border-0" style="border-radius: 15px;">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 text-primary font-weight-bold">
+                            <i class="feather icon-info mr-2"></i>Fiche complète : {{ etablissement.nom }}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            {% if etablissement.image %}
+                                <img src="{{ asset('uploads/images/' ~ etablissement.image) }}"
+                                     alt="{{ etablissement.nom }}"
+                                     class="img-fluid rounded shadow-sm"
+                                     style="max-height: 220px; border: 4px solid #f8f9fa;">
+                            {% else %}
+                                <div class="p-5 bg-light rounded text-muted">
+                                    <i class="feather icon-image h1 d-block"></i>
+                                    Aucun logo disponible
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">Identifiant unique</span>
+                                <span class="font-weight-bold">#{{ etablissement.id }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">Nom officiel</span>
+                                <span class="font-weight-bold">{{ etablissement.nom }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">Ville</span>
+                                <span class="font-weight-bold">{{ etablissement.ville }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">Localisation précise</span>
+                                <span class="text-primary">{{ etablissement.localisation }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span class="text-muted">Type d'institution</span>
+                                <span class="badge badge-light-primary px-3 py-2" style="font-size: 0.9rem; border-radius: 10px;">
+                                    {{ etablissement.type }}
+                                </span>
+                            </li>
+                        </ul>
+
+                        <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
+                            <a href="{{ path('app_admin_etablissement_index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                                <i class="feather icon-arrow-left"></i> Retour à la liste
+                            </a>
+                            <div class="d-flex">
+                                <a href="{{ path('app_admin_etablissement_edit', {'id': etablissement.id}) }}" class="btn btn-info btn-sm rounded-pill px-3 mr-2">
+                                    <i class="feather icon-edit"></i> Modifier
+                                </a>
+                                {{ include('admin/admin_etablissement/_delete_form.html.twig') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Colonne de droite : Filières proposées #}
+            <div class="col-md-5">
+                <div class="card shadow-sm border-0" style="border-radius: 15px;">
+                    <div class="card-header bg-primary py-3" style="border-radius: 15px 15px 0 0;">
+                        <h5 class="mb-0 text-white font-weight-bold">
+                            <i class="feather icon-book-open mr-2"></i>Filières proposées
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap">
+                            {% for filiere in etablissement.filieres %}
+                                <div class="p-2 m-1 border rounded bg-light d-flex align-items-center shadow-none transition-hover" style="flex: 0 0 100%; border-radius: 12px !important;">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 35px; height: 35px;">
+                                        <i class="feather icon-check small"></i>
+                                    </div>
+                                    <div>
+                                        <span class="d-block font-weight-bold text-dark">{{ filiere.nom }}</span>
+                                        <small class="text-muted">Code: FIL-{{ filiere.id }}</small>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="text-center py-4 w-100">
+                                    <i class="feather icon-slash text-muted h3 d-block mb-2"></i>
+                                    <p class="text-muted">Aucune filière associée à cet établissement.</p>
+                                    <a href="{{ path('app_admin_etablissement_edit', {'id': etablissement.id}) }}" class="btn btn-sm btn-link text-primary">
+                                        Cliquez ici pour en ajouter
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .badge-light-primary { background-color: rgba(114, 103, 239, 0.1); color: #7267EF; }
+        .transition-hover:hover {
+            background-color: #fff !important;
+            border-color: #7267EF !important;
+            transform: translateX(5px);
+            transition: all 0.3s;
+        }
+    </style>
+{% endblock %}

@@ -1,0 +1,6 @@
+<form method="post" action="{{ path('app_admin_etablissement_delete', {'id': etablissement.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer cet établissement ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ etablissement.id) }}">
+    <button class="btn btn-danger btn-sm rounded-pill">
+        <i class="feather icon-trash-2"></i> Supprimer l'établissement
+    </button>
+</form>

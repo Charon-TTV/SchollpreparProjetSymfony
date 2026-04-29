@@ -1,0 +1,71 @@
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+    {# Champ Nom avec Icône et Bords Arrondis #}
+<div class="form-group mb-4">
+    {{ form_label(form.nom, 'Nom de la catégorie', {'label_attr': {'class': 'form-label font-weight-bold text-dark'}}) }}
+    <div class="input-group input-group-merge">
+        <div class="input-group-prepend">
+                <span class="input-group-text bg-light border-right-0" style="border-top-left-radius: 20px; border-bottom-left-radius: 20px;">
+                    <i class="feather icon-tag text-primary"></i>
+                </span>
+        </div>
+        {{ form_widget(form.nom, {
+            'attr': {
+                'class': 'form-control border-left-0 pl-0',
+                'placeholder': 'Ex: Sciences et Technologies',
+                'style': 'height: 45px; border-top-right-radius: 20px; border-bottom-right-radius: 20px;'
+            }
+        }) }}
+    </div>
+    <small class="text-muted italic ml-2">Le nom doit être unique.</small>
+    <div class="text-danger small mt-1">{{ form_errors(form.nom) }}</div>
+</div>
+
+{# Champ Description avec Bords Arrondis #}
+<div class="form-group mb-4">
+    {{ form_label(form.description, 'Description détaillée', {'label_attr': {'class': 'form-label font-weight-bold text-dark'}}) }}
+    <div class="position-relative">
+        {{ form_widget(form.description, {
+            'attr': {
+                'class': 'form-control bg-light-focus',
+                'rows': '5',
+                'placeholder': 'Donnez des précisions...',
+                'style': 'border-radius: 15px;'
+            }
+        }) }}
+        <i class="feather icon-align-left position-absolute text-muted" style="top: 15px; right: 15px;"></i>
+    </div>
+    <div class="text-danger small mt-1">{{ form_errors(form.description) }}</div>
+</div>
+
+{# Zone d'actions corrigée #}
+<div class="pt-4 mt-4 border-top">
+    <div class="d-flex justify-content-between align-items-center">
+        <a href="{{ path('app_admin_categorie_index') }}" class="btn btn-outline-secondary px-4 rounded-pill">
+            <i class="feather icon-x mr-1"></i> Annuler
+        </a>
+        <button type="submit" class="btn btn-primary px-4 rounded-pill shadow-sm transition-hover">
+            <i class="feather icon-check-circle mr-1"></i> Confirmer l'enregistrement
+        </button>
+    </div>
+</div>
+
+{{ form_end(form) }}
+
+<style>
+    /* Focus stylisé pour les champs arrondis */
+    .form-control:focus {
+        border-color: #00c292 !important; /* Couleur de ton bouton vert */
+        box-shadow: 0 0 0 0.2rem rgba(0, 194, 146, 0.1) !important;
+    }
+
+    .input-group-merge:focus-within .input-group-text,
+    .input-group-merge:focus-within .form-control {
+        border-color: #00c292 !important;
+    }
+
+    .transition-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 194, 146, 0.3) !important;
+    }
+</style>

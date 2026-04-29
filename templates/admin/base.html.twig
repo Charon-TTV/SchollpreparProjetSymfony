@@ -4,45 +4,55 @@
     <title>{% block title %}Admin | SchoolPrepar{% endblock %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
     <link rel="icon" href="{{ asset('assets/admin/images/favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ asset('assets/admin/css/style.css') }}">
 
+    <style>
+        /* Modernisation légère sans casser le template */
+        .pcoded-main-container { background: #f4f7fa; }
+        .pcoded-content { padding: 30px !important; } /* Plus d'espace autour */
+        .page-header { margin-bottom: 25px; border-bottom: 1px solid #e2e5e8; padding-bottom: 20px; }
+        .page-header-title h5 { font-weight: 700; color: #3f4d67; font-size: 1.4rem; }
+    </style>
     {% block stylesheets %}{% endblock %}
 </head>
-<body class="">
+<body>
 <div class="loader-bg">
     <div class="loader-track"><div class="loader-fill"></div></div>
 </div>
 
-{# Inclusion de l'aside (Sidebar) #}
 {{ include('admin/partials/aside.html.twig') }}
-
-{# Inclusion de la nav (Header) #}
 {{ include('admin/partials/nav.html.twig') }}
 
 <div class="pcoded-main-container">
     <div class="pcoded-content">
+        {# Section En-tête Conteneurisée #}
         <div class="page-header">
             <div class="page-block">
                 <div class="row align-items-center">
-                    <div class="col-md-12">
+                    <div class="col-md-8">
                         <div class="page-header-title">
                             <h5 class="m-b-10">{% block page_title %}Tableau de bord{% endblock %}</h5>
+                            <p class="text-muted small m-b-0">Gestion centralisée de SchoolPrepar</p>
                         </div>
+                    </div>
+                    <div class="col-md-4 text-md-right">
+                        {% block header_actions %}{% endblock %}
                     </div>
                 </div>
             </div>
         </div>
 
-        {% block body %}{% endblock %}
+        {# Zone de contenu principal #}
+        <div class="main-body">
+            <div class="page-wrapper">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
     </div>
 </div>
 
-{# Inclusion du footer (Scripts) #}
 {{ include('admin/partials/footer.html.twig') }}
-
 {% block javascripts %}{% endblock %}
 </body>
 </html>
