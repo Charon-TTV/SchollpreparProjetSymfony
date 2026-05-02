@@ -2,14 +2,30 @@
     <div class="navbar-wrapper">
         <div class="navbar-content scroll-div">
             <div class="main-menu-header" style="background: rgba(63, 77, 103, 0.05); padding: 25px 15px;">
-                <img class="img-radius" src="{{ asset('assets/admin/images/user/avatar.jpeg') }}" alt="User" style="width: 50px; border: 3px solid #7267EF;">
+                {# Photo dynamique ou avatar par défaut #}
+                <img class="img-radius"
+                     src="{{ app.user.avatar ?: asset('assets/admin/images/user/avatar.jpeg') }}"
+                     alt="User" style="width: 50px; height: 50px; object-fit: cover; border: 3px solid #7267EF;">
+
                 <div class="user-details">
-                    <span class="font-weight-bold text-white">Charôn VLADIMIR</span>
-                    <div id="more-details">
+                    <span class="font-weight-bold text-white">{{ app.user.prenom }} {{ app.user.nom }}</span>
+                    <div id="more-details" style="cursor: pointer;">
                         <small class="text-muted">Administrateur</small>
                         <i class="fa fa-caret-down m-l-5"></i>
                     </div>
                 </div>
+            </div>
+
+            {# Petit menu caché pour le profil et déconnexion #}
+            <div class="collapse" id="nav-user-link" style="background: #3f4d67; margin-bottom: 10px;">
+                <ul class="list-unstyled mb-0">
+                    <li class="list-group-item border-0" style="background: transparent;">
+                        <a href="{{ path('admin_profile') }}" class="text-white small"><i class="feather icon-user m-r-5"></i>Mon Profil</a>
+                    </li>
+                    <li class="list-group-item border-0" style="background: transparent;">
+                        <a href="{{ path('app_logout') }}" class="text-danger small"><i class="feather icon-log-out m-r-5"></i>Déconnexion</a>
+                    </li>
+                </ul>
             </div>
 
             <ul class="nav pcoded-inner-navbar">

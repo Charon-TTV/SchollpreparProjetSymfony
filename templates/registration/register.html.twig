@@ -1,0 +1,306 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Inscription | SchoolPrepar{% endblock %}
+
+{% block body %}
+    {# 1. Header #}
+    <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/1.jpg') }}" style="height: 250px;">
+        <div class="container">
+            <div class="site-breadcrumb">
+                <a href="{{ path('app_home') }}">Accueil</a> /
+                <span>Inscription</span>
+            </div>
+        </div>
+    </section>
+
+    {# 2. Section Inscription #}
+    <section class="register-section spad" style="background: #f8f9fa;">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <div class="course-item" style="background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.08); border: none;">
+
+                        <div style="background: #d82a2e; padding: 40px; text-align: center; color: #fff;">
+                            <h3 style="color: #fff; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">Rejoindre la communauté</h3>
+                            <p style="color: rgba(255,255,255,0.8); margin: 0; font-size: 14px;">Inscrivez-vous pour un avenir brillant</p>
+                        </div>
+
+                        <div class="course-info" style="padding: 50px;">
+                            {{ form_start(registrationForm) }}
+
+                            {# Choix du profil centré #}
+                            <div class="text-center mb-5">
+                                <label style="font-weight: 700; color: #252525; font-size: 14px; text-transform: uppercase; margin-bottom: 25px; display: block;">Je m'inscris en tant que :</label>
+                                <div class="d-flex justify-content-center flex-wrap gap-3">
+                                    {% for child in registrationForm.userType %}
+                                        <div class="role-option">
+                                            {{ form_widget(child) }}
+                                            <label for="{{ child.vars.id }}" class="role-label">
+                                                {% if child.vars.label == 'Élève / Étudiant' %}
+                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                                                {% else %}
+                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+                                                {% endif %}
+                                                {{ child.vars.label }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-4">
+                                        <label class="custom-label">NOM D'UTILISATEUR</label>
+                                        <div class="input-wrapper">
+                                            <i class="fa fa-user"></i>
+                                            {{ form_widget(registrationForm.username, {'attr': {'class': 'form-control custom-input', 'placeholder': 'Ex: Jean228'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-4">
+                                        <label class="custom-label">ADRESSE EMAIL</label>
+                                        <div class="input-wrapper">
+                                            <i class="fa fa-envelope"></i>
+                                            {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control custom-input', 'placeholder': 'exemple@gmail.com'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {# Section Dynamique Conseiller #}
+                            <div id="section-conseiller" class="animated-section">
+                                <div class="pro-card">
+                                    <h5 class="pro-title"><i class="fa fa-graduation-cap"></i> Profil Professionnel</h5>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <label class="custom-label">NUMÉRO DE TÉLÉPHONE</label>
+                                                <div class="input-wrapper">
+                                                    <i class="fa fa-phone"></i>
+                                                    {{ form_widget(registrationForm.telephone, {'attr': {'class': 'form-control custom-input', 'placeholder': '+228...'}}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <label class="custom-label">JE SUIS UN...</label>
+                                                <div class="input-wrapper">
+                                                    <i class="fa fa-briefcase"></i>
+                                                    {# Symfony affichera ici le <select> avec "Ancien élève", etc. #}
+                                                    {{ form_widget(registrationForm.specialite, {'attr': {'class': 'form-control custom-input select-style'}}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <label class="custom-label">BIOGRAPHIE COURTE</label>
+                                        {{ form_widget(registrationForm.biographie, {'attr': {'class': 'form-control custom-input bio-area', 'placeholder': 'Parlez-nous de votre expertise...'}}) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-5">
+                                <label class="custom-label">MOT DE PASSE</label>
+                                <div class="input-wrapper">
+                                    <i class="fa fa-lock"></i>
+                                    {{ form_widget(registrationForm.plainPassword, {'id': 'passwordField', 'attr': {'class': 'form-control custom-input', 'placeholder': '6 caractères min.'}}) }}
+                                    <i class="fa fa-eye toggle-eye" id="toggleIcon"></i>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="site-btn w-100 btn-grad">S'INSCRIRE</button>
+
+                            {# Séparateur "OU" centré proprement #}
+                            <div class="divider-container">
+                                <div class="divider-line"></div>
+                                <span class="divider-text">OU</span>
+                                <div class="divider-line"></div>
+                            </div>
+
+                            {# Bouton Google centré #}
+                            <div class="text-center">
+                                <a href="{{ path('connect_google_start') }}" class="btn-google-pro">
+                                    <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="18" alt="Google">
+                                    <span>S'inscrire avec Google</span>
+                                </a>
+                            </div>
+                            <div class="text-center mt-4">
+                                <p style="color: #666; font-size: 14px;">
+                                    Vous avez déjà un compte ?
+                                    <a href="{{ path('app_login') }}" style="color: #d82a2e; font-weight: 700; text-decoration: none; border-bottom: 2px solid transparent; transition: 0.3s;" onmouseover="this.style.borderBottom='2px solid #d82a2e'" onmouseout="this.style.borderBottom='2px solid transparent'">
+                                        Connectez-vous ici
+                                    </a>
+                                </p>
+                            </div>
+
+                            {{ form_end(registrationForm) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* Labels */
+        .custom-label { font-weight: 700; color: #444; font-size: 12px; margin-bottom: 8px; display: block; }
+
+        /* Correction Alignement Inputs & Icônes */
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center; /* Centre verticalement le contenu */
+        }
+
+        .input-wrapper i:not(.toggle-eye) {
+            position: absolute;
+            left: 20px;
+            color: #95a5a6;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            height: 100%; /* S'assure que l'icône est centrée par rapport à la hauteur du wrapper */
+        }
+
+        .custom-input {
+            height: 55px;
+            border-radius: 30px;
+            padding: 0 25px 0 50px !important;
+            border: 2px solid #f0f0f0;
+            background: #fcfcfc;
+            width: 100%;
+            transition: 0.3s;
+            font-size: 15px;
+        }
+
+        .custom-input:focus { border-color: #d82a2e; background: #fff; outline: none; }
+
+        /* Zone Bio */
+        .bio-area { height: 100px !important; padding-top: 15px !important; border-radius: 15px; }
+
+        /* Toggle Mot de passe */
+        .toggle-eye {
+            position: absolute;
+            right: 20px;
+            cursor: pointer;
+            color: #95a5a6;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Role Selector */
+        .role-option input[type="radio"] { display: none; }
+        .role-label {
+            padding: 10px 20px;
+            background: #fff;
+            border: 2px solid #eee;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #444;
+            margin: 0;
+        }
+        .role-option input[type="radio"]:checked + .role-label {
+            background: #d82a2e;
+            color: #fff;
+            border-color: #d82a2e;
+            box-shadow: 0 5px 15px rgba(216, 42, 46, 0.2);
+        }
+
+        /* Bouton Principal */
+        .btn-grad {
+            border-radius: 50px;
+            padding: 16px;
+            font-weight: 700;
+            background: #d82a2e;
+            color: #fff;
+            border: none;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-grad:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(216, 42, 46, 0.3); }
+
+        /* Séparateur OU propre */
+        .divider-container {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 30px 0;
+        }
+        .divider-line { flex: 1; height: 1px; background: #eee; }
+        .divider-text { margin: 0 15px; color: #999; font-size: 12px; font-weight: 700; }
+
+        /* Bouton Google Centré */
+        .btn-google-pro {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 25px;
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            color: #555;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .btn-google-pro:hover { background: #f9f9f9; border-color: #bbb; color: #333; }
+
+        /* Profil Pro Card */
+        .pro-card { background: #fff8f8; padding: 25px; border-radius: 15px; border: 1px solid #ffebeb; margin-bottom: 25px; }
+        .pro-title { font-size: 16px; font-weight: 700; color: #d82a2e; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+
+        /* Animation section pro */
+        .animated-section { max-height: 0; overflow: hidden; opacity: 0; transition: all 0.4s ease-out; }
+        .animated-section.active { max-height: 500px; opacity: 1; margin-bottom: 20px; }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const radioButtons = document.querySelectorAll('input[name="registration_form[userType]"]');
+            const section = document.getElementById('section-conseiller');
+            const googleBtn = document.querySelector('.btn-google-pro'); // On cible le bouton Google
+
+            function toggle() {
+                const selected = document.querySelector('input[name="registration_form[userType]"]:checked');
+                if (selected) {
+                    // 1. Gère l'affichage des champs pro
+                    if (selected.value === 'conseiller') {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
+                    }
+
+                    // 2. MISE À JOUR DU LIEN GOOGLE
+                    // On ajoute ?role=eleve ou ?role=conseiller à l'URL
+                    const baseHref = "{{ path('connect_google_start') }}";
+                    googleBtn.href = baseHref + "?role=" + selected.value;
+                }
+            }
+
+            radioButtons.forEach(r => r.addEventListener('change', toggle));
+            toggle();
+
+            // Toggle Password
+            const toggleIcon = document.getElementById('toggleIcon');
+            const passwordField = document.getElementById('passwordField');
+
+            toggleIcon.addEventListener('click', function() {
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        });
+    </script>
+{% endblock %}

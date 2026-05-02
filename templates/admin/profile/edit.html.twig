@@ -1,0 +1,81 @@
+{# templates/admin/profile/edit.html.twig #}
+{% extends 'admin/base.html.twig' %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Paramètres du profil</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ path('admin_profile_edit_action') }}" method="POST" enctype="multipart/form-data">
+                        <div class="row">
+                            <!-- Colonne Gauche : Upload Photo -->
+                            <div class="col-md-4 text-center border-right">
+                                <label class="d-block mb-3 text-muted">Photo de profil</label>
+                                <div class="image-upload-wrapper">
+                                    <img id="preview" src="{{ app.user.avatar ?: asset('assets/admin/images/user/avatar.jpeg') }}"
+                                         class="img-radius mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+
+                                    <div class="custom-file-container">
+                                        <label class="btn btn-sm btn-light border shadow-sm">
+                                            <i class="feather icon-camera mr-2"></i>Choisir une photo
+                                            <input type="file" name="avatar" id="avatar-input" hidden accept="image/*">
+                                        </label>
+                                    </div>
+                                    <small class="text-muted d-block mt-2">JPG, PNG ou WebP</small>
+                                </div>
+                            </div>
+
+                            <!-- Colonne Droite : Infos -->
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold">Prénom</label>
+                                        <input type="text" name="prenom" class="form-control" value="{{ app.user.prenom }}" required>
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold">Nom</label>
+                                        <input type="text" name="nom" class="form-control" value="{{ app.user.nom }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-info mt-3 small">
+                                    <i class="feather icon-info mr-2"></i>
+                                    Les modifications prendront effet immédiatement après l'enregistrement.
+                                </div>
+
+                                <div class="text-right mt-4">
+                                    <a href="{{ path('admin_profile') }}" class="btn btn-light mr-2">Annuler</a>
+                                    <button type="submit" class="btn btn-success px-5">Mettre à jour</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Petit script pour voir l'image avant d'envoyer
+        document.getElementById('avatar-input').onchange = evt => {
+            const [file] = document.getElementById('avatar-input').files
+            if (file) {
+                document.getElementById('preview').src = URL.createObjectURL(file)
+            }
+        }
+    </script>
+
+    <style>
+        .image-upload-wrapper img {
+            transition: transform 0.3s;
+            border: 3px solid var(--accent-teal);
+            padding: 5px;
+        }
+        .image-upload-wrapper:hover img {
+            transform: scale(1.05);
+        }
+    </style>
+{% endblock %}

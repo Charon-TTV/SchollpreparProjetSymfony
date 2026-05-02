@@ -1,26 +1,188 @@
-<header class="header-section">
+<header class="header-section shadow-sm">
     <div class="container">
-        <div class="row">
+        <div class="row align-items-center">
+            <!-- LOGO -->
             <div class="col-lg-3 col-md-3">
                 <div class="site-logo">
-                    <img src="{{ asset('assets/front/img/logo.png') }}" alt="SchoolPrepar Logo">
-                </div>
-                <div class="nav-switch">
-                    <i class="fa fa-bars"></i>
+                    <img src="{{ asset('assets/front/img/logo.png') }}" alt="SchoolPrepar Logo" style="max-height: 40px;">
                 </div>
             </div>
+
+            <!-- NAVIGATION -->
             <div class="col-lg-9 col-md-9">
-                <a href="#" class="site-btn header-btn">Connexion</a>
-                <nav class="main-menu">
-                    <ul>
-                        <li><a href="{{ path('app_home') }}">Accueil</a></li>
-                        <li><a href="{{ path('app_filiere_index') }}">Filières</a></li>
-                        <li><a href="{{ path('app_etablissement_index') }}">Établissements</a></li>
-                        <li><a href="#">À propos</a></li>
-                        <li><a href="#">Contact</a></li>
+                <nav class="main-menu d-flex align-items-center justify-content-end">
+                    <ul class="d-flex align-items-center m-0 p-0" style="list-style: none;">
+                        <li class="nav-item-glass"><a href="{{ path('app_home') }}">Accueil</a></li>
+
+                        {# --- MENU SELON RÔLE --- #}
+                        {% if is_granted('ROLE_ELEVE') %}
+                            <li class="nav-item-glass"><a href="{{ path('app_categorie_index') }}">Catégories</a></li>
+                            <li class="nav-item-glass"><a href="{{ path('app_etablissement_index') }}">Établissements</a></li>
+                            <li class="nav-item-glass"><a href="#">Social</a></li>
+                            <li class="nav-item-glass"><a href="#">Orientation</a></li>
+                        {% elseif is_granted('ROLE_CONSEILLER') %}
+                            <li class="nav-item-glass"><a href="#">Espace Social</a></li>
+                            <li class="nav-item-glass"><a href="#">Événements</a></li>
+                        {% else %}
+                            <li class="nav-item-glass"><a href="{{ path('app_categorie_index') }}">Catégories</a></li>
+                            <li class="nav-item-glass"><a href="{{ path('app_etablissement_index') }}">Établissements</a></li>
+                        {% endif %}
+
+                        {# --- ESPACE UTILISATEUR OU LOGIN --- #}
+                        {% if app.user %}
+                            <li class="nav-item-glass dropdown ml-4" style="position: relative;">
+                                <a class="nav-link-simple d-flex align-items-center" href="javascript:void(0)" id="userMenu">
+                                    <i class="fa fa-user-circle-o mr-2"></i>
+                                    <span class="user-name-text">{{ app.user.prenom|default(app.user.username) }}</span>
+                                    <i class="fa fa-chevron-down ml-2" style="font-size: 10px;"></i>
+                                </a>
+
+                                <div class="custom-dropdown-menu">
+                                    <div class="dropdown-header-glass">
+                                        <div class="d-flex align-items-center p-3">
+                                            <div class="avatar-circle-ui mr-3">
+                                                {{ app.user.prenom|first|upper }}
+                                            </div>
+                                            <div style="line-height: 1.2;">
+                                                <h6 class="m-0 font-weight-bold text-white" style="font-size: 13px;">{{ app.user.prenom }} {{ app.user.nom }}</h6>
+                                                <small class="text-white-50" style="font-size: 10px;">{{ app.user.email }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-links-container">
+                                        <a class="dropdown-link-glass" href="#"><i class="fa fa-user-o mr-2"></i> Profil</a>
+                                        <div class="dropdown-sep-glass"></div>
+                                        <a class="dropdown-link-glass logout-link" href="{{ path('app_logout') }}">
+                                            <i class="fa fa-power-off mr-2"></i> Déconnexion
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li class="nav-item-glass ml-4"><a href="{{ path('app_login') }}">Connexion</a></li>
+                            <li class="nav-item-glass ml-3"><a href="{{ path('app_register') }}" class="text-highlight">S'inscrire</a></li>
+                        {% endif %}
                     </ul>
                 </nav>
             </div>
         </div>
     </div>
+
+    <style>
+        /* --- HEADER ÉCLAIRCI --- */
+        .header-section {
+            background: rgba(40, 40, 40, 0.75); /* Gris plus clair et plus transparent */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 0;
+        }
+
+        .nav-item-glass { margin-left: 25px; }
+        .nav-item-glass a, .nav-link-simple {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none !important;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-item-glass a:hover, .nav-link-simple:hover {
+            color: #d82a2e !important;
+        }
+
+        /* --- DROPDOWN ÉCLAIRCI --- */
+        .custom-dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 45px;
+            width: 250px;
+            background: rgba(45, 45, 45, 0.95); /* Fond gris anthracite au lieu de noir */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+
+        .custom-dropdown-menu.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        /* --- HOVER DU MENU (TEXTE SEULEMENT) --- */
+        .dropdown-link-glass {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.7) !important;
+            font-size: 14px;
+            transition: color 0.3s ease;
+            background: transparent !important; /* Force l'absence de fond */
+            text-decoration: none !important;
+        }
+
+        .dropdown-link-glass i {
+            transition: color 0.3s ease;
+        }
+
+        /* Au survol, seule la couleur change, pas le fond */
+        .dropdown-link-glass:hover {
+            color: #d82a2e !important;
+            background: transparent !important;
+        }
+
+        .dropdown-link-glass:hover i {
+            color: #d82a2e !important;
+        }
+
+        .logout-link:hover {
+            color: #ff4d4d !important;
+        }
+
+        .avatar-circle-ui {
+            width: 38px;
+            height: 38px;
+            background: #d82a2e;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .dropdown-sep-glass {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 2px 0;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const userMenuBtn = document.getElementById('userMenu');
+        const dropdownMenu = document.querySelector('.custom-dropdown-menu');
+
+        if (userMenuBtn && dropdownMenu) {
+            userMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('active');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!userMenuBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+        }
+    });
+</script>

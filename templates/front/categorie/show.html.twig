@@ -1,0 +1,59 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}{{ categorie.nom }} - SchoolPrepar{% endblock %}
+
+{% block body %}
+    {# Header avec Breadcrumb complet : Accueil / Catégories / Nom_Catégorie #}
+    <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/1.jpg') }}">
+        <div class="container">
+            <div class="site-breadcrumb">
+                <a href="{{ path('app_home') }}">Accueil</a> /
+                <a href="{{ path('app_categorie_index') }}">Catégories</a> /
+                <span style="color: #d82a2e;">{{ categorie.nom }}</span>
+            </div>
+            <h2 class="hp-title">{{ categorie.nom }}</h2>
+        </div>
+    </section>
+
+    <section class="course-section spad">
+        <div class="container">
+            <div class="section-title">
+                <h2>Filières en {{ categorie.nom }}</h2>
+                <p>Découvrez les spécialisations disponibles dans ce domaine au Togo.</p>
+            </div>
+
+            <div class="row">
+                {% for f in filieres %}
+                    <div class="col-lg-4 col-md-6 mb-5 d-flex align-items-stretch">
+                        <div class="course-item" style="display: flex; flex-direction: column; width: 100%; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); background: #fff;">
+                            <div class="course-thumb set-bg" data-setbg="{{ f.image ? asset('uploads/images/' ~ f.image) : asset('assets/front/img/courses/default.jpg') }}" style="height: 200px;">
+                            </div>
+                            <div class="course-info" style="padding: 25px; flex-grow: 1; display: flex; flex-direction: column;">
+                                <h5 style="font-weight: 700; color: #252525; margin-bottom: 15px;">{{ f.nom }}</h5>
+                                <p style="color: #707070; font-size: 14px; line-height: 1.6;">
+                                    {{ f.description|length > 100 ? f.description|slice(0, 100) ~ '...' : f.description }}
+                                </p>
+                                <div class="mt-auto pt-3">
+                                    <a href="{{ path('app_filiere_show', {'id': f.id}) }}" class="site-btn btn-sm w-100 text-center" style="border-radius: 30px;">
+                                        Voir le programme
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-12 text-center">
+                        <div class="alert alert-light p-5 border">
+                            <p class="text-muted">Bientôt disponible dans cette catégorie !</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .site-breadcrumb a { color: #fff; text-decoration: none; }
+        .site-breadcrumb { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+    </style>
+{% endblock %}

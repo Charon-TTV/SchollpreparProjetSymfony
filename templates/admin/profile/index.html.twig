@@ -1,0 +1,45 @@
+{# templates/admin/profile/index.html.twig #}
+{% extends 'admin/base.html.twig' %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card user-card user-card-1">
+                <div class="card-header border-0 p-0">
+                    <div class="cover-img-block" style="background: var(--sidebar-bg); height: 120px;"></div>
+                </div>
+                <div class="card-body pt-0 text-center">
+                    <div class="user-info-avatar" style="margin-top: -75px;">
+                        <img src="{{ app.user.avatar ?: asset('assets/admin/images/user/avatar.jpeg') }}"
+                             class="img-radius shadow"
+                             style="width: 150px; height: 150px; object-fit: cover; border: 5px solid #fff;">
+                    </div>
+                    <h3 class="mt-3 font-weight-bold">{{ app.user.prenom }} {{ app.user.nom }}</h3>
+                    <span class="badge badge-light-success px-3 py-2">ADMINISTRATEUR</span>
+
+                    <hr class="my-4">
+
+                    <div class="row text-left px-4">
+                        <div class="col-sm-6 mb-3">
+                            <label class="text-muted small text-uppercase">Nom d'utilisateur</label>
+                            <p class="font-weight-bold">{{ app.user.userIdentifier }}</p>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label class="text-muted small text-uppercase">Rôle</label>
+                            <p><span class="badge badge-primary">Principal Admin</span></p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pb-3">
+                        <a href="{{ path('admin_profile_edit_page') }}" class="btn btn-outline-primary px-4 mr-2">
+                            <i class="feather icon-edit mr-2"></i>Éditer mon profil
+                        </a>
+                        <a href="{{ path('admin_logout') }}" class="btn btn-outline-danger px-4">
+                            <i class="feather icon-log-out mr-2"></i>Déconnexion
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

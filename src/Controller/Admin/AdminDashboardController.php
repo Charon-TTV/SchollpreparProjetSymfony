@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/admin')]
+#[IsGranted('ROLE_ADMIN')]
 class AdminDashboardController extends AbstractController
 {
     #[Route('/', name: 'admin_dashboard')]

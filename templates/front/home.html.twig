@@ -21,43 +21,44 @@
         </div>
     </section>
 
-    {# Section Domaines / Catégories DYNAMIQUES #}
+    {# Section Domaines / Catégories DYNAMIQUES avec SLIDER #}
     <section class="categories-section spad">
         <div class="container">
             <div class="section-title">
                 <h2>Nos Domaines de Formation</h2>
                 <p>Explorez les secteurs porteurs pour construire votre carrière.</p>
             </div>
-            <div class="row">
-                {% for c in categories %}
-                    <div class="col-lg-3 col-md-6 mb-4 d-flex align-items-stretch">
-                        <div class="categorie-item" style="width: 100%; display: flex; flex-direction: column; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-radius: 10px; overflow: hidden;">
 
-                            {#
-                            IMAGE TEMPLATE :
-                            On utilise loop.index pour alterner entre 1.jpg, 2.jpg, 3.jpg et 4.jpg
-                            #}
+            {# Le conteneur du slider #}
+            <div class="categories-slider owl-carousel">
+                {% for c in categories %}
+                    {# Changement pour col-lg-4 (qui correspond à 3 items par ligne) #}
+                    <div class="item" style="padding: 15px;">
+                        <div class="categorie-item" style="width: 100%; display: flex; flex-direction: column; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-radius: 10px; overflow: hidden; height: 100%;">
+
+                            {# Image alternée #}
                             {% set imageNumber = (loop.index0 % 4) + 1 %}
                             <div class="ci-thumb set-bg"
                                  data-setbg="{{ asset('assets/front/img/categories/' ~ imageNumber ~ '.jpg') }}"
-                                 style="height: 180px; width: 100%; background-size: cover; background-position: center;">
+                                 style="height: 200px; width: 100%; background-size: cover; background-position: center;">
                             </div>
 
-                            {# Contenu de la catégorie #}
-                            <div class="ci-text" style="padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                            {# Contenu #}
+                            <div class="ci-text" style="padding: 25px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
                                 <div>
-                                    <h5 style="font-size: 18px; font-weight: 700; margin-bottom: 10px; color: #252525;">{{ c.nom }}</h5>
-                                    <p style="font-size: 14px; color: #707070; margin-bottom: 15px;">
-                                        {# On limite la description pour garder l'alignement #}
-                                        {{ c.description|length > 80 ? c.description|slice(0, 80) ~ '...' : c.description }}
+                                    <h5 style="font-size: 20px; font-weight: 700; margin-bottom: 12px; color: #252525;">{{ c.nom }}</h5>
+                                    <p style="font-size: 15px; color: #707070; margin-bottom: 20px; line-height: 1.6;">
+                                        {{ c.description|length > 100 ? c.description|slice(0, 100) ~ '...' : c.description }}
                                     </p>
                                 </div>
 
                                 <div class="d-flex justify-content-between align-items-center" style="border-top: 1px solid #f0f0f0; padding-top: 15px;">
-                                    <span style="font-size: 13px; color: #d82a2e; font-weight: 700;">
+                                    <span style="font-size: 13px; color: #d82a2e; font-weight: 700; text-transform: uppercase;">
                                         {{ c.filieres|length }} FILIÈRES
                                     </span>
-                                    <a href="#" class="btn-link text-dark"><i class="fa fa-angle-right"></i> Voir</a>
+                                    <a href="{{ path('app_categorie_show', {'id': c.id}) }}" class="btn-link text-dark" style="font-weight: 700;">
+                                        Voir <i class="fa fa-angle-right"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -94,4 +95,33 @@
             </div>
         </div>
     </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function(){
+            $('.categories-slider').owlCarousel({
+                loop: true,
+                margin: 25,
+                nav: false,
+                dots: true,
+                autoplay: true,
+                autoplayTimeout: 4000,
+                autoplayHoverPause: true,
+                smartSpeed: 1000,
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    768: {
+                        items: 2
+                    },
+                    1024: {
+                        items: 3 // Affichage de 3 items sur grand écran
+                    }
+                }
+            });
+        });
+    </script>
 {% endblock %}

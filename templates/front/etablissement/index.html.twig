@@ -8,74 +8,94 @@
         <div class="container">
             <div class="site-breadcrumb">
                 <a href="{{ path('app_home') }}">Accueil</a> /
-                <span>Établissements</span>
+                <span style="color: #d82a2e;">Établissements</span>
             </div>
             <h2 class="hp-title">Universités & Grandes Écoles</h2>
         </div>
     </section>
 
-    {# 2. Barre de recherche #}
-    <section class="search-section">
-        <div class="container">
-            <div class="search-warp">
-                <div class="section-title text-white">
-                    <h2>Trouvez l'établissement idéal</h2>
-                    <p>Découvrez les meilleures institutions d'enseignement supérieur au Togo.</p>
-                </div>
-                <div class="row">
-                    <div class="col-md-10 offset-md-1">
-                        <form class="course-search-form">
-                            <input type="text" placeholder="Nom de l'école (ex: Université de Lomé)">
-                            <input type="text" class="last-m" placeholder="Ville">
-                            <button class="site-btn">Rechercher</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {# 3. Grille des Établissements Dynamique #}
+    {# 2. Grille des Établissements #}
     <section class="course-section spad">
         <div class="container">
             <div class="row">
                 {% for e in etablissements %}
                     <div class="col-lg-4 col-md-6 mb-5 d-flex align-items-stretch">
-                        <div class="course-item" style="display: flex; flex-direction: column; width: 100%; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); background: #fff;">
-                            {# Image de l'école #}
-                            <div class="course-thumb set-bg"
-                                 data-setbg="{{ e.image ? asset('uploads/images/' ~ e.image) : asset('assets/front/img/categories/default.jpg') }}"
-                                 style="height: 200px; width: 100%;">
-                                <div class="price" style="background: {{ e.type == 'Public' ? '#252525' : '#d82a2e' }};">{{ e.type|default('Privé') }}</div>
+                        <div class="categorie-item-glass" style="width: 100%; display: flex; flex-direction: column; background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.07); border-radius: 12px; overflow: hidden; transition: 0.3s; position: relative;">
+
+                            {# Badge Public/Privé #}
+                            <div style="position: absolute; top: 15px; left: 15px; z-index: 10; background: {{ e.type == 'Public' ? '#252525' : '#d82a2e' }}; color: white; padding: 5px 15px; border-radius: 30px; font-size: 11px; font-weight: 700; text-transform: uppercase;">
+                                {{ e.type|default('Privé') }}
                             </div>
 
-                            {# Contenu #}
-                            <div class="course-info" style="padding: 25px; flex-grow: 1; display: flex; flex-direction: column;">
-                                <div class="course-text" style="flex-grow: 1; min-height: 140px;">
-                                    <h5 style="color: #252525; font-weight: 700; margin-bottom: 5px;">{{ e.nom }}</h5>
+                            {# Image de l'école (Image de l'entité ou défaut) #}
+                            <div class="ci-thumb set-bg"
+                                 data-setbg="{{ e.image ? asset('uploads/images/' ~ e.image) : asset('assets/front/img/categories/1.jpg') }}"
+                                 style="height: 180px; width: 100%;">
+                            </div>
+
+                            {# Contenu de la carte #}
+                            <div class="ci-text" style="padding: 25px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                                <div>
+                                    <h5 style="font-size: 18px; font-weight: 700; color: #252525; margin-bottom: 8px;">{{ e.nom }}</h5>
+
                                     <div class="mb-3" style="color: #d82a2e; font-size: 13px; font-weight: 600;">
                                         <i class="fa fa-map-marker"></i> {{ e.ville }}, Togo
                                     </div>
-                                    <p style="color: #707070; line-height: 1.5; font-size: 14px;">
+
+                                    <p style="font-size: 14px; color: #707070; line-height: 1.6; margin-bottom: 15px;">
                                         {{ e.localisation|length > 100 ? e.localisation|slice(0, 100) ~ '...' : e.localisation }}
                                     </p>
                                 </div>
 
-                                {# Bouton #}
-                                <div class="course-author" style="border-top: 1px solid #eee; padding-top: 20px; margin-top: auto;">
-                                    <a href="{{ path('app_etablissement_show', {'id': e.id}) }}" class="site-btn btn-sm" style="border-radius: 30px; width: 100%; text-align: center;">
-                                        Voir les filières
+                                {# Action #}
+                                <div class="text-center" style="border-top: 1px solid #f5f5f5; padding-top: 20px; margin-top: 10px; width: 100%;">
+                                    <a href="{{ path('app_etablissement_show', {'id': e.id}) }}" class="site-btn btn-sm" style="border-radius: 30px; padding: 8px 30px; display: inline-block;">
+                                        Voir plus
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 {% else %}
-                    <div class="col-12 text-center">
+                    <div class="col-12 text-center py-5">
                         <p class="text-muted">Aucun établissement répertorié pour le moment.</p>
                     </div>
                 {% endfor %}
             </div>
+
+            {# --- NAVIGATION PAGINATION (Design Ronds) --- #}
+            <div class="site-pagination pt-5 d-flex justify-content-center">
+                {{ knp_pagination_render(etablissements) }}
+            </div>
         </div>
     </section>
+
+    <style>
+        .categorie-item-glass:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+        }
+
+        {# Styles pour la pagination harmonisée #}
+        .pagination { display: flex; list-style: none; padding: 0; }
+        .pagination li { margin: 0 5px; }
+        .pagination li a, .pagination li span {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 50%;
+            background: #f0f0f0;
+            color: #252525;
+            font-weight: 600;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+        .pagination li.active span { background: #d82a2e; color: #fff; }
+        .pagination li a:hover { background: #d82a2e; color: #fff; }
+
+        .site-breadcrumb a { color: #fff; text-decoration: none; }
+        .site-breadcrumb { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+    </style>
 {% endblock %}
