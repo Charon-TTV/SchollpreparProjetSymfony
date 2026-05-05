@@ -1,14 +1,18 @@
+{# templates/front/categorie/filiere_show.html.twig #}
+
 {% extends 'front/base.html.twig' %}
 
 {% block title %}{{ filiere.nom }} - SchoolPrepar{% endblock %}
 
 {% block body %}
+    {# 1. HEADER AVEC FIL D'ARIANE COMPLET (Nouveau système de navigation) #}
     <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/2.jpg') }}">
         <div class="container">
             <div class="site-breadcrumb">
                 <a href="{{ path('app_home') }}">Accueil</a> /
-                <a href="{{ path('app_filiere_index') }}">Filières</a> /
-                <span>{{ filiere.nom }}</span>
+                <a href="{{ path('app_categorie_index') }}">Catégories</a> /
+                <a href="{{ path('app_categorie_show', {id: categorie.id}) }}">{{ categorie.nom }}</a> /
+                <span style="color: #d82a2e;">{{ filiere.nom }}</span>
             </div>
         </div>
     </section>
@@ -16,11 +20,12 @@
     <section class="single-course-section spad">
         <div class="container">
             <div class="row">
-                {# COLONNE GAUCHE : DÉTAILS DU PROGRAMME #}
+
+                {# 2. COLONNE GAUCHE : DÉTAILS DU PROGRAMME (Design riche conservé) #}
                 <div class="col-lg-8">
                     <div class="course-meta">
                         <div class="course-category" style="background: #d82a2e; color: #fff; display: inline-block; padding: 6px 20px; border-radius: 50px; font-weight: 600; margin-bottom: 15px;">
-                            {{ filiere.categorie ? filiere.categorie.nom : 'Formation Académique' }}
+                            {{ categorie.nom }}
                         </div>
                         <h2 style="font-size: 42px; font-weight: 800; color: #252525; margin-bottom: 25px;">
                             {{ filiere.nom }}
@@ -40,7 +45,7 @@
                     </div>
                 </div>
 
-                {# COLONNE DROITE : ÉTABLISSEMENTS PARTENAIRES #}
+                {# 3. COLONNE DROITE : ÉTABLISSEMENTS PARTENAIRES (Design riche conservé) #}
                 <div class="col-lg-4">
                     <div class="course-sidebar" style="background: #fff; padding: 35px; border-radius: 20px; border: 1px solid #f0f0f0; box-shadow: 0 5px 20px rgba(0,0,0,0.03);">
                         <div class="sb-widget">
@@ -49,7 +54,7 @@
                             </h4>
 
                             <div class="etablissement-cards">
-                                {# Boucle sur les établissements liés en BDD #}
+                                {# On utilise filiere.etablissements comme dans l'ancien #}
                                 {% for ecole in filiere.etablissements %}
                                     <div class="school-card" style="background: #fbfbfb; padding: 20px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 20px; transition: 0.3s;">
                                         <div class="d-flex align-items-center">
@@ -66,7 +71,6 @@
                                             </div>
                                         </div>
                                         <hr style="margin: 15px 0;">
-                                        {# Lien vers la fiche de l'école (à créer) #}
                                         <a href="{{ path('app_etablissement_index') }}" style="font-size: 12px; color: #d82a2e; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
                                             Profil de l'école <i class="fa fa-angle-right"></i>
                                         </a>
@@ -78,10 +82,11 @@
                                 {% endfor %}
                             </div>
 
-                            {# Box d'appel à l'action #}
+                            {# Box d'appel à l'action / Info complémentaire #}
                             <div class="promo-box" style="background: #252525; color: #fff; padding: 25px; border-radius: 15px; margin-top: 40px; text-align: center;">
                                 <h6 class="text-white mb-2">Besoin d'aide ?</h6>
                                 <p style="font-size: 13px; opacity: 0.8; margin-bottom: 20px;">Nos conseillers vous orientent gratuitement vers l'école idéale.</p>
+                                <a href="{{ path('app_categorie_show', {id: categorie.id}) }}" class="btn btn-outline-light btn-sm w-100 mb-2" style="border-radius: 30px;">Retour à la catégorie</a>
                                 <a href="#" class="site-btn btn-sm" style="background: #d82a2e; width: 100%; border-radius: 30px;">Nous contacter</a>
                             </div>
                         </div>
@@ -90,4 +95,10 @@
             </div>
         </div>
     </section>
+
+    <style>
+        .site-breadcrumb a { color: #fff; text-decoration: none; }
+        .site-breadcrumb { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+        .school-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.08); border-color: #d82a2e !important; }
+    </style>
 {% endblock %}

@@ -1,3 +1,5 @@
+{# templates/front/categorie/index.html.twig #}
+
 {% extends 'front/base.html.twig' %}
 
 {% block title %}Domaines d'études - SchoolPrepar{% endblock %}
@@ -16,11 +18,9 @@
     <section class="categories-section spad">
         <div class="container">
             <div class="row">
-                {# On boucle sur les catégories paginées #}
                 {% for c in categories %}
                     <div class="col-lg-4 col-md-6 mb-4 d-flex align-items-stretch">
                         <div class="categorie-item-glass" style="width: 100%; display: flex; flex-direction: column; background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.07); border-radius: 12px; overflow: hidden; transition: 0.3s;">
-
                             {% set imageNumber = (loop.index0 % 4) + 1 %}
                             <div class="ci-thumb set-bg"
                                  data-setbg="{{ asset('assets/front/img/categories/' ~ imageNumber ~ '.jpg') }}"
@@ -53,36 +53,71 @@
                 {% endfor %}
             </div>
 
-            {# --- AFFICHAGE DE LA PAGINATION --- #}
-            <div class="site-pagination pt-5 d-flex justify-content-center">
-                {{ knp_pagination_render(categories) }}
-            </div>
+            {# --- NAVIGATION DE PAGINATION MANUELLE (Style Cercles) --- #}
+            {% if pagesTotales > 1 %}
+                <div class="site-pagination pt-5 d-flex justify-content-center">
+                    <ul class="pagination">
+                        {# Flèche Précédent #}
+                        <li class="{{ pageActuelle == 1 ? 'disabled' }}">
+                            {% if pageActuelle > 1 %}
+                                <a href="{{ path('app_categorie_index', {page: pageActuelle - 1}) }}">
+                                    <i class="fa fa-angle-left"></i>
+                                </a>
+                            {% else %}
+                                <span><i class="fa fa-angle-left"></i></span>
+                            {% endif %}
+                        </li>
+
+                        {# Chiffres #}
+                        {% for i in 1..pagesTotales %}
+                            <li class="{{ i == pageActuelle ? 'active' }}">
+                                {% if i == pageActuelle %}
+                                    <span>{{ i }}</span>
+                                {% else %}
+                                    <a href="{{ path('app_categorie_index', {page: i}) }}">{{ i }}</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+
+                        {# Flèche Suivant #}
+                        <li class="{{ pageActuelle == pagesTotales ? 'disabled' }}">
+                            {% if pageActuelle < pagesTotales %}
+                                <a href="{{ path('app_categorie_index', {page: pageActuelle + 1}) }}">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            {% else %}
+                                <span><i class="fa fa-angle-right"></i></span>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
         </div>
     </section>
 
     <style>
-        /* Style pour personnaliser les boutons de pagination KNP */
-        .pagination { display: flex; list-style: none; padding: 0; }
-        .pagination li { margin: 0 5px; }
+        /* On garde tes styles CSS exactement comme avant car la structure HTML <ul> <li> <a>/<span> est conservée */
+        .pagination { display: flex; list-style: none; padding: 0; margin: 0; align-items: center; }
+        .pagination li { margin: 0 8px; }
         .pagination li a, .pagination li span {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            line-height: 40px;
-            text-align: center;
-            border-radius: 50%;
-            background: #f0f0f0;
-            color: #252525;
-            font-weight: 600;
-            transition: 0.3s;
-            text-decoration: none;
+            display: flex; align-items: center; justify-content: center;
+            width: 45px; height: 45px; border-radius: 50%;
+            background: #fff; color: #2c3e50; font-weight: 600;
+            font-size: 16px; border: 1px solid #ebedef;
+            transition: all 0.3s ease; text-decoration: none !important;
         }
-        .pagination li.active span { background: #d82a2e; color: #fff; }
-        .pagination li a:hover { background: #d82a2e; color: #fff; }
+        .pagination li.active span {
+            background: #d82a2e !important; color: #fff !important;
+            border-color: #d82a2e !important; box-shadow: 0 4px 10px rgba(179, 17, 12, 0.3);
+        }
+        .pagination li.disabled span { color: #ccc; background: #f8f9fa; cursor: not-allowed; }
+        .pagination li a:hover { border-color: #d82a2e; color: #d82a2e; background: rgba(29, 196, 108, 0.05); transform: translateY(-2px); }
 
+        /* Tes autres styles de cartes... */
         .categorie-item-glass:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.12); }
         .view-more-link:hover { color: #d82a2e !important; }
         .site-breadcrumb a { color: #fff; text-decoration: none; }
         .site-breadcrumb { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+        .hp-title { color: #fff; font-weight: 700; }
     </style>
 {% endblock %}

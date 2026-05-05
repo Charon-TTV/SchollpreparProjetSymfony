@@ -15,10 +15,31 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AdminCategorieController extends AbstractController
 {
     #[Route(name: 'app_admin_categorie_index', methods: ['GET'])]
-    public function index(CategorieRepository $categorieRepository): Response
+    public function index(Request $request, CategorieRepository $categorieRepository): Response
     {
+        // 1. Définition de la limite
+        $limit = 4;
+
+        // 2. Récupération de la page actuelle
+        $page = (int)$request->query->get('page', 1);
+        if ($page < 1) $page = 1;
+
+        // 3. Récupération des catégories paginées
+        $categories = $categorieRepository->findBy(
+            [],
+            ['id' => 'DESC'],
+            $limit,
+            ($page - 1) * $limit
+        );
+
+        // 4. Calcul du total de pages
+        $total = $categorieRepository->count([]);
+        $pagesTotales = ceil($total / $limit);
+
         return $this->render('admin/admin_categorie/index.html.twig', [
-            'categories' => $categorieRepository->findAll(),
+            'categories' => $categories,
+            'pagesTotales' => (int)$pagesTotales,
+            'pageActuelle' => $page,
         ]);
     }
 

@@ -24,6 +24,7 @@
                             <table class="table table-hover align-middle">
                                 <thead class="thead-light">
                                 <tr>
+                                    {# On garde une largeur fixe pour le # #}
                                     <th class="border-top-0" style="width: 50px;">#</th>
                                     <th class="border-top-0">Aperçu</th>
                                     <th class="border-top-0">Nom & Ville</th>
@@ -35,7 +36,10 @@
                                 <tbody>
                                 {% for etablissement in etablissements %}
                                     <tr>
-                                        <td class="text-muted font-weight-bold">{{ loop.index }}</td>
+                                        {# Calcul de l'index global pour la pagination #}
+                                        <td class="text-muted font-weight-bold">
+                                            {{ (pageActuelle - 1) * 5 + loop.index }}
+                                        </td>
                                         <td>
                                             {% if etablissement.image %}
                                                 <img src="{{ asset('uploads/images/' ~ etablissement.image) }}"
@@ -98,6 +102,41 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        {# --- BLOC PAGINATION --- #}
+                        {% if pagesTotales > 1 %}
+                            <div class="d-flex justify-content-between align-items-center mt-4">
+                                <div class="text-muted small">
+                                    Page <strong>{{ pageActuelle }}</strong> sur <strong>{{ pagesTotales }}</strong>
+                                </div>
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination pagination-sm mb-0">
+                                        {# Bouton Précédent #}
+                                        <li class="page-item {{ pageActuelle == 1 ? 'disabled' }}">
+                                            <a class="page-link" href="{{ path('app_admin_etablissement_index', {page: pageActuelle - 1}) }}">
+                                                <i class="feather icon-chevron-left"></i>
+                                            </a>
+                                        </li>
+
+                                        {# Boucle des numéros de page #}
+                                        {% for i in 1..pagesTotales %}
+                                            <li class="page-item {{ i == pageActuelle ? 'active' }}">
+                                                <a class="page-link shadow-none" href="{{ path('app_admin_etablissement_index', {page: i}) }}">{{ i }}</a>
+                                            </li>
+                                        {% endfor %}
+
+                                        {# Bouton Suivant #}
+                                        <li class="page-item {{ pageActuelle == pagesTotales ? 'disabled' }}">
+                                            <a class="page-link" href="{{ path('app_admin_etablissement_index', {page: pageActuelle + 1}) }}">
+                                                <i class="feather icon-chevron-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        {% endif %}
+                        {# --- FIN PAGINATION --- #}
+
                     </div>
                 </div>
             </div>
@@ -109,5 +148,26 @@
         .badge-light-success { background-color: #e6f9f0; color: #00c292; }
         .badge-light-warning { background-color: #fff8e6; color: #fec107; }
         .align-middle td { vertical-align: middle !important; }
+
+        /* Style pour la pagination personnalisée */
+        .page-item.active .page-link {
+            background-color: #11c15b; /* Couleur rouge SchoolPrepar */
+            border-color: #11c15b;
+            color: #fff !important;
+        }
+        .page-link {
+            color: #252525;
+            border: 1px solid #dee2e6;
+            padding: 0.5rem 0.75rem;
+        }
+        .page-link:hover {
+            color: #11c15b;
+            background-color: #f8f9fa;
+        }
+        .page-item.disabled .page-link {
+            color: #6c757d;
+            pointer-events: none;
+            background-color: #fff;
+        }
     </style>
 {% endblock %}

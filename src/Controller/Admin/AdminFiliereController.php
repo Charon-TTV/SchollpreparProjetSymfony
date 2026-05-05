@@ -17,10 +17,31 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 final class AdminFiliereController extends AbstractController
 {
     #[Route(name: 'app_admin_filiere_index', methods: ['GET'])]
-    public function index(FiliereRepository $filiereRepository): Response
+    public function index(Request $request, FiliereRepository $filiereRepository): Response
     {
+        // 1. Définir la limite par page
+        $limit = 4;
+
+        // 2. Récupérer la page actuelle (1 par défaut)
+        $page = (int)$request->query->get('page', 1);
+        if ($page < 1) $page = 1;
+
+        // 3. Récupérer les filières avec pagination
+        $filieres = $filiereRepository->findBy(
+            [],
+            ['id' => 'DESC'],
+            $limit,
+            ($page - 1) * $limit
+        );
+
+        // 4. Calculer le nombre total de pages
+        $total = $filiereRepository->count([]);
+        $pagesTotales = ceil($total / $limit);
+
         return $this->render('admin/admin_filiere/index.html.twig', [
-            'filieres' => $filiereRepository->findAll(),
+            'filieres' => $filieres,
+            'pagesTotales' => (int)$pagesTotales,
+            'pageActuelle' => $page,
         ]);
     }
 

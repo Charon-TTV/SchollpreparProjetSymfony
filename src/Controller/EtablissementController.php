@@ -1,10 +1,11 @@
 <?php
 
+// src/Controller/EtablissementController.php
+
 namespace App\Controller;
 
 use App\Entity\Etablissement;
 use App\Repository\EtablissementRepository;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,21 +16,29 @@ final class EtablissementController extends AbstractController
     #[Route('/etablissements', name: 'app_etablissement_index')]
     public function index(
         EtablissementRepository $etablissementRepository,
-        PaginatorInterface $paginator,
         Request $request
     ): Response {
-        // On récupère les données
-        $data = $etablissementRepository->findAll();
+        // 1. Configuration de la pagination
+        $limit = 3;
+        $page = $request->query->getInt('page', 1);
+        if ($page < 1) $page = 1;
 
-        // On pagine : 3 établissements par page
-        $etablissements = $paginator->paginate(
-            $data,
-            $request->query->getInt('page', 1),
-            3
+        // 2. Récupération des données avec offset
+        $etablissements = $etablissementRepository->findBy(
+            [],
+            ['nom' => 'ASC'],
+            $limit,
+            ($page - 1) * $limit
         );
+
+        // 3. Calcul pour la navigation
+        $total = $etablissementRepository->count([]);
+        $pagesTotales = ceil($total / $limit);
 
         return $this->render('front/etablissement/index.html.twig', [
             'etablissements' => $etablissements,
+            'pagesTotales' => (int)$pagesTotales,
+            'pageActuelle' => $page,
         ]);
     }
 

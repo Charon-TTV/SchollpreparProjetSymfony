@@ -17,10 +17,32 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 final class AdminEtablissementController extends AbstractController
 {
     #[Route(name: 'app_admin_etablissement_index', methods: ['GET'])]
-    public function index(EtablissementRepository $etablissementRepository): Response
+    public function index(Request $request, EtablissementRepository $etablissementRepository): Response
     {
+        // 1. On définit le nombre d'éléments par page
+        $limit = 4;
+
+        // 2. On récupère la page actuelle depuis la requête (par défaut 1)
+        $page = (int)$request->query->get('page', 1);
+        if ($page < 1) $page = 1;
+
+        // 3. On récupère les établissements avec pagination (findBy)
+        // findBy(critères, tri, limite, offset)
+        $etablissements = $etablissementRepository->findBy(
+            [],
+            ['id' => 'DESC'],
+            $limit,
+            ($page - 1) * $limit
+        );
+
+        // 4. On compte le nombre total pour calculer le nombre de pages
+        $total = $etablissementRepository->count([]);
+        $pagesTotales = ceil($total / $limit);
+
         return $this->render('admin/admin_etablissement/index.html.twig', [
-            'etablissements' => $etablissementRepository->findAll(),
+            'etablissements' => $etablissements,
+            'pagesTotales' => $pagesTotales,
+            'pageActuelle' => $page
         ]);
     }
 

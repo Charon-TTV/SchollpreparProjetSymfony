@@ -1,9 +1,11 @@
+{# templates/front/categorie/show.html.twig #}
+
 {% extends 'front/base.html.twig' %}
 
 {% block title %}{{ categorie.nom }} - SchoolPrepar{% endblock %}
 
 {% block body %}
-    {# Header avec Breadcrumb complet : Accueil / Catégories / Nom_Catégorie #}
+    {# 1. Header avec Breadcrumb complet #}
     <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/1.jpg') }}">
         <div class="container">
             <div class="site-breadcrumb">
@@ -15,6 +17,7 @@
         </div>
     </section>
 
+    {# 2. Grille des Filières filtrées #}
     <section class="course-section spad">
         <div class="container">
             <div class="section-title">
@@ -34,7 +37,7 @@
                                     {{ f.description|length > 100 ? f.description|slice(0, 100) ~ '...' : f.description }}
                                 </p>
                                 <div class="mt-auto pt-3">
-                                    <a href="{{ path('app_filiere_show', {'id': f.id}) }}" class="site-btn btn-sm w-100 text-center" style="border-radius: 30px;">
+                                    <a href="{{ path('app_categorie_filiere_show', {'id': categorie.id, 'filiere_id': f.id}) }}" class="site-btn btn-sm w-100 text-center" style="border-radius: 30px;">
                                         Voir le programme
                                     </a>
                                 </div>
@@ -42,18 +45,79 @@
                         </div>
                     </div>
                 {% else %}
-                    <div class="col-12 text-center">
+                    <div class="col-12 text-center py-5">
                         <div class="alert alert-light p-5 border">
-                            <p class="text-muted">Bientôt disponible dans cette catégorie !</p>
+                            <p class="text-muted mb-0">Bientôt disponible dans cette catégorie !</p>
                         </div>
                     </div>
                 {% endfor %}
             </div>
+
+            {# 3. Navigation de la Pagination #}
+            {% if pagesTotales > 1 %}
+                <div class="site-pagination pt-5 d-flex justify-content-center">
+                    <ul class="pagination">
+                        {# Bouton Précédent #}
+                        <li class="{{ pageActuelle == 1 ? 'disabled' }}">
+                            {% if pageActuelle > 1 %}
+                                <a href="{{ path('app_categorie_show', {id: categorie.id, page: pageActuelle - 1}) }}">
+                                    <i class="fa fa-angle-left"></i>
+                                </a>
+                            {% else %}
+                                <span><i class="fa fa-angle-left"></i></span>
+                            {% endif %}
+                        </li>
+
+                        {# Liste des chiffres #}
+                        {% for i in 1..pagesTotales %}
+                            <li class="{{ i == pageActuelle ? 'active' }}">
+                                {% if i == pageActuelle %}
+                                    <span>{{ i }}</span>
+                                {% else %}
+                                    <a href="{{ path('app_categorie_show', {id: categorie.id, page: i}) }}">{{ i }}</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+
+                        {# Bouton Suivant #}
+                        <li class="{{ pageActuelle == pagesTotales ? 'disabled' }}">
+                            {% if pageActuelle < pagesTotales %}
+                                <a href="{{ path('app_categorie_show', {id: categorie.id, page: pageActuelle + 1}) }}">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            {% else %}
+                                <span><i class="fa fa-angle-right"></i></span>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
         </div>
     </section>
 
     <style>
+        /* Styles de la navigation */
+        .pagination { display: flex; list-style: none; padding: 0; margin: 0; align-items: center; }
+        .pagination li { margin: 0 8px; }
+        .pagination li a, .pagination li span {
+            display: flex; align-items: center; justify-content: center;
+            width: 45px; height: 45px; border-radius: 50%;
+            background: #fff; color: #2c3e50; font-weight: 600;
+            font-size: 16px; border: 1px solid #ebedef;
+            transition: all 0.3s ease; text-decoration: none !important;
+        }
+        .pagination li.active span {
+            background: #d82a2e !important;
+            color: #fff !important;
+            border-color: #d82a2e !important;
+            box-shadow: 0 4px 10px rgba(216, 42, 46, 0.3);
+        }
+        .pagination li.disabled span { color: #ccc; background: #f8f9fa; cursor: not-allowed; }
+        .pagination li a:hover { border-color: #d82a2e; color: #d82a2e; transform: translateY(-2px); }
+
+        /* Styles globaux de la page */
         .site-breadcrumb a { color: #fff; text-decoration: none; }
         .site-breadcrumb { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+        .hp-title { color: #fff; font-weight: 700; }
     </style>
 {% endblock %}
