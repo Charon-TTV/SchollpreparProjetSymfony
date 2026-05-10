@@ -18,27 +18,51 @@
     </section>
 
     {# 2. Grille des Filières filtrées #}
-    <section class="course-section spad">
+    <section class="categories-section spad" style="background: #fbfbfb;">
         <div class="container">
             <div class="section-title">
-                <h2>Filières en {{ categorie.nom }}</h2>
+                <h2 style="font-weight: 800;">Filières en {{ categorie.nom }}</h2>
                 <p>Découvrez les spécialisations disponibles dans ce domaine au Togo.</p>
             </div>
 
             <div class="row">
                 {% for f in filieres %}
                     <div class="col-lg-4 col-md-6 mb-5 d-flex align-items-stretch">
-                        <div class="course-item" style="display: flex; flex-direction: column; width: 100%; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); background: #fff;">
-                            <div class="course-thumb set-bg" data-setbg="{{ f.image ? asset('uploads/images/' ~ f.image) : asset('assets/front/img/courses/default.jpg') }}" style="height: 200px;">
+                        <div class="categorie-item-glass" style="width: 100%; display: flex; flex-direction: column; background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.07); border-radius: 12px; overflow: hidden; transition: 0.3s; position: relative;">
+
+                            {# Badge Catégorie #}
+                            <div style="position: absolute; top: 15px; left: 15px; z-index: 10; background: #252525; color: white; padding: 5px 15px; border-radius: 30px; font-size: 11px; font-weight: 700; text-transform: uppercase;">
+                                {{ categorie.nom }}
                             </div>
-                            <div class="course-info" style="padding: 25px; flex-grow: 1; display: flex; flex-direction: column;">
-                                <h5 style="font-weight: 700; color: #252525; margin-bottom: 15px;">{{ f.nom }}</h5>
-                                <p style="color: #707070; font-size: 14px; line-height: 1.6;">
-                                    {{ f.description|length > 100 ? f.description|slice(0, 100) ~ '...' : f.description }}
-                                </p>
-                                <div class="mt-auto pt-3">
-                                    <a href="{{ path('app_categorie_filiere_show', {'id': categorie.id, 'filiere_id': f.id}) }}" class="site-btn btn-sm w-100 text-center" style="border-radius: 30px;">
-                                        Voir le programme
+
+                            {# Image de la filière #}
+                            <div class="ci-thumb set-bg"
+                                 data-setbg="{{ f.image ? asset('uploads/images/' ~ f.image) : asset('assets/front/img/courses/default.jpg') }}"
+                                 style="height: 190px; width: 100%;">
+                            </div>
+
+                            <div class="ci-text" style="padding: 25px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                                <div>
+                                    <h5 style="font-size: 18px; font-weight: 700; color: #252525; margin-bottom: 12px;">{{ f.nom }}</h5>
+                                    <p style="font-size: 14px; color: #707070; line-height: 1.6; margin-bottom: 20px;">
+                                        {{ f.description|length > 100 ? f.description|slice(0, 100) ~ '...' : f.description }}
+                                    </p>
+                                </div>
+
+                                {# Bouton Principal (Style Forum) #}
+                                <div class="mb-3">
+                                    <a href="{{ path('app_categorie_filiere_show', {'id': categorie.id, 'filiere_id': f.id}) }}" class="btn btn-success btn-sm btn-block" style="border-radius: 20px; font-weight: 600; padding: 10px 15px; background-color: #28a745; border: none;">
+                                        <i class="fa fa-graduation-cap mr-1"></i> Voir le programme
+                                    </a>
+                                </div>
+
+                                {# Footer de la carte #}
+                                <div class="d-flex justify-content-between align-items-center" style="border-top: 1px solid #f5f5f5; padding-top: 15px; margin-top: 10px;">
+                                    <span style="font-size: 11px; color: #707070; font-weight: 600; text-transform: uppercase;">
+                                        <i class="fa fa-info-circle text-info mr-1"></i> Orientation dispo
+                                    </span>
+                                    <a href="{{ path('app_categorie_filiere_show', {'id': categorie.id, 'filiere_id': f.id}) }}" class="view-more-link" style="color: #252525; font-weight: 700; font-size: 14px; text-decoration: none;">
+                                        Découvrir <i class="fa fa-angle-right ml-1"></i>
                                     </a>
                                 </div>
                             </div>
@@ -46,7 +70,9 @@
                     </div>
                 {% else %}
                     <div class="col-12 text-center py-5">
-                        <div class="alert alert-light p-5 border">
+                        <div class="empty-state-glass p-5" style="background: #f8f9fa; border-radius: 15px; border: 2px dashed #dee2e6;">
+                            <i class="fa fa-folder-open-o mb-3" style="font-size: 50px; color: #dee2e6;"></i>
+                            <h4 style="color: #252525;">Aucune filière trouvée</h4>
                             <p class="text-muted mb-0">Bientôt disponible dans cette catégorie !</p>
                         </div>
                     </div>
@@ -57,7 +83,6 @@
             {% if pagesTotales > 1 %}
                 <div class="site-pagination pt-5 d-flex justify-content-center">
                     <ul class="pagination">
-                        {# Bouton Précédent #}
                         <li class="{{ pageActuelle == 1 ? 'disabled' }}">
                             {% if pageActuelle > 1 %}
                                 <a href="{{ path('app_categorie_show', {id: categorie.id, page: pageActuelle - 1}) }}">
@@ -68,7 +93,6 @@
                             {% endif %}
                         </li>
 
-                        {# Liste des chiffres #}
                         {% for i in 1..pagesTotales %}
                             <li class="{{ i == pageActuelle ? 'active' }}">
                                 {% if i == pageActuelle %}
@@ -79,7 +103,6 @@
                             </li>
                         {% endfor %}
 
-                        {# Bouton Suivant #}
                         <li class="{{ pageActuelle == pagesTotales ? 'disabled' }}">
                             {% if pageActuelle < pagesTotales %}
                                 <a href="{{ path('app_categorie_show', {id: categorie.id, page: pageActuelle + 1}) }}">
@@ -96,7 +119,22 @@
     </section>
 
     <style>
-        /* Styles de la navigation */
+        /* Styles globaux de la page */
+        .site-breadcrumb a { color: #fff; text-decoration: none; }
+        .site-breadcrumb { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+        .hp-title { color: #fff; font-weight: 700; }
+
+        /* Animation au survol des cartes (Design Glass) */
+        .categorie-item-glass:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15) !important;
+        }
+
+        .view-more-link:hover {
+            color: #d82a2e !important;
+        }
+
+        /* Styles de la pagination */
         .pagination { display: flex; list-style: none; padding: 0; margin: 0; align-items: center; }
         .pagination li { margin: 0 8px; }
         .pagination li a, .pagination li span {
@@ -114,10 +152,5 @@
         }
         .pagination li.disabled span { color: #ccc; background: #f8f9fa; cursor: not-allowed; }
         .pagination li a:hover { border-color: #d82a2e; color: #d82a2e; transform: translateY(-2px); }
-
-        /* Styles globaux de la page */
-        .site-breadcrumb a { color: #fff; text-decoration: none; }
-        .site-breadcrumb { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
-        .hp-title { color: #fff; font-weight: 700; }
     </style>
 {% endblock %}

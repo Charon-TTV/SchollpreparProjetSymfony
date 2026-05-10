@@ -1,14 +1,12 @@
 <header class="header-section shadow-sm">
     <div class="container">
         <div class="row align-items-center">
-            <!-- LOGO -->
             <div class="col-lg-3 col-md-3">
                 <div class="site-logo">
                     <img src="{{ asset('assets/front/img/logo.png') }}" alt="SchoolPrepar Logo" style="max-height: 40px;">
                 </div>
             </div>
 
-            <!-- NAVIGATION -->
             <div class="col-lg-9 col-md-9">
                 <nav class="main-menu d-flex align-items-center justify-content-end">
                     <ul class="d-flex align-items-center m-0 p-0" style="list-style: none;">
@@ -18,19 +16,81 @@
                         {% if is_granted('ROLE_ELEVE') %}
                             <li class="nav-item-glass"><a href="{{ path('app_categorie_index') }}">Catégories</a></li>
                             <li class="nav-item-glass"><a href="{{ path('app_etablissement_index') }}">Établissements</a></li>
-                            <li class="nav-item-glass"><a href="#">Social</a></li>
-                            <li class="nav-item-glass"><a href="#">Orientation</a></li>
+
+                            <li class="nav-item-glass dropdown" style="position: relative;">
+                                <a class="nav-link-simple d-flex align-items-center" href="javascript:void(0)" style="white-space: nowrap;">
+                                    Social / Orientation <i class="fa fa-chevron-down ml-2" style="font-size: 10px;"></i>
+                                </a>
+                                <div class="custom-dropdown-menu">
+                                    <div class="dropdown-links-container">
+                                        <a class="dropdown-link-glass" href="{{ path('app_social_index') }}"><i class="fa fa-users mr-2"></i> Mon espace social</a>
+                                        <div class="dropdown-sep-glass"></div>
+                                        <a class="dropdown-link-glass" href="#"><i class="fa fa-compass mr-2"></i> S'orienter</a>
+                                    </div>
+                                </div>
+                            </li>
+
                         {% elseif is_granted('ROLE_CONSEILLER') %}
-                            <li class="nav-item-glass"><a href="#">Espace Social</a></li>
+                            <li class="nav-item-glass"><a href="{{ path('app_categorie_index') }}">Catégories</a></li>
+
+                            <li class="nav-item-glass dropdown" style="position: relative;">
+                                <a class="nav-link-simple d-flex align-items-center" href="javascript:void(0)" style="white-space: nowrap;">
+                                    Social / Orientation <i class="fa fa-chevron-down ml-2" style="font-size: 10px;"></i>
+                                </a>
+                                <div class="custom-dropdown-menu">
+                                    <div class="dropdown-links-container">
+                                        <a class="dropdown-link-glass" href="{{ path('app_social_index') }}"><i class="fa fa-comments-o mr-2"></i> Mon espace social</a>
+                                        <div class="dropdown-sep-glass"></div>
+                                        <a class="dropdown-link-glass" href="#"><i class="fa fa-calendar mr-2"></i> Orientation</a>
+                                    </div>
+                                </div>
+                            </li>
                             <li class="nav-item-glass"><a href="#">Événements</a></li>
+
                         {% else %}
                             <li class="nav-item-glass"><a href="{{ path('app_categorie_index') }}">Catégories</a></li>
                             <li class="nav-item-glass"><a href="{{ path('app_etablissement_index') }}">Établissements</a></li>
                         {% endif %}
 
-                        {# --- ESPACE UTILISATEUR OU LOGIN --- #}
+                        {# --- ESPACE UTILISATEUR / NOTIFICATIONS --- #}
                         {% if app.user %}
                             <li class="nav-item-glass dropdown ml-4" style="position: relative;">
+                                <a class="nav-link-simple position-relative d-flex align-items-center" href="javascript:void(0)" id="notifMenu">
+                                    <i class="fa fa-bell-o" style="font-size: 18px;"></i>
+                                    {% set unreadCount = app.user.notifications|filter(n => not n.isRead)|length %}
+                                    <span id="notif-badge" class="badge badge-danger position-absolute {{ unreadCount == 0 ? 'd-none' : '' }}"
+                                          style="top: -5px; right: -8px; border-radius: 50%; font-size: 10px; padding: 3px 6px;">
+                                        {{ unreadCount }}
+                                    </span>
+                                </a>
+                                <div class="custom-dropdown-menu" style="width: 320px;">
+                                    <div class="p-3 border-bottom text-white font-weight-bold d-flex justify-content-between align-items-center" style="font-size: 14px; background: rgba(255,255,255,0.05);">
+                                        <span>Notifications</span>
+                                        <a href="#" class="text-muted small" style="font-size: 10px;">Tout marquer comme lu</a>
+                                    </div>
+                                    <div id="notif-container" class="dropdown-links-container" style="max-height: 350px; overflow-y: auto;">
+                                        {% for notif in app.user.notifications|slice(0, 5)|reverse %}
+                                            <a class="dropdown-link-glass d-flex flex-column align-items-start {{ notif.isRead ? 'opacity-50' : 'bg-unread' }}"
+                                               href="{{ notif.url|default('#') }}" style="line-height: 1.4; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                                <div class="d-flex justify-content-between w-100">
+                                                    <strong style="font-size: 12px; color: #fff;">
+                                                        {{ 'Forum' in notif.titre ? notif.titre : 'Forum ' ~ notif.titre }}
+                                                    </strong>
+                                                    <small class="text-muted" style="font-size: 9px;">{{ notif.createdAt|date('H:i') }}</small>
+                                                </div>
+                                                <span style="font-size: 11px; white-space: normal;">Nouveau message disponible</span>
+                                            </a>
+                                        {% else %}
+                                            <div class="p-4 text-center text-white-50">
+                                                <i class="fa fa-bell-slash-o mb-2 d-block" style="font-size: 24px;"></i>
+                                                <small>Aucune nouvelle notification</small>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="nav-item-glass dropdown ml-3" style="position: relative;">
                                 <a class="nav-link-simple d-flex align-items-center" href="javascript:void(0)" id="userMenu">
                                     <i class="fa fa-user-circle-o mr-2"></i>
                                     <span class="user-name-text">{{ app.user.prenom|default(app.user.username) }}</span>
@@ -69,120 +129,78 @@
     </div>
 
     <style>
-        /* --- HEADER ÉCLAIRCI --- */
-        .header-section {
-            background: rgba(40, 40, 40, 0.75); /* Gris plus clair et plus transparent */
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px 0;
-        }
-
+        .header-section { background: rgba(40, 40, 40, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding: 15px 0; }
         .nav-item-glass { margin-left: 25px; }
-        .nav-item-glass a, .nav-link-simple {
-            color: rgba(255, 255, 255, 0.85) !important;
-            font-size: 14px;
-            font-weight: 500;
-            text-decoration: none !important;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .nav-item-glass a:hover, .nav-link-simple:hover {
-            color: #d82a2e !important;
-        }
-
-        /* --- DROPDOWN ÉCLAIRCI --- */
-        .custom-dropdown-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 45px;
-            width: 250px;
-            background: rgba(45, 45, 45, 0.95); /* Fond gris anthracite au lieu de noir */
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
-            z-index: 1000;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-            overflow: hidden;
-        }
-
-        .custom-dropdown-menu.active {
-            display: block;
-            animation: slideDown 0.3s ease-out;
-        }
-
-        /* --- HOVER DU MENU (TEXTE SEULEMENT) --- */
-        .dropdown-link-glass {
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            color: rgba(255, 255, 255, 0.7) !important;
-            font-size: 14px;
-            transition: color 0.3s ease;
-            background: transparent !important; /* Force l'absence de fond */
-            text-decoration: none !important;
-        }
-
-        .dropdown-link-glass i {
-            transition: color 0.3s ease;
-        }
-
-        /* Au survol, seule la couleur change, pas le fond */
-        .dropdown-link-glass:hover {
-            color: #d82a2e !important;
-            background: transparent !important;
-        }
-
-        .dropdown-link-glass:hover i {
-            color: #d82a2e !important;
-        }
-
-        .logout-link:hover {
-            color: #ff4d4d !important;
-        }
-
-        .avatar-circle-ui {
-            width: 38px;
-            height: 38px;
-            background: #d82a2e;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .dropdown-sep-glass {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-            margin: 2px 0;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .nav-item-glass a, .nav-link-simple { color: rgba(255, 255, 255, 0.85) !important; font-size: 14px; font-weight: 500; text-decoration: none !important; transition: all 0.3s ease; cursor: pointer; }
+        .nav-item-glass a:hover, .nav-link-simple:hover { color: #d82a2e !important; }
+        .custom-dropdown-menu { display: none; position: absolute; right: 0; top: 45px; width: 250px; background: rgba(45, 45, 45, 0.95); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; z-index: 1000; box-shadow: 0 10px 40px rgba(0,0,0,0.4); overflow: hidden; }
+        .custom-dropdown-menu.active { display: block; animation: slideDown 0.3s ease-out; }
+        .dropdown-link-glass { padding: 12px 20px; display: flex; align-items: center; color: rgba(255, 255, 255, 0.7) !important; font-size: 14px; transition: color 0.3s ease; background: transparent !important; text-decoration: none !important; }
+        .dropdown-link-glass:hover { color: #d82a2e !important; }
+        .logout-link:hover { color: #ff4d4d !important; }
+        .bg-unread { background: rgba(216, 42, 46, 0.1) !important; }
+        @keyframes shake { 0% { transform: rotate(0); } 15% { transform: rotate(15deg); } 30% { transform: rotate(-15deg); } 45% { transform: rotate(10deg); } 60% { transform: rotate(-10deg); } 100% { transform: rotate(0); } }
+        .fa-shake { animation: shake 0.5s ease-in-out; }
+        .avatar-circle-ui { width: 38px; height: 38px; background: #d82a2e; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .dropdown-sep-glass { height: 1px; background: rgba(255, 255, 255, 0.1); margin: 2px 0; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </header>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const userMenuBtn = document.getElementById('userMenu');
-        const dropdownMenu = document.querySelector('.custom-dropdown-menu');
-
-        if (userMenuBtn && dropdownMenu) {
-            userMenuBtn.addEventListener('click', function(e) {
+        const dropdowns = document.querySelectorAll('.dropdown');
+        dropdowns.forEach(dropdown => {
+            const trigger = dropdown.querySelector('a');
+            const menu = dropdown.querySelector('.custom-dropdown-menu');
+            trigger.addEventListener('click', function(e) {
                 e.stopPropagation();
-                dropdownMenu.classList.toggle('active');
+                document.querySelectorAll('.custom-dropdown-menu').forEach(m => { if (m !== menu) m.classList.remove('active'); });
+                menu.classList.toggle('active');
             });
+        });
+        document.addEventListener('click', () => { document.querySelectorAll('.custom-dropdown-menu').forEach(m => m.classList.remove('active')); });
 
-            document.addEventListener('click', function(e) {
-                if (!userMenuBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                    dropdownMenu.classList.remove('active');
-                }
-            });
-        }
+        {% if app.user %}
+        const notifUrl = new URL('{{ mercure_hub_url|default("http://localhost:3000/.well-known/mercure") }}');
+        notifUrl.searchParams.append('topic', 'user_notifications_{{ app.user.id }}');
+        const notifSource = new EventSource(notifUrl);
+
+        notifSource.onmessage = event => {
+            const data = JSON.parse(event.data);
+            const badge = document.getElementById('notif-badge');
+            const container = document.getElementById('notif-container');
+
+            if (data.type === 'new_notif') {
+                let currentCount = parseInt(badge.innerText) || 0;
+                badge.innerText = currentCount + 1;
+                badge.classList.remove('d-none');
+
+                const bellIcon = document.querySelector('#notifMenu i');
+                bellIcon.classList.add('fa-shake');
+                setTimeout(() => bellIcon.classList.remove('fa-shake'), 1000);
+
+                // --- SÉCURISATION ET ADAPTATION ---
+                const forumName = data.forum_nom || 'Forum';
+                const targetUrl = data.url || '#';
+                const formattedTitle = forumName.includes('Forum') ? forumName : 'Forum ' + forumName;
+
+                const newNotifHtml = `
+                    <a class="dropdown-link-glass d-flex flex-column align-items-start bg-unread"
+                       href="${targetUrl}" style="line-height: 1.4; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <div class="d-flex justify-content-between w-100">
+                            <strong style="font-size: 12px; color: #fff;">${formattedTitle}</strong>
+                            <small class="text-muted" style="font-size: 9px;">Maintenant</small>
+                        </div>
+                        <span style="font-size: 11px; white-space: normal;">Nouveau message dans la discussion</span>
+                    </a>
+                `;
+
+                const emptyMsg = container.querySelector('.text-center');
+                if (emptyMsg) emptyMsg.remove();
+                container.insertAdjacentHTML('afterbegin', newNotifHtml);
+            }
+        };
+        {% endif %}
     });
 </script>

@@ -4,6 +4,7 @@
 {% block title %}Nos Établissements - SchoolPrepar{% endblock %}
 
 {% block body %}
+    {# Section d'entête #}
     <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/1.jpg') }}">
         <div class="container">
             <div class="site-breadcrumb">
@@ -14,36 +15,45 @@
         </div>
     </section>
 
-    <section class="course-section spad">
+    <section class="course-section spad" style="background: #fbfbfb;">
         <div class="container">
             <div class="row">
                 {% for e in etablissements %}
                     <div class="col-lg-4 col-md-6 mb-5 d-flex align-items-stretch">
                         <div class="categorie-item-glass" style="width: 100%; display: flex; flex-direction: column; background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.07); border-radius: 12px; overflow: hidden; transition: 0.3s; position: relative;">
 
-                            <div style="position: absolute; top: 15px; left: 15px; z-index: 10; background: {{ e.type == 'Public' ? '#252525' : '#d82a2e' }}; color: white; padding: 5px 15px; border-radius: 30px; font-size: 11px; font-weight: 700; text-transform: uppercase;">
+                            {# Badge Type (Public/Privé) #}
+                            <div style="position: absolute; top: 15px; left: 15px; z-index: 10; background: {{ e.type == 'Public' ? '#252525' : '#d82a2e' }}; color: white; padding: 5px 15px; border-radius: 30px; font-size: 11px; font-weight: 700; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
                                 {{ e.type|default('Privé') }}
                             </div>
 
+                            {# Image de l'établissement #}
                             <div class="ci-thumb set-bg"
                                  data-setbg="{{ e.image ? asset('uploads/images/' ~ e.image) : asset('assets/front/img/categories/1.jpg') }}"
                                  style="height: 180px; width: 100%;">
                             </div>
 
+                            {# Contenu de la carte #}
                             <div class="ci-text" style="padding: 25px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
                                 <div>
                                     <h5 style="font-size: 18px; font-weight: 700; color: #252525; margin-bottom: 8px;">{{ e.nom }}</h5>
                                     <div class="mb-3" style="color: #d82a2e; font-size: 13px; font-weight: 600;">
-                                        <i class="fa fa-map-marker"></i> {{ e.ville }}, Togo
+                                        <i class="fa fa-map-marker mr-1"></i> {{ e.ville }}, Togo
                                     </div>
-                                    <p style="font-size: 14px; color: #707070; line-height: 1.6; margin-bottom: 15px;">
+                                    <p style="font-size: 14px; color: #707070; line-height: 1.6; margin-bottom: 20px;">
                                         {{ e.localisation|length > 100 ? e.localisation|slice(0, 100) ~ '...' : e.localisation }}
                                     </p>
                                 </div>
 
-                                <div class="text-center" style="border-top: 1px solid #f5f5f5; padding-top: 20px; margin-top: 10px; width: 100%;">
-                                    <a href="{{ path('app_etablissement_show', {'id': e.id}) }}" class="site-btn btn-sm" style="border-radius: 30px; padding: 8px 30px; display: inline-block;">
-                                        Voir plus
+
+
+                                {# Footer de la carte (Détails) #}
+                                <div class="d-flex justify-content-between align-items-center" style="border-top: 1px solid #f5f5f5; padding-top: 15px; margin-top: 10px;">
+                                    <span style="font-size: 11px; color: #707070; font-weight: 600; text-transform: uppercase;">
+                                        <i class="fa fa-check-circle text-success mr-1"></i> Partenaire
+                                    </span>
+                                    <a href="{{ path('app_etablissement_show', {'id': e.id}) }}" class="view-more-link" style="color: #252525; font-weight: 700; font-size: 14px; text-decoration: none;">
+                                        Fiche complète <i class="fa fa-angle-right ml-1"></i>
                                     </a>
                                 </div>
                             </div>
@@ -51,12 +61,15 @@
                     </div>
                 {% else %}
                     <div class="col-12 text-center py-5">
-                        <p class="text-muted">Aucun établissement répertorié pour le moment.</p>
+                        <div class="empty-state-glass p-5" style="background: #f8f9fa; border-radius: 15px; border: 2px dashed #dee2e6;">
+                            <i class="fa fa-building-o mb-3" style="font-size: 50px; color: #dee2e6;"></i>
+                            <p class="text-muted">Aucun établissement répertorié pour le moment.</p>
+                        </div>
                     </div>
                 {% endfor %}
             </div>
 
-            {# --- NAVIGATION PAGINATION MANUELLE --- #}
+            {# Pagination #}
             {% if pagesTotales > 1 %}
                 <div class="site-pagination pt-5 d-flex justify-content-center">
                     <ul class="pagination">
@@ -92,6 +105,22 @@
     </section>
 
     <style>
+        /* Styles de base */
+        .site-breadcrumb a { color: #fff; text-decoration: none; }
+        .site-breadcrumb { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+        .hp-title { color: #fff; font-weight: 700; }
+
+        /* Animation au survol des cartes */
+        .categorie-item-glass:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15) !important;
+        }
+
+        .view-more-link:hover {
+            color: #d82a2e !important;
+        }
+
+        /* Pagination Style */
         .pagination { display: flex; list-style: none; padding: 0; margin: 0; align-items: center; }
         .pagination li { margin: 0 8px; }
         .pagination li a, .pagination li span {
@@ -102,17 +131,12 @@
             transition: all 0.3s ease; text-decoration: none !important;
         }
         .pagination li.active span {
-            background: #d82a2e !important; /* Couleur rouge pour correspondre au thème Établissements */
+            background: #d82a2e !important;
             color: #fff !important;
             border-color: #d82a2e !important;
             box-shadow: 0 4px 10px rgba(216, 42, 46, 0.3);
         }
         .pagination li.disabled span { color: #ccc; background: #f8f9fa; cursor: not-allowed; }
         .pagination li a:hover { border-color: #d82a2e; color: #d82a2e; transform: translateY(-2px); }
-
-        .categorie-item-glass:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.12); }
-        .site-breadcrumb a { color: #fff; text-decoration: none; }
-        .site-breadcrumb { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
-        .hp-title { color: #fff; font-weight: 700; }
     </style>
 {% endblock %}

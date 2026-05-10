@@ -1,0 +1,146 @@
+{# templates/front/social/show.html.twig #}
+
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Forum {{ forum.nom }} - SchoolPrepar{% endblock %}
+
+{% block body %}
+    {# Header avec image de fond #}
+    <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/1.jpg') }}">
+        <div class="container">
+            <div class="site-breadcrumb">
+                <a href="{{ path('app_home') }}">Accueil</a> /
+                <a href="{{ path('app_social_index') }}">Mon Espace Social</a> /
+                <span style="color: #d82a2e;">{{ forum.nom }}</span>
+            </div>
+            <h2 class="hp-title">{{ forum.nom }}</h2>
+        </div>
+    </section>
+
+    <section class="single-category-spad pb-5">
+        <div class="container">
+            <div class="row">
+                {# Colonne Principale #}
+                <div class="col-lg-8">
+                    <div class="forum-detail-content bg-white p-4 p-md-5 shadow-sm mb-4" style="border-radius: 15px;">
+
+                        {# Titre Adaptatif selon le Rôle #}
+                        <h3 class="mb-4" style="font-weight: 700; color: #252525;">
+                            {% if is_granted('ROLE_CONSEILLER') %}
+                                <i class="fa fa-briefcase text-muted mr-2"></i> Votre Espace d'Accompagnement
+                            {% else %}
+                                <i class="fa fa-graduation-cap text-muted mr-2"></i> Votre Communauté d'Apprentissage
+                            {% endif %}
+                        </h3>
+
+                        {# Description de la catégorie/forum #}
+                        <div class="description-text mb-5" style="font-size: 16px; color: #606060; line-height: 1.8;">
+                            <p><strong>Domaine :</strong> {{ forum.nom }}</p>
+                            {{ forum.description|nl2br }}
+                        </div>
+
+                        {# Zone de Message Contextuel (Callout) #}
+                        {% if is_granted('ROLE_CONSEILLER') %}
+                            {# Message spécifique pour le CONSEILLER #}
+                            <div class="community-callout p-4 mb-4" style="background: rgba(40, 167, 69, 0.05); border-left: 5px solid #28a745; border-radius: 8px;">
+                                <h5 style="color: #28a745; font-weight: 700;" class="mb-2">Votre rôle de mentor</h5>
+                                <p class="m-0" style="color: #444;">
+                                    En tant que conseiller, votre présence ici est précieuse. Répondez aux interrogations des élèves, partagez des ressources sur les débouchés du secteur <strong>{{ forum.nom }}</strong> et aidez-les à construire leur projet professionnel.
+                                </p>
+                            </div>
+                        {% else %}
+                            {# Message spécifique pour l'ÉLÈVE #}
+                            <div class="community-callout p-4 mb-4" style="background: rgba(216, 42, 46, 0.05); border-left: 5px solid #d82a2e; border-radius: 8px;">
+                                <h5 style="color: #d82a2e; font-weight: 700;" class="mb-2">Besoin de conseils ?</h5>
+                                <p class="m-0" style="color: #444;">
+                                    N'hésitez pas à poser vos questions sur les filières de <strong>{{ forum.nom }}</strong>. Des conseillers d'orientation et d'autres étudiants sont là pour vous répondre et partager leurs expériences.
+                                </p>
+                            </div>
+                        {% endif %}
+
+                        {# Actions : Ouvrir le chat ou Quitter #}
+                        <div class="d-flex flex-wrap mt-5">
+                            <a href="{{ path('app_social_chat', {id: forum.id}) }}" class="btn btn-lg px-5 mr-3 mb-3"
+                               style="background-color: {% if is_granted('ROLE_CONSEILLER') %}#28a745{% else %}#d82a2e{% endif %};
+                                   color: white; border-radius: 30px; font-weight: 700; border: none;
+                                   box-shadow: 0 5px 15px rgba(0,0,0,0.15);">
+                                <i class="fa fa-comments mr-2"></i>
+                                {% if is_granted('ROLE_CONSEILLER') %}Modérer & Échanger{% else %}Ouvrir le Chat{% endif %}
+                            </a>
+
+                            <a href="{{ path('app_social_quitter', {id: forum.id}) }}"
+                               class="btn btn-lg btn-outline-secondary px-4 mb-3"
+                               style="border-radius: 30px; font-weight: 600;"
+                               onclick="return confirm('Voulez-vous vraiment quitter ce groupe ?')">
+                                Quitter le forum
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                {# Barre Latérale (Infos supplémentaires) #}
+                <div class="col-lg-4">
+                    <div class="sidebar-card p-4 bg-white shadow-sm mb-4" style="border-radius: 15px; border-top: 4px solid #d82a2e;">
+                        <h5 class="mb-4" style="font-weight: 700;">Informations Clés</h5>
+                        <ul style="list-style: none; padding: 0;">
+                            <li class="mb-3 d-flex align-items-center">
+                                <div class="icon-box mr-3 text-center" style="width: 35px; color: #d82a2e;">
+                                    <i class="fa fa-graduation-cap fa-lg"></i>
+                                </div>
+                                <div>
+                                    <small class="d-block text-muted">Domaine</small>
+                                    <span style="font-weight: 600;">{{ forum.nom }}</span>
+                                </div>
+                            </li>
+                            <li class="mb-3 d-flex align-items-center">
+                                <div class="icon-box mr-3 text-center" style="width: 35px; color: #d82a2e;">
+                                    <i class="fa fa-users fa-lg"></i>
+                                </div>
+                                <div>
+                                    <small class="d-block text-muted">Type d'espace</small>
+                                    <span style="font-weight: 600;">Communautaire & Mentorat</span>
+                                </div>
+                            </li>
+                            <li class="mb-3 d-flex align-items-center">
+                                <div class="icon-box mr-3 text-center" style="width: 35px; color: #d82a2e;">
+                                    <i class="fa fa-check-circle fa-lg"></i>
+                                </div>
+                                <div>
+                                    <small class="d-block text-muted">Votre Statut</small>
+                                    {% if is_granted('ROLE_CONSEILLER') %}
+                                        <span class="badge badge-primary" style="border-radius: 10px; background-color: #007bff;">Conseiller Expert</span>
+                                    {% else %}
+                                        <span class="badge badge-success" style="border-radius: 10px;">Élève Membre</span>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {# Bloc d'aide SchoolPrepar #}
+                    <div class="sidebar-card p-4 text-white shadow-sm" style="border-radius: 15px; background: linear-gradient(45deg, #d82a2e, #a31d20);">
+                        <h5 class="mb-3" style="font-weight: 700;">Besoin d'aide ?</h5>
+                        <p style="font-size: 14px; opacity: 0.9;">
+                            SchoolPrepar vous met en relation avec des conseillers pour éclairer vos choix d'avenir.
+                        </p>
+                        <a href="#" class="btn btn-sm btn-light btn-block" style="border-radius: 20px; font-weight: 700; color: #d82a2e;">Prendre RDV</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .single-category-spad { padding-top: 60px; background: #fbfbfb; }
+        .forum-detail-content { transition: transform 0.3s ease; }
+        .site-breadcrumb a { color: #fff; text-decoration: none; }
+        .site-breadcrumb { color: #fff; font-size: 16px; margin-bottom: 15px; }
+        .hp-title { color: #fff; font-weight: 700; font-size: 40px; }
+
+        /* Hover effect pour les boutons outline */
+        .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: white !important;
+        }
+    </style>
+{% endblock %}

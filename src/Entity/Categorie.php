@@ -28,9 +28,23 @@ class Categorie
     #[ORM\OneToMany(targetEntity: Filiere::class, mappedBy: 'categorie')]
     private Collection $filieres;
 
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'forumCategorie')]
+    private Collection $forumMessages;
+
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'forums')]
+    private Collection $membres;
+
     public function __construct()
     {
         $this->filieres = new ArrayCollection();
+        $this->forumMessages = new ArrayCollection();
+        $this->membres = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -87,6 +101,63 @@ class Categorie
             if ($filiere->getCategorie() === $this) {
                 $filiere->setCategorie(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getForumMessages(): Collection
+    {
+        return $this->forumMessages;
+    }
+
+    public function addForumMessage(Message $forumMessage): static
+    {
+        if (!$this->forumMessages->contains($forumMessage)) {
+            $this->forumMessages->add($forumMessage);
+            $forumMessage->setForumCategorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeForumMessage(Message $forumMessage): static
+    {
+        if ($this->forumMessages->removeElement($forumMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($forumMessage->getForumCategorie() === $this) {
+                $forumMessage->setForumCategorie(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getMembres(): Collection
+    {
+        return $this->membres;
+    }
+
+    public function addMembre(User $membre): static
+    {
+        if (!$this->membres->contains($membre)) {
+            $this->membres->add($membre);
+            $membre->addForum($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMembre(User $membre): static
+    {
+        if ($this->membres->removeElement($membre)) {
+            $membre->removeForum($this);
         }
 
         return $this;

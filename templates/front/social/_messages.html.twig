@@ -1,0 +1,54 @@
+{# templates/front/social/_messages.html.twig #}
+
+{% for message in messages %}
+
+    {% if message.expediteur is null %}
+        {# --- AFFICHAGE MESSAGE SYSTÈME (Historique) --- #}
+        <div class="text-center my-3 w-100">
+            <span class="badge badge-light p-2 shadow-sm" style="border-radius: 20px; font-size: 11px;">
+                <i class="fa fa-info-circle mr-1"></i> {{ message.contenu }}
+            </span>
+        </div>
+    {% else %}
+        {# --- AFFICHAGE MESSAGE UTILISATEUR (Historique) --- #}
+        {% set isMe = (app.user and message.expediteur == app.user) %}
+        {% set isConseiller = ('ROLE_CONSEILLER' in message.expediteur.roles) %}
+
+        <div id="message-{{ message.id }}" class="message-wrapper {{ isMe ? 'me' : 'others' }}">
+            <div class="message-meta d-flex align-items-center mb-1">
+                {% if isConseiller %}
+                    <i class="fa fa-briefcase text-primary mr-1" style="font-size: 11px;" title="Conseiller"></i>
+                {% else %}
+                    <i class="fa fa-graduation-cap text-success mr-1" style="font-size: 11px;" title="Élève"></i>
+                {% endif %}
+
+                <strong class="mr-1" style="font-size: 13px;">
+                    {{ isMe ? 'Moi' : (message.expediteur.nom ~ ' ' ~ message.expediteur.prenom) }}
+                </strong>
+
+                <span class="text-muted" style="font-size: 10px;">
+                    • {{ message.dateEnvoi|date('H:i') }}
+                </span>
+            </div>
+
+            <div class="message-bubble shadow-sm">
+                {{ message.contenu|nl2br }}
+            </div>
+
+            {% if isMe or is_granted('ROLE_CONSEILLER') %}
+                <button onclick="deleteMessage({{ message.id }})" class="btn-delete-msg" title="Supprimer le message">
+                    <i class="fa fa-trash"></i> Supprimer
+                </button>
+            {% endif %}
+        </div>
+    {% endif %}
+
+{% else %}
+    <div class="text-center p-5 text-muted">
+        <div class="mb-3 opacity-25">
+            <i class="fa fa-comments-o fa-4x"></i>
+        </div>
+        <h6 class="font-weight-bold">Aucun message ici</h6>
+        <p class="small">Soyez le premier à lancer la discussion !</p>
+    </div>
+{% endfor %}

@@ -1,0 +1,32 @@
+{
+    # On désactive l'administration et le HTTPS pour éviter les conflits de ports
+    admin off
+    auto_https off
+}
+
+# On écoute sur le port 3000
+:3000 {
+    # Compression pour la rapidité
+    encode zstd gzip
+
+    # Configuration du Hub Mercure
+    mercure {
+        # On écrit directement la clé au lieu d'utiliser des variables {env...}
+        publisher_jwt !ChangeThisMercureHubJWTSecretKey!
+        subscriber_jwt !ChangeThisMercureHubJWTSecretKey!
+
+        # Configuration permissive pour le dev
+        cors_origins *
+        publish_origins *
+        anonymous
+        subscriptions
+    }
+
+    # Redirection vers l'interface de test (optionnel)
+    redir / /.well-known/mercure/ui/
+
+    # Réponse par défaut pour tester si le serveur répond
+    handle / {
+        respond "Le Hub Mercure est en ligne sur le port 3000"
+    }
+}

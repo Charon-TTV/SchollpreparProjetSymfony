@@ -1,0 +1,134 @@
+{# templates/admin/admin_user/index.html.twig #}
+{% extends 'admin/base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="m-0 text-dark font-weight-bold">
+                    <i class="feather icon-users mr-2 text-primary"></i>Gestion des Utilisateurs
+                </h5>
+                <span class="badge badge-primary">{{ users|length }} affichés</span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Utilisateur</th>
+                            <th>Email</th>
+                            <th>Rôles</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td class="text-muted small">
+                                    {{ (pageActuelle - 1) * 4 + loop.index }}
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {% if user.avatar is not empty %}
+                                            <img src="{{ asset('uploads/avatars/' ~ user.avatar) }}"
+                                                 class="rounded-circle mr-3"
+                                                 style="width: 40px; height: 40px; object-fit: cover;"
+                                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                                            <div class="rounded-circle mr-3 align-items-center justify-content-center bg-light text-primary font-weight-bold"
+                                                 style="width: 40px; height: 40px; min-width: 40px; display: none; border: 1px solid #e2e5e8;">
+                                                {{ user.prenom|slice(0, 1)|upper }}
+                                            </div>
+                                        {% else %}
+                                            <div class="rounded-circle mr-3 d-inline-flex align-items-center justify-content-center bg-light text-primary font-weight-bold"
+                                                 style="width: 40px; height: 40px; min-width: 40px; border: 1px solid #e2e5e8;">
+                                                {{ user.prenom|slice(0, 1)|upper }}
+                                            </div>
+                                        {% endif %}
+
+                                        <div>
+                                            <h6 class="m-0 font-weight-bold text-dark">{{ user.prenom }} {{ user.nom }}</h6>
+                                            <small class="text-muted">@{{ user.username }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="text-muted small">{{ user.email }}</span></td>
+                                <td>
+                                    {% if 'ROLE_ADMIN' in user.roles %}
+                                        <span class="badge badge-light-danger">Admin</span>
+                                    {% elseif 'ROLE_CONSEILLER' in user.roles %}
+                                        <span class="badge badge-light-primary">Conseiller</span>
+                                    {% else %}
+                                        <span class="badge badge-light-success">Élève</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <a href="{{ path('admin_user_show', {id: user.id}) }}"
+                                           class="btn btn-sm btn-outline-primary border-0 rounded-circle shadow-none">
+                                            <i class="feather icon-eye"></i>
+                                        </a>
+                                        <form method="post" action="{{ path('admin_user_delete', {id: user.id}) }}"
+                                              onsubmit="return confirm('Supprimer cet utilisateur ?');"
+                                              style="display:inline">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                            <button class="btn btn-sm btn-outline-danger border-0 rounded-circle shadow-none">
+                                                <i class="feather icon-trash-2"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {# --- NAVIGATION DE PAGINATION --- #}
+                {% if pagesTotales > 1 %}
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div class="text-muted small">
+                            Page <strong>{{ pageActuelle }}</strong> sur <strong>{{ pagesTotales }}</strong>
+                        </div>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item {{ pageActuelle == 1 ? 'disabled' }}">
+                                    <a class="page-link shadow-none" href="{{ path('admin_user_index', {page: pageActuelle - 1}) }}">
+                                        <i class="feather icon-chevron-left"></i>
+                                    </a>
+                                </li>
+
+                                {% for i in 1..pagesTotales %}
+                                    <li class="page-item {{ i == pageActuelle ? 'active' }}">
+                                        <a class="page-link shadow-none" href="{{ path('admin_user_index', {page: i}) }}">{{ i }}</a>
+                                    </li>
+                                {% endfor %}
+
+                                <li class="page-item {{ pageActuelle == pagesTotales ? 'disabled' }}">
+                                    <a class="page-link shadow-none" href="{{ path('admin_user_index', {page: pageActuelle + 1}) }}">
+                                        <i class="feather icon-chevron-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Styles Pagination Harmonisés */
+        .page-item.active .page-link {
+            background-color: #11c15b !important;
+            border-color: #11c15b !important;
+            color: #fff !important;
+        }
+        .page-link { color: #252525; border: 1px solid #dee2e6; }
+        .page-link:hover { color: #11c15b; background-color: #f8f9fa; }
+
+        .btn-outline-primary:hover { background-color: rgba(114, 103, 239, 0.1) !important; color: #7267EF !important; }
+        .btn-outline-danger:hover { background-color: rgba(255, 82, 82, 0.1) !important; color: #ff5252 !important; }
+    </style>
+{% endblock %}

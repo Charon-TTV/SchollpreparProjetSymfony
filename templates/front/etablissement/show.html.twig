@@ -75,10 +75,22 @@
                                     <div class="p-3 mb-2" style="background: #fcfcfc; border: 1px solid #f1f1f1; border-radius: 6px;">
                                         <h6 class="mb-1" style="font-weight: 600; font-size: 13px; color: #252525;">{{ filiere.nom }}</h6>
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <span class="text-muted" style="font-size: 11px;">{{ filiere.categorie ? filiere.categorie.nom : 'Général' }}</span>
-                                            <a href="{{ path('app_filiere_show', {'id': filiere.id}) }}" style="color: #d82a2e; font-size: 11px; font-weight: 700;">
-                                                VOIR <i class="fa fa-angle-right"></i>
-                                            </a>
+                <span class="text-muted" style="font-size: 11px;">
+                    {{ filiere.categorie ? filiere.categorie.nom : 'Général' }}
+                </span>
+
+                                            {# CORRECTION DU LIEN ICI #}
+                                            {% if filiere.categorie %}
+                                                <a href="{{ path('app_categorie_filiere_show', {
+                                                    'id': filiere.categorie.id,
+                                                    'filiere_id': filiere.id
+                                                }) }}" style="color: #d82a2e; font-size: 11px; font-weight: 700;">
+                                                    VOIR <i class="fa fa-angle-right"></i>
+                                                </a>
+                                            {% else %}
+                                                {# Fallback si la filière n'a pas de catégorie (optionnel) #}
+                                                <span class="text-muted small">Détails indisponibles</span>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 {% else %}

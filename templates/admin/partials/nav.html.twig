@@ -16,12 +16,33 @@
             <li>
                 <div class="dropdown drp-user">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        {# On garde la petite icône de personne comme demandé #}
                         <i class="feather icon-user text-white"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right profile-notification">
                         <div class="pro-head">
-                            <img src="{{ app.user.avatar ?: asset('assets/admin/images/user/avatar.jpeg') }}" class="img-radius" alt="User-Profile-Image">
-                            <span>{{ app.user.prenom }}</span>
+                            {# Vérification si l'avatar est renseigné en base de données #}
+                            {% if app.user.avatar is not empty %}
+                                <img src="{{ app.user.avatar ?: asset('assets/admin/images/user/avatar.jpeg') }}"
+                                     class="img-radius"
+                                     alt="User"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                                {# Ce bloc s'affiche si l'image ne charge pas (ex: fichier supprimé du dossier user) #}
+                                <div class="img-radius align-items-center justify-content-center bg-danger text-white font-weight-bold"
+                                     style="width: 40px; height: 40px; min-width: 40px; text-transform: uppercase; font-size: 1.2rem; display: none;">
+                                    {{ app.user.prenom|slice(0, 1) }}
+                                </div>
+                            {% else %}
+                                {# Affichage par défaut pour les comptes Google ou sans photo #}
+                                <div class="img-radius d-inline-flex align-items-center justify-content-center bg-danger text-white font-weight-bold"
+                                     style="width: 40px; height: 40px; min-width: 40px; text-transform: uppercase; font-size: 1.2rem;">
+                                    {{ app.user.prenom|slice(0, 1) }}
+                                </div>
+                            {% endif %}
+
+                            <span class="ml-2">{{ app.user.prenom }}</span>
+
                             <a href="{{ path('app_logout') }}" class="dud-logout" title="Logout">
                                 <i class="feather icon-log-out"></i>
                             </a>
@@ -29,7 +50,7 @@
                         <ul class="pro-body">
                             <li><a href="#" class="dropdown-item"><i class="feather icon-settings"></i> Paramètres</a></li>
                             <li><a href="{{ path('admin_profile') }}" class="dropdown-item"><i class="feather icon-user"></i> Mon Profil</a></li>
-                            <li><a href="{{ path('app_logout') }}" class="dropdown-item"><i class="feather icon-lock"></i> Déconnexion</a></li>
+                            <li><a href="{{ path('app_logout') }}" class="dropdown-item text-danger"><i class="feather icon-lock"></i> Déconnexion</a></li>
                         </ul>
                     </div>
                 </div>

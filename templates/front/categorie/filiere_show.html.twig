@@ -5,7 +5,7 @@
 {% block title %}{{ filiere.nom }} - SchoolPrepar{% endblock %}
 
 {% block body %}
-    {# 1. HEADER AVEC FIL D'ARIANE COMPLET (Nouveau système de navigation) #}
+    {# 1. HEADER DYNAMIQUE #}
     <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/2.jpg') }}">
         <div class="container">
             <div class="site-breadcrumb">
@@ -14,80 +14,97 @@
                 <a href="{{ path('app_categorie_show', {id: categorie.id}) }}">{{ categorie.nom }}</a> /
                 <span style="color: #d82a2e;">{{ filiere.nom }}</span>
             </div>
+            <h2 class="hp-title">{{ filiere.nom }}</h2>
         </div>
     </section>
 
-    <section class="single-course-section spad">
+    <section class="single-course-section spad" style="background: #fbfbfb;">
         <div class="container">
             <div class="row">
 
-                {# 2. COLONNE GAUCHE : DÉTAILS DU PROGRAMME (Design riche conservé) #}
+                {# 2. COLONNE GAUCHE : PRÉSENTATION #}
                 <div class="col-lg-8">
-                    <div class="course-meta">
-                        <div class="course-category" style="background: #d82a2e; color: #fff; display: inline-block; padding: 6px 20px; border-radius: 50px; font-weight: 600; margin-bottom: 15px;">
-                            {{ categorie.nom }}
+                    <div class="course-meta mb-4">
+                        <div class="course-category" style="background: #d82a2e; color: #fff; display: inline-block; padding: 6px 20px; border-radius: 50px; font-weight: 600; margin-bottom: 15px; font-size: 13px; text-transform: uppercase;">
+                            <i class="fa fa-tags mr-1"></i> {{ categorie.nom }}
                         </div>
-                        <h2 style="font-size: 42px; font-weight: 800; color: #252525; margin-bottom: 25px;">
-                            {{ filiere.nom }}
-                        </h2>
+                        <h2 style="font-size: 38px; font-weight: 800; color: #252525;">{{ filiere.nom }}</h2>
                     </div>
 
                     <div class="course-preview" style="margin-bottom: 35px; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1);">
                         <img src="{{ filiere.image ? asset('uploads/images/' ~ filiere.image) : asset('assets/front/img/courses/default-big.jpg') }}"
-                             alt="{{ filiere.nom }}" style="width: 100%; height: 450px; object-fit: cover;">
+                             alt="{{ filiere.nom }}" style="width: 100%; height: 400px; object-fit: cover;">
                     </div>
 
                     <div class="course-description p-2">
-                        <h4 style="margin-bottom: 20px; color: #d82a2e; font-weight: 700;">Présentation de la filière</h4>
-                        <div style="font-size: 16px; line-height: 1.8; color: #555;">
+                        <h4 style="margin-bottom: 20px; color: #d82a2e; font-weight: 700; display: flex; align-items: center;">
+                            <span style="width: 40px; height: 2px; background: #d82a2e; display: inline-block; margin-right: 15px;"></span>
+                            Présentation de la formation
+                        </h4>
+                        <div style="font-size: 16px; line-height: 1.8; color: #555; background: #fff; padding: 30px; border-radius: 15px; border: 1px solid #eee;">
                             {{ filiere.description|nl2br }}
                         </div>
                     </div>
                 </div>
 
-                {# 3. COLONNE DROITE : ÉTABLISSEMENTS PARTENAIRES (Design riche conservé) #}
+                {# 3. COLONNE DROITE : ÉTABLISSEMENTS (Nouveau Design inspiré du Forum) #}
                 <div class="col-lg-4">
-                    <div class="course-sidebar" style="background: #fff; padding: 35px; border-radius: 20px; border: 1px solid #f0f0f0; box-shadow: 0 5px 20px rgba(0,0,0,0.03);">
+                    <div class="course-sidebar">
                         <div class="sb-widget">
-                            <h4 class="sb-title" style="border-left: 5px solid #d82a2e; padding-left: 15px; margin-bottom: 30px; font-weight: 700;">
-                                Universités & Écoles
+                            <h4 class="sb-title" style="border-left: 5px solid #d82a2e; padding-left: 15px; margin-bottom: 30px; font-weight: 700; color: #252525;">
+                                Où se former ?
                             </h4>
 
-                            <div class="etablissement-cards">
-                                {# On utilise filiere.etablissements comme dans l'ancien #}
+                            <div class="etablissement-list">
                                 {% for ecole in filiere.etablissements %}
-                                    <div class="school-card" style="background: #fbfbfb; padding: 20px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 20px; transition: 0.3s;">
-                                        <div class="d-flex align-items-center">
-                                            <div class="school-logo" style="width: 60px; height: 60px; background: #fff; border-radius: 10px; margin-right: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid #f0f0f0;">
-                                                {% if ecole.image %}
-                                                    <img src="{{ asset('uploads/images/' ~ ecole.image) }}" alt="{{ ecole.nom }}" style="max-width: 100%;">
-                                                {% else %}
-                                                    <i class="fa fa-university" style="color: #d82a2e; font-size: 24px;"></i>
-                                                {% endif %}
-                                            </div>
-                                            <div>
-                                                <h6 style="margin: 0; font-weight: 700; color: #252525;">{{ ecole.nom }}</h6>
-                                                <small class="text-muted"><i class="fa fa-map-marker text-danger"></i> {{ ecole.ville }}, Togo</small>
+                                    <div class="categorie-item-glass mb-4" style="background: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-radius: 15px; overflow: hidden; transition: 0.3s; border: 1px solid #f0f0f0;">
+
+                                        {# Image de l'école miniature #}
+                                        <div class="set-bg" data-setbg="{{ ecole.image ? asset('uploads/images/' ~ ecole.image) : asset('assets/front/img/categories/1.jpg') }}" style="height: 120px; width: 100%; position: relative;">
+                                            <div style="position: absolute; top: 10px; right: 10px; background: {{ ecole.type == 'Public' ? '#252525' : '#d82a2e' }}; color: white; padding: 3px 12px; border-radius: 20px; font-size: 10px; font-weight: 700;">
+                                                {{ ecole.type|default('Privé') }}
                                             </div>
                                         </div>
-                                        <hr style="margin: 15px 0;">
-                                        <a href="{{ path('app_etablissement_index') }}" style="font-size: 12px; color: #d82a2e; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
-                                            Profil de l'école <i class="fa fa-angle-right"></i>
-                                        </a>
+
+                                        <div style="padding: 20px;">
+                                            <h6 style="font-weight: 700; color: #252525; margin-bottom: 5px;">{{ ecole.nom }}</h6>
+                                            <div style="font-size: 12px; color: #d82a2e; margin-bottom: 15px; font-weight: 600;">
+                                                <i class="fa fa-map-marker"></i> {{ ecole.ville }}, Togo
+                                            </div>
+
+                                            {# Bouton Action style Forum #}
+                                            <a href="{{ path('app_etablissement_show', {'id': ecole.id}) }}" class="btn btn-outline-success btn-sm btn-block" style="border-radius: 20px; font-weight: 700; font-size: 12px; transition: 0.3s;">
+                                                Consulter l'établissement
+                                            </a>
+
+                                            <div class="d-flex justify-content-between align-items-center mt-3 pt-2" style="border-top: 1px solid #f8f8f8;">
+                                                <span style="font-size: 10px; color: #aaa; text-transform: uppercase; font-weight: 700;">
+                                                    <i class="fa fa-check text-success"></i> Accrédité
+                                                </span>
+                                                <a href="{{ path('app_etablissement_show', {'id': ecole.id}) }}" style="font-size: 12px; color: #252525; font-weight: 700;">
+                                                    Détails <i class="fa fa-angle-right"></i>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 {% else %}
-                                    <div class="text-center py-4 bg-light rounded" style="border: 1px dashed #ccc;">
-                                        <p class="text-muted small mb-0">Aucun établissement répertorié pour cette formation.</p>
+                                    <div class="text-center py-5 bg-white rounded shadow-sm" style="border: 2px dashed #eee;">
+                                        <i class="fa fa-university mb-2" style="font-size: 30px; color: #ccc;"></i>
+                                        <p class="text-muted small mb-0">Aucun établissement répertorié.</p>
                                     </div>
                                 {% endfor %}
                             </div>
 
                             {# Box d'appel à l'action / Info complémentaire #}
-                            <div class="promo-box" style="background: #252525; color: #fff; padding: 25px; border-radius: 15px; margin-top: 40px; text-align: center;">
-                                <h6 class="text-white mb-2">Besoin d'aide ?</h6>
-                                <p style="font-size: 13px; opacity: 0.8; margin-bottom: 20px;">Nos conseillers vous orientent gratuitement vers l'école idéale.</p>
-                                <a href="{{ path('app_categorie_show', {id: categorie.id}) }}" class="btn btn-outline-light btn-sm w-100 mb-2" style="border-radius: 30px;">Retour à la catégorie</a>
-                                <a href="#" class="site-btn btn-sm" style="background: #d82a2e; width: 100%; border-radius: 30px;">Nous contacter</a>
+                            <div class="promo-box mt-4" style="background: linear-gradient(135deg, #252525 0%, #454545 100%); color: #fff; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.15);">
+                                <div style="width: 50px; height: 50px; background: rgba(216, 42, 46, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                                    <i class="fa fa-question" style="color: #d82a2e; font-size: 20px;"></i>
+                                </div>
+                                <h6 class="text-white mb-2">Un doute sur votre choix ?</h6>
+                                <p style="font-size: 13px; opacity: 0.8; margin-bottom: 20px;">Nos conseillers d'orientation sont là pour vous aider à choisir la meilleure école.</p>
+                                <a href="{{ path('app_social_index') }}" class="site-btn btn-sm w-100" style="background: #d82a2e; border-radius: 30px; border: none; box-shadow: 0 4px 12px rgba(216, 42, 46, 0.4);">
+                                    Discuter avec un conseiller
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -99,6 +116,24 @@
     <style>
         .site-breadcrumb a { color: #fff; text-decoration: none; }
         .site-breadcrumb { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
-        .school-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.08); border-color: #d82a2e !important; }
+        .hp-title { color: #fff; font-weight: 700; margin-top: 0; }
+
+        /* Animation des cartes établissement */
+        .categorie-item-glass:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1) !important;
+            border-color: #d82a2e !important;
+        }
+
+        .btn-outline-success {
+            color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-outline-success:hover {
+            background-color: #28a745;
+            border-color: #28a745;
+            color: #fff;
+        }
     </style>
 {% endblock %}

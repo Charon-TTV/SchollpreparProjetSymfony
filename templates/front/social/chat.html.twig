@@ -1,0 +1,300 @@
+{# templates/front/social/chat.html.twig #}
+
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Chat - {{ categorie.nom }} - SchoolPrepar{% endblock %}
+
+{% block body %}
+    {# Section d'entête #}
+    <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/1.jpg') }}">
+        <div class="container">
+            <div class="site-breadcrumb">
+                <a href="{{ path('app_home') }}">Accueil</a> /
+                <a href="{{ path('app_social_index') }}">Mon Espace Social</a> /
+                <span style="color: #d82a2e;">Chat {{ categorie.nom }}</span>
+            </div>
+            <h2 class="hp-title"><i class="fa fa-comments-o mr-3"></i>Forum {{ categorie.nom }}</h2>
+        </div>
+    </section>
+
+    <section class="chat-section spad" style="background: #fbfbfb;">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="chat-main-wrapper shadow-lg bg-white position-relative">
+
+                        {# Header du Chat #}
+                        <div class="chat-header p-3 border-bottom d-flex justify-content-between align-items-center bg-light">
+                            <div class="d-flex align-items-center">
+                                <a href="{{ path('app_social_index') }}" class="btn btn-link text-muted mr-3 p-0" title="Retour aux forums">
+                                    <i class="fa fa-arrow-left fa-lg"></i>
+                                </a>
+                                <div>
+                                    <h6 class="m-0" style="font-weight: 700; color: #252525;">Discussion en direct</h6>
+                                    <small class="text-success"><i class="fa fa-circle mr-1" style="font-size: 8px;"></i> En ligne</small>
+                                </div>
+                            </div>
+
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary" type="button" id="chatOptionsBtn">
+                                    <i class="fa fa-cog mr-1"></i> Options
+                                </button>
+                                <div id="chatDropdownMenu" class="dropdown-menu dropdown-menu-right shadow-sm border-0">
+                                    <a class="dropdown-item py-2" href="{{ path('app_social_show', {id: categorie.id}) }}">
+                                        <i class="fa fa-info-circle mr-2 text-primary"></i> Infos du Forum
+                                    </a>
+                                    <a class="dropdown-item py-2" href="#" data-toggle="modal" data-target="#membersModal">
+                                        <i class="fa fa-users mr-2 text-success"></i> Voir les membres
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item py-2 text-danger" href="{{ path('app_social_quitter', {id: categorie.id}) }}" onclick="return confirm('Voulez-vous vraiment quitter ce groupe ?')">
+                                        <i class="fa fa-sign-out mr-2"></i> Quitter le forum
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Zone des messages #}
+                        <div id="chat-box" class="chat-content p-4">
+                            {% include 'front/social/_messages.html.twig' %}
+                        </div>
+
+                        {# Formulaire d'envoi #}
+                        <div class="chat-input-footer p-3 border-top bg-light">
+                            <form id="chat-form" class="position-relative">
+                                <div class="input-group">
+                                    <input type="text" id="message-content" class="form-control"
+                                           placeholder="Écrivez votre message..."
+                                           required>
+                                    <div class="input-group-append ml-2">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Modal membres triés #}
+    <div class="modal fade" id="membersModal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 2000;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="border-radius: 15px;">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title" style="font-weight: 700;">Membres du forum</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                    <ul class="list-group list-group-flush">
+                        {% for membre in categorie.membres %}
+                            {% if 'ROLE_CONSEILLER' in membre.roles %}
+                                <li class="list-group-item d-flex align-items-center border-0 px-0">
+                                    <div class="mr-3" style="width: 35px; height: 35px; background: rgba(216, 42, 46, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa fa-briefcase text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <p class="m-0" style="font-weight: 700; font-size: 14px; color: #d82a2e;">{{ membre.nom }} {{ membre.prenom }}</p>
+                                        <small class="text-primary" style="font-weight: 600;">Conseiller</small>
+                                    </div>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        <hr class="my-2">
+                        {% for membre in categorie.membres %}
+                            {% if 'ROLE_CONSEILLER' not in membre.roles %}
+                                <li class="list-group-item d-flex align-items-center border-0 px-0">
+                                    <div class="mr-3" style="width: 35px; height: 35px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa fa-graduation-cap text-muted"></i>
+                                    </div>
+                                    <div>
+                                        <p class="m-0" style="font-weight: 600; font-size: 14px;">{{ membre.nom }} {{ membre.prenom }}</p>
+                                        <small class="text-muted">Élève</small>
+                                    </div>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .site-breadcrumb a { color: #fff; text-decoration: none; }
+        .site-breadcrumb { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+        .hp-title { color: #fff; font-weight: 700; }
+
+        /* Structure principale */
+        .chat-main-wrapper {
+            max-height: 600px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px;
+            border: 1px solid #eee;
+            overflow: hidden;
+        }
+
+        .chat-header { border-radius: 20px 20px 0 0; }
+        #chatOptionsBtn { border-radius: 15px; font-size: 12px; padding: 5px 15px; }
+        #chatDropdownMenu { display: none; right: 0; left: auto; z-index: 1060; min-width: 200px; border-radius: 10px; font-size: 14px; margin-top: 10px; }
+        #chatDropdownMenu.show { display: block; animation: fadeIn 0.2s; }
+
+        /* Zone de messages fixe */
+        .chat-content {
+            height: 400px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Bulles de discussion (RÉTABLIES) */
+        .message-wrapper { margin-bottom: 20px; display: flex; flex-direction: column; transition: all 0.3s ease; }
+        .message-wrapper.me { align-items: flex-end; }
+        .message-wrapper.others { align-items: flex-start; }
+
+        .message-bubble { padding: 12px 18px; border-radius: 18px; max-width: 80%; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); word-wrap: break-word; }
+        .me .message-bubble { background: #d82a2e; color: white; border-bottom-right-radius: 2px; }
+        .others .message-bubble { background: #f8f9fa; color: #333; border-bottom-left-radius: 2px; border-left: 3px solid #d82a2e; }
+
+        .message-meta { font-size: 12px; margin-bottom: 4px; color: #666; }
+
+        /* Bouton supprimer discret */
+        .btn-delete-msg {
+            font-size: 10px;
+            border: none;
+            background: none;
+            color: #ff4d4d;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+            padding: 0;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+        .message-wrapper:hover .btn-delete-msg { opacity: 1; }
+
+        /* Footer et Input */
+        .chat-input-footer { border-radius: 0 0 20px 20px; }
+        #message-content { border-radius: 30px; padding: 25px 20px; border: 1px solid #ddd; box-shadow: none; }
+        .btn-primary { background: #d82a2e; border: none; border-radius: 50%; width: 50px; height: 50px; transition: 0.3s; }
+
+        /* Style des messages système */
+        .badge-light { background-color: #f8f9fa; font-weight: 500; letter-spacing: 0.3px; color: #777; border: 1px solid #eee; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        #chat-box::-webkit-scrollbar { width: 6px; }
+        #chat-box::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const chatForm = document.getElementById('chat-form');
+        const input = document.getElementById('message-content');
+        const optionsBtn = document.getElementById('chatOptionsBtn');
+        const optionsMenu = document.getElementById('chatDropdownMenu');
+
+        const scrollToBottom = () => { chatBox.scrollTop = chatBox.scrollHeight; };
+        scrollToBottom();
+
+        // Menu Options
+        optionsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            optionsMenu.classList.toggle('show');
+        });
+        document.addEventListener('click', () => optionsMenu.classList.remove('show'));
+
+        // Envoi Message
+        chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const message = input.value.trim();
+            if(!message) return;
+
+            const params = new URLSearchParams({ 'message': message });
+            input.value = '';
+
+            fetch("{{ path('app_social_chat_send', {id: categorie.id}) }}", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params
+            }).catch(() => {
+                alert("Erreur lors de l'envoi");
+                input.value = message;
+            });
+        });
+
+        // Temps Réel Mercure
+        const url = new URL('{{ mercure_hub_url|default("http://localhost:3000/.well-known/mercure") }}');
+        url.searchParams.append('topic', 'forum_chat_{{ categorie.id }}');
+
+        const eventSource = new EventSource(url);
+
+        eventSource.onmessage = event => {
+            const data = JSON.parse(event.data);
+            const currentUserId = {{ app.user ? app.user.id : 'null' }};
+            const isCurrentUserConseiller = {{ is_granted('ROLE_CONSEILLER') ? 'true' : 'false' }};
+
+            // Messages Système (Badge centré)
+            if (data.type === 'system_message') {
+                const systemHtml = `
+                    <div class="text-center my-3 w-100">
+                        <span class="badge badge-light p-2 shadow-sm" style="border-radius: 20px; font-size: 11px;">
+                            <i class="fa ${data.icon} mr-1"></i> ${data.contenu}
+                        </span>
+                    </div>
+                `;
+                chatBox.insertAdjacentHTML('beforeend', systemHtml);
+                scrollToBottom();
+            }
+
+            // Nouveaux Messages (Bulles de couleur)
+            if (data.type === 'new_message') {
+                const isMe = data.expediteurId === currentUserId;
+                const iconClass = data.role === 'conseiller' ? 'fa-briefcase text-primary' : 'fa-graduation-cap text-success';
+                const displayName = isMe ? 'Moi' : data.expediteurNomComplet;
+
+                const messageHtml = `
+                    <div id="message-${data.id}" class="message-wrapper ${isMe ? 'me' : 'others'}">
+                        <div class="message-meta d-flex align-items-center mb-1">
+                            <i class="fa ${iconClass} mr-1" style="font-size: 12px;"></i>
+                            <strong class="mr-1" style="font-size: 13px;">${displayName}</strong>
+                            <span class="text-muted" style="font-size: 10px;">• ${data.date}</span>
+                        </div>
+                        <div class="message-bubble shadow-sm">
+                            ${data.contenu}
+                        </div>
+                        ${ (isMe || isCurrentUserConseiller) ?
+                    '<button onclick="deleteMessage('+data.id+')" class="btn-delete-msg"><i class="fa fa-trash"></i> Supprimer</button>' : ''
+                }
+                    </div>
+                `;
+                chatBox.insertAdjacentHTML('beforeend', messageHtml);
+                scrollToBottom();
+            }
+
+            // Suppression en temps réel
+            if (data.type === 'delete_message') {
+                const element = document.getElementById('message-' + data.messageId);
+                if (element) {
+                    element.style.opacity = '0';
+                    element.style.transform = 'scale(0.8)';
+                    setTimeout(() => element.remove(), 300);
+                }
+            }
+        };
+
+        function deleteMessage(id) {
+            if(!confirm('Supprimer ce message ?')) return;
+            fetch(`/social/chat/message/${id}/delete`, { method: 'POST' });
+        }
+    </script>
+{% endblock %}

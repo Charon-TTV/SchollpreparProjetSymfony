@@ -20,7 +20,6 @@
                 <div class="col-lg-5 col-md-8">
                     <div class="course-item" style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: none;">
 
-                        {# Header Rouge SchoolPrepar #}
                         <div style="background: #d82a2e; padding: 30px; text-align: center; color: #fff;">
                             <i class="fa fa-user-circle fa-3x mb-3"></i>
                             <h3 style="color: #fff; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Bon retour !</h3>
@@ -35,7 +34,6 @@
                                     </div>
                                 {% endif %}
 
-                                {# Champ Utilisateur #}
                                 <div class="form-group mb-4" style="position: relative;">
                                     <label style="font-weight: 700; color: #252525; font-size: 13px; text-transform: uppercase; margin-bottom: 8px; display: block;">Nom d'utilisateur</label>
                                     <i class="fa fa-user" style="position: absolute; left: 20px; top: 43px; color: #95a5a6; z-index: 5;"></i>
@@ -44,16 +42,15 @@
                                            placeholder="Votre pseudo" required autofocus>
                                 </div>
 
-                                {# Champ Password #}
                                 <div class="form-group mb-4" style="position: relative;">
                                     <label style="font-weight: 700; color: #252525; font-size: 13px; text-transform: uppercase; margin-bottom: 8px; display: block;">Mot de passe</label>
-                                    <i class="fa fa-lock" style="position: absolute; left: 20px; top: 43px; color: #95a5a6; z-index: 5;"></i>
-                                    <div style="position: relative;">
-                                        <input type="password" name="_password" id="passwordField" class="form-control"
-                                               style="height: 50px; border-radius: 30px; padding: 0 50px 0 50px; border: 2px solid #eee; background: #fcfcfc;"
-                                               placeholder="••••••••" required>
-                                        <i class="fa fa-eye" id="toggleIcon"
-                                           style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #95a5a6; transition: 0.3s;"></i>
+                                    <div style="position: relative; display: flex; align-items: center;">
+                                        <i class="fa fa-lock" style="position: absolute; left: 20px; color: #95a5a6; z-index: 5;"></i>
+                                        <input type="password" name="_password" id="loginPasswordField" class="form-control"
+                                               style="height: 50px; border-radius: 30px; padding: 0 50px 0 50px; border: 2px solid #eee; background: #fcfcfc; width: 100%;"
+                                               placeholder="••••••••" required autocomplete="current-password">
+                                        <i class="fa fa-eye" id="loginToggleIcon"
+                                           style="position: absolute; right: 20px; cursor: pointer; color: #95a5a6; transition: 0.3s; z-index: 10;"></i>
                                     </div>
                                 </div>
 
@@ -70,18 +67,15 @@
                                     SE CONNECTER
                                 </button>
 
-                                {# Séparateur #}
                                 <div style="text-align: center; margin: 25px 0; position: relative; color: #95a5a6; font-size: 13px;">
                                     <span style="background: #fff; padding: 0 15px; position: relative; z-index: 2;">OU</span>
                                     <div style="position: absolute; width: 100%; height: 1px; background: #eee; left: 0; top: 50%; z-index: 1;"></div>
                                 </div>
 
-                                {# Wrapper Google avec Info-bulle #}
                                 <div class="google-wrapper">
                                     <div class="google-tooltip">
                                         Nouveau ? Passez par la page d'inscription pour choisir votre profil.
                                     </div>
-
                                     <a href="{{ path('connect_google_start') }}" class="btn-google-custom">
                                         <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="18" alt="Google">
                                         Continuer avec Google
@@ -103,105 +97,49 @@
     </section>
 
     <style>
-        /* Bouton Google */
+        /* --- SUPPRESSION ICONE NATIVE NAVIGATEUR --- */
+        input::-ms-reveal,
+        input::-ms-clear {
+            display: none;
+        }
+
         .btn-google-custom {
-            width: 100%;
-            padding: 12px;
-            background: white;
-            border: 2px solid #eee;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            text-decoration: none;
-            color: #333;
-            font-weight: 600;
-            font-size: 14px;
-            transition: 0.3s;
+            width: 100%; padding: 12px; background: white; border: 2px solid #eee; border-radius: 50px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            text-decoration: none; color: #333; font-weight: 600; font-size: 14px; transition: 0.3s;
         }
-        .btn-google-custom:hover {
-            background: #f9f9f9;
-            border-color: #d82a2e;
-            color: #d82a2e;
-        }
+        .btn-google-custom:hover { background: #f9f9f9; border-color: #d82a2e; color: #d82a2e; }
 
-        /* --- STYLES INFO-BULLE (TOOLTIP) --- */
-        .google-wrapper {
-            position: relative;
-            text-align: center;
-        }
-
+        .google-wrapper { position: relative; text-align: center; }
         .google-tooltip {
-            position: absolute;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%) translateY(10px);
-            background: #333;
-            color: #fff;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 12px;
-            width: 260px;
-            line-height: 1.4;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-            z-index: 100;
+            position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%) translateY(10px);
+            background: #333; color: #fff; padding: 10px 15px; border-radius: 8px; font-size: 12px;
+            width: 260px; line-height: 1.4; opacity: 0; visibility: hidden; transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15); z-index: 100;
         }
-
-        /* Petit triangle sous la bulle */
         .google-tooltip::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -6px;
-            border-width: 6px;
-            border-style: solid;
-            border-color: #333 transparent transparent transparent;
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -6px;
+            border-width: 6px; border-style: solid; border-color: #333 transparent transparent transparent;
         }
+        .google-wrapper:hover .google-tooltip { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
 
-        /* Affichage au survol du wrapper */
-        .google-wrapper:hover .google-tooltip {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* Animation légère pour attirer l'attention */
-        @keyframes bounceTooltip {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-5px); }
-        }
-
-        .google-wrapper:hover .google-tooltip {
-            animation: bounceTooltip 2s infinite ease-in-out;
-        }
-
-        /* Autres styles */
-        .form-control:focus {
-            border-color: #d82a2e !important;
-            box-shadow: none !important;
-            background: #fff !important;
-        }
-        #toggleIcon:hover {
-            color: #d82a2e;
-        }
+        .form-control:focus { border-color: #d82a2e !important; box-shadow: none !important; background: #fff !important; }
+        #loginToggleIcon:hover { color: #d82a2e; }
     </style>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const passwordField = document.querySelector('#passwordField');
-            const toggleIcon = document.querySelector('#toggleIcon');
+            const passwordField = document.querySelector('#loginPasswordField');
+            const toggleIcon = document.querySelector('#loginToggleIcon');
 
-            toggleIcon.addEventListener('click', function () {
-                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordField.setAttribute('type', type);
-                this.classList.toggle('fa-eye');
-                this.classList.toggle('fa-eye-slash');
-            });
+            if(toggleIcon && passwordField) {
+                toggleIcon.addEventListener('click', function () {
+                    const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordField.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+            }
         });
     </script>
 {% endblock %}
