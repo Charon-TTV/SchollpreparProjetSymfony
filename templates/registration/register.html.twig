@@ -28,6 +28,14 @@
                         <div class="course-info" style="padding: 50px;">
                             {{ form_start(registrationForm) }}
 
+                            {# Affichage des erreurs globales (ex: erreur UniqueEntity si non rattachée à un champ) #}
+                            {% if not registrationForm.vars.valid %}
+                                <div class="alert alert-danger" style="border-radius: 15px; border: none; background: #fff1f1; color: #d82a2e; font-weight: 600;">
+                                    <i class="fa fa-exclamation-triangle mr-2"></i> Veuillez corriger les erreurs ci-dessous.
+                                    {{ form_errors(registrationForm) }}
+                                </div>
+                            {% endif %}
+
                             {# Choix du profil centré #}
                             <div class="text-center mb-5">
                                 <label style="font-weight: 700; color: #252525; font-size: 14px; text-transform: uppercase; margin-bottom: 25px; display: block;">Je m'inscris en tant que :</label>
@@ -54,8 +62,9 @@
                                         <label class="custom-label">NOM D'UTILISATEUR</label>
                                         <div class="input-wrapper">
                                             <i class="fa fa-user"></i>
-                                            {{ form_widget(registrationForm.username, {'attr': {'class': 'form-control custom-input', 'placeholder': 'Ex: Jean228'}}) }}
+                                            {{ form_widget(registrationForm.username, {'attr': {'class': 'form-control custom-input' ~ (registrationForm.username.vars.valid ? '' : ' is-invalid'), 'placeholder': 'Ex: Jean228'}}) }}
                                         </div>
+                                        <div class="error-message">{{ form_errors(registrationForm.username) }}</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -63,8 +72,9 @@
                                         <label class="custom-label">ADRESSE EMAIL</label>
                                         <div class="input-wrapper">
                                             <i class="fa fa-envelope"></i>
-                                            {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control custom-input', 'placeholder': 'exemple@gmail.com'}}) }}
+                                            {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control custom-input' ~ (registrationForm.email.vars.valid ? '' : ' is-invalid'), 'placeholder': 'exemple@gmail.com'}}) }}
                                         </div>
+                                        <div class="error-message">{{ form_errors(registrationForm.email) }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -79,8 +89,9 @@
                                                 <label class="custom-label">NUMÉRO DE TÉLÉPHONE</label>
                                                 <div class="input-wrapper">
                                                     <i class="fa fa-phone"></i>
-                                                    {{ form_widget(registrationForm.telephone, {'attr': {'class': 'form-control custom-input', 'placeholder': '+228...'}}) }}
+                                                    {{ form_widget(registrationForm.telephone, {'attr': {'class': 'form-control custom-input' ~ (registrationForm.telephone.vars.valid ? '' : ' is-invalid'), 'placeholder': '+228...'}}) }}
                                                 </div>
+                                                <div class="error-message">{{ form_errors(registrationForm.telephone) }}</div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -107,13 +118,14 @@
                                     {{ form_widget(registrationForm.plainPassword, {
                                         'id': 'passwordField',
                                         'attr': {
-                                            'class': 'form-control custom-input',
+                                            'class': 'form-control custom-input' ~ (registrationForm.plainPassword.vars.valid ? '' : ' is-invalid'),
                                             'placeholder': '6 caractères min.',
                                             'autocomplete': 'new-password'
                                         }
                                     }) }}
                                     <i class="fa fa-eye toggle-eye" id="toggleIcon"></i>
                                 </div>
+                                <div class="error-message">{{ form_errors(registrationForm.plainPassword) }}</div>
                             </div>
 
                             <button type="submit" class="site-btn w-100 btn-grad">S'INSCRIRE</button>
@@ -182,6 +194,24 @@
         }
 
         .custom-input:focus { border-color: #d82a2e; background: #fff; outline: none; }
+
+        /* Style spécifique pour les erreurs Symfony */
+        .is-invalid {
+            border-color: #d82a2e !important;
+            background-color: #fff8f8 !important;
+        }
+
+        .error-message ul {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0 0 15px;
+        }
+
+        .error-message li {
+            color: #d82a2e;
+            font-size: 13px;
+            font-weight: 600;
+        }
 
         .bio-area { height: 100px !important; padding-top: 15px !important; border-radius: 15px; }
 
@@ -273,7 +303,7 @@
             radioButtons.forEach(r => r.addEventListener('change', toggle));
             toggle();
 
-            // Toggle Password UNIQUE
+            // Toggle Password logic
             const toggleIcon = document.getElementById('toggleIcon');
             const passwordField = document.getElementById('passwordField');
 

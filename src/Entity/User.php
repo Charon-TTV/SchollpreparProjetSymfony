@@ -9,12 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
-
-// --- AJOUTE CES LIGNES ICI ---
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
 #[ORM\DiscriminatorMap([
@@ -22,9 +21,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
     'eleve' => Eleve::class,
     'conseiller' => Conseiller::class
 ])]
-#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
-// -----------------------------
-
+// Validation d'unicité (nécessite une migration si les index n'existent pas encore)
+#[UniqueEntity(fields: ['username'], message: "Ce nom d'utilisateur est déjà utilisé par un autre membre.")]
+#[UniqueEntity(fields: ['email'], message: "Cette adresse email est déjà enregistrée.")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -33,6 +32,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: "Le nom d'utilisateur ne peut pas être vide.")]
     private ?string $username = null;
 
     /**
@@ -48,6 +48,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "L'adresse email est obligatoire.")]
+    #[Assert\Email(message: "L'adresse email '{{ value }}' n'est pas valide.")]
     private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -65,7 +67,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Message>
      */
-    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'expediteur')]
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'expediteur', cascade: ['remove'], orphanRemoval: true)]
     private Collection $messages;
 
     /**
@@ -77,9 +79,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Notification>
      */
-    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'utilisateur')]
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'utilisateur', cascade: ['remove'], orphanRemoval: true)]
     private Collection $notifications;
-
 
     public function __construct()
     {
@@ -101,45 +102,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUsername(string $username): static
     {
         $this->username = $username;
-
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->username;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 
-    /**
-     * @param list<string> $roles
-     */
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
-
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -148,14 +131,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(?string $password): static
     {
         $this->password = $password;
-
         return $this;
     }
 
-    #[\Deprecated]
     public function eraseCredentials(): void
     {
-        // @deprecated, to be removed when upgrading to Symfony 8
+        // Si vous stockez des données temporaires sensibles, effacez-les ici
     }
 
     public function getEmail(): ?string
@@ -166,7 +147,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(?string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -178,7 +158,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setGoogleId(?string $googleId): static
     {
         $this->googleId = $googleId;
-
         return $this;
     }
 
@@ -190,7 +169,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAvatar(?string $avatar): static
     {
         $this->avatar = $avatar;
-
         return $this;
     }
 
@@ -202,7 +180,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNom(?string $nom): static
     {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -214,13 +191,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPrenom(?string $prenom): static
     {
         $this->prenom = $prenom;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Message>
-     */
+    /** @return Collection<int, Message> */
     public function getMessages(): Collection
     {
         return $this->messages;
@@ -232,25 +206,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->messages->add($message);
             $message->setExpediteur($this);
         }
-
         return $this;
     }
 
     public function removeMessage(Message $message): static
     {
         if ($this->messages->removeElement($message)) {
-            // set the owning side to null (unless already changed)
             if ($message->getExpediteur() === $this) {
                 $message->setExpediteur(null);
             }
         }
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Categorie>
-     */
+    /** @return Collection<int, Categorie> */
     public function getForums(): Collection
     {
         return $this->forums;
@@ -261,20 +230,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if (!$this->forums->contains($forum)) {
             $this->forums->add($forum);
         }
-
         return $this;
     }
 
     public function removeForum(Categorie $forum): static
     {
         $this->forums->removeElement($forum);
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Notification>
-     */
+    /** @return Collection<int, Notification> */
     public function getNotifications(): Collection
     {
         return $this->notifications;
@@ -286,22 +251,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->notifications->add($notification);
             $notification->setUtilisateur($this);
         }
-
         return $this;
     }
 
     public function removeNotification(Notification $notification): static
     {
         if ($this->notifications->removeElement($notification)) {
-            // set the owning side to null (unless already changed)
             if ($notification->getUtilisateur() === $this) {
                 $notification->setUtilisateur(null);
             }
         }
-
         return $this;
     }
-
-
-
 }

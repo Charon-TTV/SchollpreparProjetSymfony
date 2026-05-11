@@ -20,40 +20,42 @@
             <div class="row">
                 {% for e in etablissements %}
                     <div class="col-lg-4 col-md-6 mb-5 d-flex align-items-stretch">
-                        <div class="categorie-item-glass" style="width: 100%; display: flex; flex-direction: column; background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.07); border-radius: 12px; overflow: hidden; transition: 0.3s; position: relative;">
+                        {# Carte Style "Lomé" Épuré #}
+                        <div class="categorie-item-glass" style="width: 100%; display: flex; flex-direction: column; background: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-radius: 15px; overflow: hidden; transition: 0.3s; border: 1px solid #f0f0f0;">
 
-                            {# Badge Type (Public/Privé) #}
-                            <div style="position: absolute; top: 15px; left: 15px; z-index: 10; background: {{ e.type == 'Public' ? '#252525' : '#d82a2e' }}; color: white; padding: 5px 15px; border-radius: 30px; font-size: 11px; font-weight: 700; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-                                {{ e.type|default('Privé') }}
-                            </div>
-
-                            {# Image de l'établissement #}
-                            <div class="ci-thumb set-bg"
-                                 data-setbg="{{ e.image ? asset('uploads/images/' ~ e.image) : asset('assets/front/img/categories/1.jpg') }}"
-                                 style="height: 180px; width: 100%;">
+                            {# Image avec Badge Type #}
+                            <div class="set-bg" data-setbg="{{ e.image ? asset('uploads/images/' ~ e.image) : asset('assets/front/img/categories/1.jpg') }}" style="height: 180px; width: 100%; position: relative;">
+                                <div style="position: absolute; top: 15px; right: 15px; background: {{ e.type == 'Public' ? '#252525' : '#d82a2e' }}; color: white; padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: 700;">
+                                    {{ e.type|default('Privé') }}
+                                </div>
                             </div>
 
                             {# Contenu de la carte #}
-                            <div class="ci-text" style="padding: 25px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
-                                <div>
-                                    <h5 style="font-size: 18px; font-weight: 700; color: #252525; margin-bottom: 8px;">{{ e.nom }}</h5>
-                                    <div class="mb-3" style="color: #d82a2e; font-size: 13px; font-weight: 600;">
-                                        <i class="fa fa-map-marker mr-1"></i> {{ e.ville }}, Togo
-                                    </div>
-                                    <p style="font-size: 14px; color: #707070; line-height: 1.6; margin-bottom: 20px;">
-                                        {{ e.localisation|length > 100 ? e.localisation|slice(0, 100) ~ '...' : e.localisation }}
-                                    </p>
+                            <div style="padding: 25px; flex-grow: 1; display: flex; flex-direction: column;">
+                                <h5 style="font-weight: 700; color: #252525; margin-bottom: 8px; font-size: 18px;">{{ e.nom }}</h5>
+
+                                <div style="font-size: 13px; color: #d82a2e; margin-bottom: 15px; font-weight: 600;">
+                                    <i class="fa fa-map-marker"></i> {{ e.ville }}, Togo
                                 </div>
 
+                                <p style="font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 20px;">
+                                    {{ e.localisation|length > 90 ? e.localisation|slice(0, 90) ~ '...' : e.localisation }}
+                                </p>
 
+                                {# Bouton Vert Arrondi (Action principale) #}
+                                <div class="mt-auto">
+                                    <a href="{{ path('app_etablissement_show', {'id': e.id}) }}" class="btn btn-outline-success btn-block" style="border-radius: 25px; font-weight: 700; font-size: 14px; padding: 10px; transition: 0.3s; border-width: 1px;">
+                                        Consulter l'établissement
+                                    </a>
+                                </div>
 
-                                {# Footer de la carte (Détails) #}
-                                <div class="d-flex justify-content-between align-items-center" style="border-top: 1px solid #f5f5f5; padding-top: 15px; margin-top: 10px;">
-                                    <span style="font-size: 11px; color: #707070; font-weight: 600; text-transform: uppercase;">
-                                        <i class="fa fa-check-circle text-success mr-1"></i> Partenaire
+                                {# Footer discret #}
+                                <div class="d-flex justify-content-between align-items-center mt-3 pt-3" style="border-top: 1px solid #f8f8f8;">
+                                    <span style="font-size: 10px; color: #aaa; text-transform: uppercase; font-weight: 700;">
+                                        <i class="fa fa-check text-success"></i> Accrédité
                                     </span>
-                                    <a href="{{ path('app_etablissement_show', {'id': e.id}) }}" class="view-more-link" style="color: #252525; font-weight: 700; font-size: 14px; text-decoration: none;">
-                                        Fiche complète <i class="fa fa-angle-right ml-1"></i>
+                                    <a href="{{ path('app_etablissement_show', {'id': e.id}) }}" style="font-size: 12px; color: #252525; font-weight: 700; text-decoration: none;">
+                                        Détails <i class="fa fa-angle-right"></i>
                                     </a>
                                 </div>
                             </div>
@@ -61,8 +63,8 @@
                     </div>
                 {% else %}
                     <div class="col-12 text-center py-5">
-                        <div class="empty-state-glass p-5" style="background: #f8f9fa; border-radius: 15px; border: 2px dashed #dee2e6;">
-                            <i class="fa fa-building-o mb-3" style="font-size: 50px; color: #dee2e6;"></i>
+                        <div class="empty-state-glass p-5" style="background: #fff; border-radius: 15px; border: 2px dashed #eee;">
+                            <i class="fa fa-university mb-3" style="font-size: 50px; color: #ccc;"></i>
                             <p class="text-muted">Aucun établissement répertorié pour le moment.</p>
                         </div>
                     </div>
@@ -110,14 +112,23 @@
         .site-breadcrumb { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
         .hp-title { color: #fff; font-weight: 700; }
 
-        /* Animation au survol des cartes */
+        /* Animation au survol */
         .categorie-item-glass:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15) !important;
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1) !important;
+            border-color: #d82a2e !important;
         }
 
-        .view-more-link:hover {
-            color: #d82a2e !important;
+        /* Style bouton vert style "Lomé" */
+        .btn-outline-success {
+            color: #00c292;
+            border-color: #00c292;
+        }
+
+        .btn-outline-success:hover {
+            background-color: #00c292;
+            border-color: #00c292;
+            color: #fff;
         }
 
         /* Pagination Style */

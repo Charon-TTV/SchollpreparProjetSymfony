@@ -1,0 +1,266 @@
+{# templates/front/profile/index.html.twig #}
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Mon Profil | SchoolPrepar{% endblock %}
+
+{% block body %}
+    {# --- SECTION HEADER --- #}
+    <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/1.jpg') }}">
+        <div class="container">
+            <div class="site-breadcrumb">
+                <a href="{{ path('app_home') }}">Accueil</a> /
+                <span style="color: #d82a2e;">{{ isEdit ? 'Paramètres' : 'Mon Profil' }}</span>
+            </div>
+            <h2 class="hp-title">{{ isEdit ? 'Personnaliser mon compte' : 'Tableau de bord profil' }}</h2>
+        </div>
+    </section>
+
+    <section class="profile-section spad" style="background: #fbfbfb; padding-top: 60px;">
+        <div class="container">
+            <div class="row">
+                {# --- SIDEBAR GAUCHE --- #}
+                <div class="col-lg-4 mb-4">
+                    <div class="categorie-item-glass p-4 text-center shadow-sm" style="background: #fff; border-radius: 15px; border-bottom: 4px solid #d82a2e;">
+
+                        {# --- GESTION DYNAMIQUE DE L'AVATAR (Commun à tous les types d'utilisateurs) --- #}
+                        <div class="avatar-wrapper position-relative mx-auto mb-4" style="width: 140px;">
+                            {% if user.avatar %}
+                                {# Cas 1 : Image uploadée ou lien externe stocké dans 'avatar' #}
+                                {% if user.avatar starts with 'http' %}
+                                    <img src="{{ user.avatar }}" class="avatar-main shadow" alt="Avatar" referrerpolicy="no-referrer">
+                                {% else %}
+                                    <img src="{{ asset('uploads/avatars/' ~ user.avatar) }}" class="avatar-main shadow" alt="Avatar">
+                                {% endif %}
+
+                            {% else %}
+                                {# Cas 2 : Initiales par défaut (Prénom+Nom ou Username) #}
+                                <div class="avatar-placeholder shadow">
+                                    {% if user.prenom and user.nom %}
+                                        {{ user.prenom|first|upper }}{{ user.nom|first|upper }}
+                                    {% else %}
+                                        {{ user.username|first|upper }}
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+
+                            {% if isEdit %}
+                                <label for="{{ form.avatarFile.vars.id }}" class="cam-badge" title="Changer la photo">
+                                    <i class="fa fa-camera"></i>
+                                </label>
+                            {% endif %}
+                        </div>
+
+                        <h4 style="font-weight: 700; color: #252525; margin-bottom: 5px;">{{ user.prenom }} {{ user.nom }}</h4>
+                        <p class="text-danger font-weight-bold mb-3" style="font-size: 14px;">@{{ user.username }}</p>
+
+                        <div class="mb-4">
+                            <span class="badge-custom {{ is_granted('ROLE_CONSEILLER') ? 'bg-black' : 'bg-red' }}">
+                                <i class="fa {{ is_granted('ROLE_CONSEILLER') ? 'fa-mortar-board' : 'fa-user' }} mr-2"></i>
+                                {{ is_granted('ROLE_CONSEILLER') ? 'Conseiller Orientation' : 'Élève / Étudiant' }}
+                            </span>
+                        </div>
+
+                        {% if not isEdit %}
+                            <a href="{{ path('app_profile', {'mode': 'edit'}) }}" class="site-btn w-100 btn-outline-red">
+                                <i class="fa fa-edit mr-2"></i> Modifier mon profil
+                            </a>
+                        {% else %}
+                            <a href="{{ path('app_profile', {'mode': 'view'}) }}" class="btn btn-link text-muted w-100 font-weight-bold">
+                                <i class="fa fa-arrow-left mr-1"></i> Retour au profil
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {# --- ZONE DE CONTENU PRINCIPALE --- #}
+                <div class="col-lg-8">
+                    <div class="categorie-item-glass p-5 shadow-sm" style="background: #fff; border-radius: 15px; position: relative; overflow: hidden;">
+
+                        {# Filigrane Background #}
+                        <i class="fa fa-id-card" style="position: absolute; top: -20px; right: -20px; font-size: 150px; color: #fbfbfb; z-index: 0;"></i>
+
+                        <div style="position: relative; z-index: 1;">
+                            {% if not isEdit %}
+                                {# --- MODE VUE --- #}
+                                <div class="d-flex align-items-center mb-5">
+                                    <div style="width: 5px; height: 30px; background: #d82a2e; margin-right: 15px;"></div>
+                                    <h3 style="font-weight: 800; color: #252525; margin: 0;">Mes Informations</h3>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="info-card">
+                                            <i class="fa fa-envelope text-danger"></i>
+                                            <div>
+                                                <label>Adresse Email</label>
+                                                <p>{{ user.email }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="info-card">
+                                            <i class="fa fa-user text-danger"></i>
+                                            <div>
+                                                <label>Nom Complet</label>
+                                                <p>{{ user.prenom }} {{ user.nom|upper }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {% if is_granted('ROLE_CONSEILLER') %}
+                                        <div class="col-md-6 mb-4">
+                                            <div class="info-card">
+                                                <i class="fa fa-phone text-danger"></i>
+                                                <div>
+                                                    <label>Téléphone</label>
+                                                    <p>{{ user.telephone|default('Non renseigné') }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="info-card">
+                                                <i class="fa fa-briefcase text-danger"></i>
+                                                <div>
+                                                    <label>Spécialité</label>
+                                                    <p class="text-dark font-weight-bold">{{ user.type.value|default('CONSEILLER') }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 mt-2">
+                                            <div class="info-card flex-column align-items-start">
+                                                <label class="mb-2"><i class="fa fa-quote-left mr-2"></i> Ma Biographie</label>
+                                                <div class="bio-text">
+                                                    {{ user.biographie|default('Aucune biographie rédigée.')|nl2br }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                            {% else %}
+                                {# --- MODE ÉDITION --- #}
+                                <div class="d-flex align-items-center mb-5">
+                                    <div style="width: 5px; height: 30px; background: #d82a2e; margin-right: 15px;"></div>
+                                    <h3 style="font-weight: 800; color: #252525; margin: 0;">Paramètres du compte</h3>
+                                </div>
+
+                                {{ form_start(form, {'attr': {'class': 'premium-form'}}) }}
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label-premium">Prénom</label>
+                                        {{ form_widget(form.prenom, {'attr': {'class': 'form-control input-glass'}}) }}
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label-premium">Nom</label>
+                                        {{ form_widget(form.nom, {'attr': {'class': 'form-control input-glass'}}) }}
+                                    </div>
+                                </div>
+
+                                <div style="display:none">{{ form_widget(form.avatarFile) }}</div>
+
+                                {% if form.telephone is defined %}
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+                                            <label class="form-label-premium">Téléphone</label>
+                                            {{ form_widget(form.telephone, {'attr': {'class': 'form-control input-glass'}}) }}
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <label class="form-label-premium">Spécialité</label>
+                                            {{ form_widget(form.type, {'attr': {'class': 'form-control input-glass'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label-premium">Biographie</label>
+                                        {{ form_widget(form.biographie, {'attr': {'class': 'form-control input-glass bio-area'}}) }}
+                                    </div>
+                                {% endif %}
+
+                                <div class="text-right pt-3">
+                                    <button type="submit" class="site-btn btn-grad shadow">
+                                        <i class="fa fa-save mr-2"></i> Mettre à jour mon profil
+                                    </button>
+                                </div>
+                                {{ form_end(form) }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* --- AVATAR DYNAMIQUE --- */
+        .avatar-main {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #fff;
+            display: block;
+        }
+        .avatar-placeholder {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: #d82a2e;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 45px;
+            font-weight: 800;
+            border: 5px solid #fff;
+        }
+        .cam-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 40px;
+            height: 40px;
+            background: #252525;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #fff;
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 10;
+        }
+        .cam-badge:hover { background: #d82a2e; transform: scale(1.1); }
+
+        /* --- INFO CARDS --- */
+        .info-card { display: flex; align-items: center; background: #fcfcfc; padding: 15px; border-radius: 12px; border: 1px solid #f0f0f0; height: 100%; }
+        .info-card i { font-size: 20px; margin-right: 15px; width: 30px; text-align: center; }
+        .info-card label { display: block; font-size: 11px; font-weight: 700; color: #999; margin-bottom: 2px; text-transform: uppercase; }
+        .info-card p { margin: 0; font-size: 15px; color: #252525; font-weight: 600; }
+        .bio-text { background: #fff; border: 1px dashed #d82a2e; padding: 20px; border-radius: 10px; width: 100%; color: #555; line-height: 1.6; font-style: italic; }
+
+        /* --- BADGES & BUTTONS --- */
+        .badge-custom { padding: 8px 20px; border-radius: 30px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #fff; }
+        .bg-red { background: #d82a2e; box-shadow: 0 4px 10px rgba(216, 42, 46, 0.3); }
+        .bg-black { background: #252525; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .btn-outline-red { background: transparent; border: 2px solid #d82a2e; color: #d82a2e; font-weight: 700; border-radius: 10px; transition: 0.3s; }
+        .btn-outline-red:hover { background: #d82a2e; color: #fff; }
+
+        /* --- FORM --- */
+        .form-label-premium { font-size: 12px; font-weight: 800; color: #252525; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .input-glass { background: #f8f9fa !important; border: 1px solid #ececec !important; border-radius: 10px !important; height: 50px !important; font-weight: 600; }
+        .input-glass:focus { border-color: #d82a2e !important; background: #fff !important; }
+        .bio-area { height: 120px !important; padding: 15px !important; }
+
+        /* --- GLOBALS --- */
+        .site-breadcrumb a { color: #fff; text-decoration: none; }
+        .site-breadcrumb { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+        .hp-title { color: #fff; font-weight: 700; text-transform: uppercase; }
+        .categorie-item-glass { transition: 0.3s; }
+    </style>
+
+    <script>
+        document.querySelector('.cam-badge')?.addEventListener('click', function() {
+            document.getElementById('{{ form.avatarFile.vars.id }}').click();
+        });
+    </script>
+{% endblock %}

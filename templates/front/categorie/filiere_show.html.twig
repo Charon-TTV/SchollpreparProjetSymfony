@@ -4,6 +4,50 @@
 
 {% block title %}{{ filiere.nom }} - SchoolPrepar{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        .site-breadcrumb a { color: #fff; text-decoration: none; }
+        .site-breadcrumb { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+        .hp-title { color: #fff; font-weight: 700; margin-top: 0; }
+
+        /* Style spécifique pour le Swiper Vertical */
+        .etablissementSwiper {
+            height: 580px;
+            padding: 10px 5px;
+        }
+
+        .categorie-item-glass {
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+        }
+
+        .categorie-item-glass:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1) !important;
+            border-color: #d82a2e !important;
+        }
+
+        .btn-outline-success {
+            color: #28a745;
+            border-color: #28a745;
+            transition: 0.3s;
+        }
+
+        .btn-outline-success:hover {
+            background-color: #28a745;
+            border-color: #28a745;
+            color: #fff;
+        }
+
+        /* Personnalisation de la pagination Swiper aux couleurs du site */
+        .swiper-pagination-bullet-active {
+            background: #d82a2e !important;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
     {# 1. HEADER DYNAMIQUE #}
     <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/2.jpg') }}">
@@ -47,7 +91,7 @@
                     </div>
                 </div>
 
-                {# 3. COLONNE DROITE : ÉTABLISSEMENTS (Nouveau Design inspiré du Forum) #}
+                {# 3. COLONNE DROITE : ÉTABLISSEMENTS AVEC SLIDER #}
                 <div class="col-lg-4">
                     <div class="course-sidebar">
                         <div class="sb-widget">
@@ -55,55 +99,51 @@
                                 Où se former ?
                             </h4>
 
-                            <div class="etablissement-list">
-                                {% for ecole in filiere.etablissements %}
-                                    <div class="categorie-item-glass mb-4" style="background: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-radius: 15px; overflow: hidden; transition: 0.3s; border: 1px solid #f0f0f0;">
+                            <div class="swiper etablissementSwiper">
+                                <div class="swiper-wrapper">
+                                    {% for ecole in filiere.etablissements %}
+                                        <div class="swiper-slide">
+                                            <div class="categorie-item-glass" style="background: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-radius: 15px; overflow: hidden;">
 
-                                        {# Image de l'école miniature #}
-                                        <div class="set-bg" data-setbg="{{ ecole.image ? asset('uploads/images/' ~ ecole.image) : asset('assets/front/img/categories/1.jpg') }}" style="height: 120px; width: 100%; position: relative;">
-                                            <div style="position: absolute; top: 10px; right: 10px; background: {{ ecole.type == 'Public' ? '#252525' : '#d82a2e' }}; color: white; padding: 3px 12px; border-radius: 20px; font-size: 10px; font-weight: 700;">
-                                                {{ ecole.type|default('Privé') }}
+                                                {# Image de l'école #}
+                                                <div class="set-bg" data-setbg="{{ ecole.image ? asset('uploads/images/' ~ ecole.image) : asset('assets/front/img/categories/1.jpg') }}" style="height: 110px; width: 100%; position: relative;">
+                                                    <div style="position: absolute; top: 10px; right: 10px; background: {{ ecole.type == 'Public' ? '#252525' : '#d82a2e' }}; color: white; padding: 3px 12px; border-radius: 20px; font-size: 10px; font-weight: 700;">
+                                                        {{ ecole.type|default('Privé') }}
+                                                    </div>
+                                                </div>
+
+                                                <div style="padding: 15px;">
+                                                    <h6 style="font-weight: 700; color: #252525; margin-bottom: 5px; font-size: 15px;">{{ ecole.nom }}</h6>
+                                                    <div style="font-size: 12px; color: #d82a2e; margin-bottom: 12px; font-weight: 600;">
+                                                        <i class="fa fa-map-marker"></i> {{ ecole.ville }}, Togo
+                                                    </div>
+
+                                                    <a href="{{ path('app_etablissement_show', {'id': ecole.id}) }}" class="btn btn-outline-success btn-sm btn-block" style="border-radius: 20px; font-weight: 700; font-size: 12px;">
+                                                        Consulter l'établissement
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
-
-                                        <div style="padding: 20px;">
-                                            <h6 style="font-weight: 700; color: #252525; margin-bottom: 5px;">{{ ecole.nom }}</h6>
-                                            <div style="font-size: 12px; color: #d82a2e; margin-bottom: 15px; font-weight: 600;">
-                                                <i class="fa fa-map-marker"></i> {{ ecole.ville }}, Togo
-                                            </div>
-
-                                            {# Bouton Action style Forum #}
-                                            <a href="{{ path('app_etablissement_show', {'id': ecole.id}) }}" class="btn btn-outline-success btn-sm btn-block" style="border-radius: 20px; font-weight: 700; font-size: 12px; transition: 0.3s;">
-                                                Consulter l'établissement
-                                            </a>
-
-                                            <div class="d-flex justify-content-between align-items-center mt-3 pt-2" style="border-top: 1px solid #f8f8f8;">
-                                                <span style="font-size: 10px; color: #aaa; text-transform: uppercase; font-weight: 700;">
-                                                    <i class="fa fa-check text-success"></i> Accrédité
-                                                </span>
-                                                <a href="{{ path('app_etablissement_show', {'id': ecole.id}) }}" style="font-size: 12px; color: #252525; font-weight: 700;">
-                                                    Détails <i class="fa fa-angle-right"></i>
-                                                </a>
-                                            </div>
+                                    {% else %}
+                                        <div class="text-center py-5 bg-white rounded shadow-sm" style="border: 2px dashed #eee; width: 100%;">
+                                            <i class="fa fa-university mb-2" style="font-size: 30px; color: #ccc;"></i>
+                                            <p class="text-muted small">Aucun établissement répertorié.</p>
                                         </div>
-                                    </div>
-                                {% else %}
-                                    <div class="text-center py-5 bg-white rounded shadow-sm" style="border: 2px dashed #eee;">
-                                        <i class="fa fa-university mb-2" style="font-size: 30px; color: #ccc;"></i>
-                                        <p class="text-muted small mb-0">Aucun établissement répertorié.</p>
-                                    </div>
-                                {% endfor %}
+                                    {% endfor %}
+                                </div>
+                                {# Pagination discrète sous le slider #}
+                                <div class="swiper-pagination" style="bottom: 0;"></div>
                             </div>
 
-                            {# Box d'appel à l'action / Info complémentaire #}
+                            {# Box d'appel à l'action #}
                             <div class="promo-box mt-4" style="background: linear-gradient(135deg, #252525 0%, #454545 100%); color: #fff; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.15);">
                                 <div style="width: 50px; height: 50px; background: rgba(216, 42, 46, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
                                     <i class="fa fa-question" style="color: #d82a2e; font-size: 20px;"></i>
                                 </div>
-                                <h6 class="text-white mb-2">Un doute sur votre choix ?</h6>
-                                <p style="font-size: 13px; opacity: 0.8; margin-bottom: 20px;">Nos conseillers d'orientation sont là pour vous aider à choisir la meilleure école.</p>
-                                <a href="{{ path('app_social_index') }}" class="site-btn btn-sm w-100" style="background: #d82a2e; border-radius: 30px; border: none; box-shadow: 0 4px 12px rgba(216, 42, 46, 0.4);">
-                                    Discuter avec un conseiller
+                                <h6 class="text-white mb-2">Besoin d'aide ?</h6>
+                                <p style="font-size: 13px; opacity: 0.8; margin-bottom: 20px;">Nos conseillers vous accompagnent dans votre projet d'étude au Togo.</p>
+                                <a href="{{ path('app_social_index') }}" class="site-btn btn-sm w-100" style="background: #d82a2e; border-radius: 30px; border: none; font-weight: 700;">
+                                    Contacter un conseiller
                                 </a>
                             </div>
                         </div>
@@ -112,28 +152,31 @@
             </div>
         </div>
     </section>
+{% endblock %}
 
-    <style>
-        .site-breadcrumb a { color: #fff; text-decoration: none; }
-        .site-breadcrumb { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
-        .hp-title { color: #fff; font-weight: 700; margin-top: 0; }
-
-        /* Animation des cartes établissement */
-        .categorie-item-glass:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.1) !important;
-            border-color: #d82a2e !important;
-        }
-
-        .btn-outline-success {
-            color: #28a745;
-            border-color: #28a745;
-        }
-
-        .btn-outline-success:hover {
-            background-color: #28a745;
-            border-color: #28a745;
-            color: #fff;
-        }
-    </style>
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialisation du slider vertical
+            const swiper = new Swiper(".etablissementSwiper", {
+                direction: "vertical",
+                slidesPerView: 2.3, // Affiche 2 cartes pleines et un bout de la 3ème
+                spaceBetween: 20,
+                loop: {{ filiere.etablissements|length > 2 ? 'true' : 'false' }},
+                autoplay: {
+                    delay: 3500,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true, // S'arrête quand on survole avec la souris
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                    dynamicBullets: true,
+                },
+                grabCursor: true,
+            });
+        });
+    </script>
 {% endblock %}

@@ -1,60 +1,62 @@
+{# templates/front/etablissement/show.html.twig #}
 {% extends 'front/base.html.twig' %}
 
 {% block title %}{{ etablissement.nom }} - SchoolPrepar{% endblock %}
 
 {% block body %}
-    {# 1. Header de page #}
-    <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/1.jpg') }}" style="height: 180px;">
+    {# 1. Section d'entête (Même style que l'index) #}
+    <section class="page-info-section set-bg" data-setbg="{{ asset('assets/front/img/page-bg/1.jpg') }}">
         <div class="container">
-            {# Correction navigation : Couleurs sombres pour la lisibilité sur fond clair #}
-            <div class="site-breadcrumb" style="color: #252525;">
-                <a href="{{ path('app_home') }}" style="color: #d82a2e; font-weight: 600;">Accueil</a>
-                <span style="color: #252525; margin: 0 10px;">/</span>
-                <a href="{{ path('app_etablissement_index') }}" style="color: #d82a2e; font-weight: 600;">Établissements</a>
-                <span style="color: #252525; margin: 0 10px;">/</span>
-                <span style="color: #707070;">{{ etablissement.nom }}</span>
+            <div class="site-breadcrumb">
+                <a href="{{ path('app_home') }}">Accueil</a> /
+                <a href="{{ path('app_etablissement_index') }}">Établissements</a> /
+                <span style="color: #d82a2e;">{{ etablissement.nom }}</span>
             </div>
+            <h2 class="hp-title">{{ etablissement.nom }}</h2>
         </div>
     </section>
 
-    <section class="single-course-section spad" style="background: #fdfdfd; padding-top: 60px;">
+    <section class="single-course-section spad" style="background: #fbfbfb; padding-top: 60px;">
         <div class="container">
             <div class="row">
 
                 {# COLONNE GAUCHE #}
                 <div class="col-lg-8">
-
-                    {# Bloc 1 : Identité #}
-                    <div class="card border-0 shadow-sm mb-4" style="border-radius: 10px; background: #fff;">
+                    {# Bloc Identité & Badge Public/Privé #}
+                    <div class="card border-0 shadow-sm mb-4" style="border-radius: 15px;">
                         <div class="card-body p-4">
                             <div class="d-flex align-items-center mb-2">
-                                <span class="badge px-3 py-1 mr-3" style="border-radius: 4px; font-size: 10px; background: #d82a2e; color: #fff;">
-                                    {{ etablissement.type|upper }}
+                                <span class="badge px-3 py-2 mr-3" style="border-radius: 6px; font-size: 10px; background: {{ etablissement.type == 'Public' ? '#252525' : '#d82a2e' }}; color: #fff; text-transform: uppercase;">
+                                    {{ etablissement.type|default('Privé') }}
                                 </span>
-                                <h2 class="m-0" style="font-weight: 700; color: #252525; font-size: 24px;">{{ etablissement.nom }}</h2>
+                                <h2 class="m-0" style="font-weight: 800; color: #252525; font-size: 24px;">Présentation générale</h2>
                             </div>
-                            <p class="text-muted mb-0 small">
-                                <i class="fa fa-map-marker mr-2"></i> {{ etablissement.localisation }}, {{ etablissement.ville }}
+                            <p class="mb-0" style="color: #666; font-size: 14px;">
+                                <i class="fa fa-map-marker mr-2 text-danger"></i>
+                                Situé à {{ etablissement.ville }}, {{ etablissement.localisation }}
                             </p>
                         </div>
                     </div>
 
-                    {# Bloc 2 : Image (Plus petite, sans fond vitré/flouté) #}
-                    <div class="card border-0 shadow-sm mb-4" style="border-radius: 10px; overflow: hidden; background: #fff;">
-                        <div style="height: 300px; width: 100%; display: flex; align-items: center; justify-content: center; padding: 20px;">
-                            <img src="{{ etablissement.image ? asset('uploads/images/' ~ etablissement.image) : asset('assets/front/img/categories/default-big.jpg') }}"
+                    {# Bloc Image Centrale #}
+                    <div class="card border-0 shadow-sm mb-4" style="border-radius: 15px; overflow: hidden;">
+                        <div style="background: #fff; padding: 40px; text-align: center;">
+                            <img src="{{ etablissement.image ? asset('uploads/images/' ~ etablissement.image) : asset('assets/front/img/categories/1.jpg') }}"
                                  alt="{{ etablissement.nom }}"
-                                 style="max-width: 100%; max-height: 100%; object-fit: contain; border: 1px solid #eee; border-radius: 5px;">
+                                 style="max-width: 100%; height: auto; max-height: 350px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
                         </div>
                     </div>
 
-                    {# Bloc 3 : Présentation #}
-                    <div class="card border-0 shadow-sm mb-4" style="border-radius: 10px;">
+                    {# Bloc Présentation #}
+                    <div class="card border-0 shadow-sm mb-4" style="border-radius: 15px;">
                         <div class="card-body p-4">
-                            <h5 class="mb-3" style="font-weight: 700; color: #252525;">À propos</h5>
-                            <div style="font-size: 15px; line-height: 1.6; color: #666;">
-                                <p>L'établissement <strong>{{ etablissement.nom }}</strong> est situé à {{ etablissement.ville }}.</p>
-                                <p>Il offre des programmes de formation adaptés aux besoins du marché local et international, garantissant une insertion professionnelle aux étudiants.</p>
+                            <h4 class="mb-4" style="font-weight: 700; color: #252525; position: relative; padding-left: 15px;">
+                                <span style="position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #d82a2e; border-radius: 10px;"></span>
+                                À propos
+                            </h4>
+                            <div style="font-size: 15px; line-height: 1.8; color: #555;">
+                                <p>L'établissement <strong>{{ etablissement.nom }}</strong> est un acteur clé de l'enseignement à {{ etablissement.ville }}.</p>
+                                <p>Il propose des programmes de formation rigoureux et adaptés aux réalités du marché, permettant aux étudiants d'acquérir des compétences solides pour leur future carrière.</p>
                             </div>
                         </div>
                     </div>
@@ -63,45 +65,40 @@
                 {# COLONNE DROITE #}
                 <div class="col-lg-4">
                     {# Widget Filières #}
-                    <div class="card border-0 shadow-sm mb-4" style="border-radius: 10px;">
+                    <div class="card border-0 shadow-sm mb-4" style="border-radius: 15px;">
                         <div class="card-header bg-white border-0 pt-4 px-4">
-                            <h6 style="font-weight: 700; color: #252525; text-transform: uppercase; font-size: 13px; letter-spacing: 1px;">
+                            <h6 style="font-weight: 800; color: #252525; text-transform: uppercase; font-size: 12px; letter-spacing: 1.2px;">
                                 Filières disponibles
                             </h6>
                         </div>
-                        <div class="card-body p-4">
-                            <div class="filiere-stack">
-                                {% for filiere in etablissement.filieres %}
-                                    <div class="p-3 mb-2" style="background: #fcfcfc; border: 1px solid #f1f1f1; border-radius: 6px;">
-                                        <h6 class="mb-1" style="font-weight: 600; font-size: 13px; color: #252525;">{{ filiere.nom }}</h6>
-                                        <div class="d-flex justify-content-between align-items-center">
-                <span class="text-muted" style="font-size: 11px;">
-                    {{ filiere.categorie ? filiere.categorie.nom : 'Général' }}
-                </span>
-
-                                            {# CORRECTION DU LIEN ICI #}
-                                            {% if filiere.categorie %}
-                                                <a href="{{ path('app_categorie_filiere_show', {
-                                                    'id': filiere.categorie.id,
-                                                    'filiere_id': filiere.id
-                                                }) }}" style="color: #d82a2e; font-size: 11px; font-weight: 700;">
-                                                    VOIR <i class="fa fa-angle-right"></i>
-                                                </a>
-                                            {% else %}
-                                                {# Fallback si la filière n'a pas de catégorie (optionnel) #}
-                                                <span class="text-muted small">Détails indisponibles</span>
-                                            {% endif %}
+                        <div class="card-body p-3">
+                            {% for filiere in etablissement.filieres %}
+                                <div class="filiere-item p-3 mb-2" style="background: #fff; border: 1px solid #f0f0f0; border-radius: 12px; transition: 0.3s;">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1" style="font-weight: 700; font-size: 14px; color: #252525;">{{ filiere.nom }}</h6>
+                                            <span style="font-size: 11px; color: #999; font-weight: 600;">
+                                                {{ filiere.categorie ? filiere.categorie.nom : 'Général' }}
+                                            </span>
                                         </div>
+                                        {% if filiere.categorie %}
+                                            <a href="{{ path('app_categorie_filiere_show', {'id': filiere.categorie.id, 'filiere_id': filiere.id}) }}"
+                                               style="color: #d82a2e; font-size: 10px; font-weight: 800; text-transform: uppercase;">
+                                                Voir <i class="fa fa-angle-right ml-1"></i>
+                                            </a>
+                                        {% endif %}
                                     </div>
-                                {% else %}
-                                    <p class="text-muted small italic text-center">Aucune filière listée.</p>
-                                {% endfor %}
-                            </div>
+                                </div>
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <p class="text-muted small mb-0">Aucune filière répertoriée.</p>
+                                </div>
+                            {% endfor %}
                         </div>
                     </div>
 
                     {# Bouton Contact #}
-                    <a href="#" class="site-btn btn-sm w-100 shadow-sm" style="border-radius: 6px; background: #252525; padding: 15px;">
+                    <a href="#" class="btn btn-dark w-100 py-3 shadow-sm" style="border-radius: 12px; font-weight: 700; background: #252525; border: none; letter-spacing: 0.5px;">
                         Contacter l'établissement
                     </a>
                 </div>
@@ -109,4 +106,25 @@
             </div>
         </div>
     </section>
+
+    <style>
+        /* Styles de base navigation (Identiques à l'index) */
+        .site-breadcrumb a { color: #fff; text-decoration: none; }
+        .site-breadcrumb { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+        .hp-title { color: #fff; font-weight: 700; }
+
+        /* Effets de survol */
+        .filiere-item:hover {
+            border-color: #d82a2e !important;
+            background: #fffafb !important;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(216, 42, 46, 0.08);
+        }
+
+        .btn-dark:hover {
+            background: #d82a2e !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(216, 42, 46, 0.2) !important;
+        }
+    </style>
 {% endblock %}
